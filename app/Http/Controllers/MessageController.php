@@ -10,7 +10,7 @@ class MessageController extends Controller
     public function verification($id)
     {
         $ok = People::where('id', $id)->first();
-        if(!$ok->token)
+        if($ok->token)
         {
             return 0;
         }
