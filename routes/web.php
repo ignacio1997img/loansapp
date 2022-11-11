@@ -109,7 +109,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 });
 
-Route::get('message/verification', [MessageController::class, 'verification']);
+Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
 
 Route::get('/admin/clear-cache', function() {
     Artisan::call('optimize:clear');
