@@ -231,7 +231,7 @@
                 }
             })
 
-            url = "http://api.trabajostop.com/?number=591"+phone+"&message=Hola "+name+", para verificar tus datos personales has click en el enlace de abajo\nhttp://loansapp.trabajostop.com/message/verification";
+            url = "http://api.trabajostop.com/?number=591"+phone+"&message=Hola "+name+", para verificar tus datos personales has click en el enlace de abajo\n http://loansapp.trabajostop.com/message/verification";
             const xhr = new XMLHttpRequest();
             xhr.open("GET", url);
             xhr.send();
