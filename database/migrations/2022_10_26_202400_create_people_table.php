@@ -40,7 +40,7 @@ class CreatePeopleTable extends Migration
             $table->string('tiktok')->nullable();           
 
             
-            $table->smallInteger('status')->default(2);
+            $table->smallInteger('status')->default(1);
             $table->string('token')->nullable();
             $table->timestamps();
             $table->foreignId('register_userId')->nullable()->constrained('users');
