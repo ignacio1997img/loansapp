@@ -12,7 +12,7 @@ class MessageController extends Controller
         $ok = People::where('id', $id)->first();
         if($ok->token)
         {
-            return 0;
+            return view('message.verification-success');
         }
         $ok->update(['token'=>1]);
 
