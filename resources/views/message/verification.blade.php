@@ -31,7 +31,7 @@
                 <img src="{{asset('images/people-verificartion.png')}}" width="250" height="200" border="0">
                 <br>
 
-                <a href="{{ url('/') }}" class="btn btn-primary">Volver a intentar</a>
+                {{-- <a href="{{ url('/') }}" class="btn btn-primary">Volver a intentar</a> --}}
             </div>
         </div>
     </body>
