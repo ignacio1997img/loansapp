@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class People extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'ci',
+        'first_name',
+        'last_name1',
+        'last_name2',
+        'birth_date',
+        'email',
+        'cell_phone',
+        'phone',
+        'street',
+        'home',
+        'zone',
+        'streetB',
+        'homeB',
+        'zoneB',
+
+        'gender',
+        'image',
+        'facebook',
+        'instagram',
+        'tiktok',
+        'status',
+        'token',
+        'register_userId',
+        'deleted_at',
+        'deleted_userId'
+    ];  
+}

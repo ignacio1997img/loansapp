@@ -1,0 +1,63 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateLoansTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('loans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('people_id')->nullable()->constrained('people');
+            $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
+            
+            $table->string('typeLoan')->nullable();
+            $table->date('date')->nullable();
+            $table->integer('day')->nullable();
+            $table->integer('month')->nullable();
+            $table->decimal('porcentage',11,2)->nullable();
+            $table->decimal('amountLoan',11,2)->nullable();
+
+
+            $table->decimal('debt',11,2)->nullable();
+
+            $table->decimal('amountPorcentage',11,2)->nullable();
+            $table->decimal('amountTotal',11,2)->nullable();
+            // $table->foreignId('agentCollection_id')->nullable()->constrained('agent_collections');
+
+            $table->text('observation')->nullable();
+            $table->smallInteger('status')->nullable();
+
+            $table->foreignId('inspector_userId')->nullable()->constrained('users');
+            $table->string('inspector_agentType')->nullable();
+
+            $table->foreignId('success_userId')->nullable()->constrained('users');
+            $table->string('success_agentType')->nullable();
+
+            $table->timestamps();
+            $table->foreignId('register_userId')->nullable()->constrained('users');
+            $table->string('register_agentType')->nullable();
+            $table->softDeletes();
+            $table->foreignId('deleted_userId')->nullable()->constrained('users');
+            $table->string('deleted_agentType')->nullable();
+
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('loans');
+    }
+}
