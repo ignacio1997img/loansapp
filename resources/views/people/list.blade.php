@@ -50,7 +50,7 @@
                         @endif
                     </td>
                     <td class="no-sort no-click bread-actions text-right">
-                        @if ($item->status==2)
+                        @if ($item->token==null)
                             <a href="#" data-toggle="modal" data-target="#verificar-modal" data-name="{{ $item->first_name }} {{ $item->last_name1 }} {{ $item->last_name2 }}" data-id="{{$item->id}}" data-phone="{{$item->cell_phone}}" title="Verificación" class="btn btn-sm btn-success">
                                 <i class="fa-solid fa-key"></i> <span class="hidden-xs hidden-sm">Verificar</span>
                             </a>
