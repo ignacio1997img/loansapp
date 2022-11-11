@@ -21,7 +21,7 @@
     <body>
         <div class="d-flex align-items-center justify-content-center vh-100">
             <div class="text-center">
-                <h1 class="display-1 fw-bold"> <span class="text-danger">Maria te amo</span></h1>
+                <h1 class="display-1 fw-bold"> <span class="text-danger">Capresi</span></h1>
                 <p class="fs-3">  Verificación exitosa.</p>
                 <p class="lead">
                     {{-- En estos momentos el sistema se encuentra en mantenimiento, por favor intente más tarde. --}}
