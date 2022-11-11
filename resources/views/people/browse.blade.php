@@ -66,12 +66,16 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title"><i class="fa-solid fa-key"></i> Verificación</h4>
                 </div>
+                <div class="modal-body">
+                        <input type="hidden" id="id">
+                        <input type="hidden" id="phone">
+                        <input type="hidden" id="name">
+                </div>   
                 
                 <div class="modal-footer">
-                    <form action="#" id="verificacion_form" method="POST">
+                    {{-- <form action="#" id="verificacion_form" method="POST">
                         {{ method_field('DELETE') }}
-                        {{ csrf_field() }}</form>
-                        <input type="hidden" name="id" id="id">
+                        {{ csrf_field() }}</form> --}}
 
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-brands fa-square-whatsapp" style="color: #52ce5f; font-size: 5em;"></i>
@@ -186,8 +190,24 @@
             }});
 
         }
+        $('#verificar-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) //captura valor del data-empresa=""
+            var id = button.data('id')
+            var phone = button.data('phone')
+            var name = button.data('name')
+            var modal = $(this)
+            modal.find('.modal-body #id').val(id)
+            modal.find('.modal-body #name').val(name)
+            modal.find('.modal-body #phone').val(phone)
+        });
 
         function miFunc() {
+
+            let id = $('#id').val();
+            let phone = $('#phone').val();
+            let name = $('#name').val();
+
+            // alert(phone)
             
             let timerInterval
             Swal.fire({
@@ -211,8 +231,9 @@
                 }
             })
 
+            url = "http://api.trabajostop.com/?number=591"+phone+"&message=Hola "+name+", para verificar tus datos personales has click en el enlace de abajo\nhttp://loansapp.trabajostop.com/message/verification";
             const xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://api.trabajostop.com:3001/?number=59167285914&message=http://trabajostop.com/message/verification");
+            xhr.open("GET", url);
             xhr.send();
             // xhr.responseType = "json";
             
