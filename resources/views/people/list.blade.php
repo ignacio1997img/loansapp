@@ -42,12 +42,15 @@
                         @if ($item->status==1)
                             <label class="label label-success">Activo</label>
                         @endif
-                        @if ($item->status==2)
-                            <label class="label label-warning">Pendiente</label>
-                        @endif
                         @if ($item->status==0)
-                            <label class="label label-danger">Inactivo</label>
+                            <label class="label label-warning">Inactivo</label>
                         @endif
+                        <br><br>
+                        @if ($item->token==NULL)
+                            <label class="label label-danger">Sin Verificar</label>
+                        @endif
+
+                        
                     </td>
                     <td class="no-sort no-click bread-actions text-right">
                         @if ($item->token==null)
