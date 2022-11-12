@@ -102,10 +102,6 @@
                 </div>
                 <div class="modal-footer">
                     <form action="#" id="habilitar_form" method="GET">
-                        {{-- {{ method_field('DELETE') }}
-                        {{ csrf_field() }} --}}
-                        {{-- <input type="hidden" name="id" id="id"> --}}
-
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-solid fa-thumbs-up" style="color: #1abc9c; font-size: 5em;"></i>
                                 <br>
@@ -129,9 +125,6 @@
                 </div>
                 <div class="modal-footer">
                     <form action="#" id="inhabilitar_form" method="GET">
-                        {{-- {{ method_field('DELETE') }}
-                        {{ csrf_field() }} --}}
-                        {{-- <input type="hidden" name="id" id="id"> --}}
 
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-solid fa-thumbs-down" style="color: #fabe28; font-size: 5em;"></i>

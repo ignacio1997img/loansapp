@@ -55,6 +55,38 @@
         </div>
     </div>
 
+    <div class="modal modal-success fade" data-backdrop="static" tabindex="-1" id="patrocinador-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="fa-solid fa-key"></i> Verificación</h4>
+                </div>
+                <div class="modal-body">
+                        <input type="hidden" id="id">
+                        <input type="hidden" id="phone">
+                        <input type="hidden" id="name">
+                </div>   
+                
+                <div class="modal-footer">
+                    {{-- <form action="#" id="verificacion_form" method="POST">
+                        {{ method_field('DELETE') }}
+                        {{ csrf_field() }}</form> --}}
+
+                            <div class="text-center" style="text-transform:uppercase">
+                                <i class="fa-brands fa-square-whatsapp" style="color: #52ce5f; font-size: 5em;"></i>
+                                <br>
+                                {{-- <i class="fa-brands fa-square-whatsapp"></i> --}}
+                                <p><b>Desea enviar verificacion?</b></p>
+                            </div>
+                        <input type="submit" class="btn btn-success pull-right delete-confirm"  onclick="miFunc()" value="Sí, Enviar">
+                    
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal modal-success fade" data-backdrop="static" tabindex="-1" id="verificar-modal" role="dialog">
         <div class="modal-dialog">

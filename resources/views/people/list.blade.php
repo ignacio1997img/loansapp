@@ -59,7 +59,7 @@
                             </a>
                         @endif
                         @if (auth()->user()->hasPermission('sponsor_people'))
-                            <a href="http://api.trabajostop.com:3001/?number=59167285914&message=hola" title="Ver" class="btn btn-sm btn-dark view">
+                            <a href="{{route('people-sponsor.index', ['id'=>$item->id])}}" title="Ver" class="btn btn-sm btn-dark view">
                                 <i class="fa-solid fa-medal"></i> <span class="hidden-xs hidden-sm">Patrocinador</span>
                             </a>
                         @endif
