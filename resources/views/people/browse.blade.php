@@ -242,7 +242,7 @@
             // var phone = $('#phone').val();
             // var name = $('#name').val();
 
-            alert(id);
+            // alert(id);
             
             let timerInterval
             Swal.fire({
