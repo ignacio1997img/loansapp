@@ -277,22 +277,6 @@ class MenuItemsTableSeeder extends Seeder
             ),
             16 => 
             array (
-                'id' => 19,
-                'menu_id' => 1,
-                'title' => 'Tipos de Préstamos',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-categories',
-                'color' => NULL,
-                'parent_id' => 11,
-                'order' => 5,
-                'created_at' => '2022-10-26 20:14:00',
-                'updated_at' => '2022-11-07 19:39:12',
-                'route' => 'voyager.type-loans.index',
-                'parameters' => NULL,
-            ),
-            17 => 
-            array (
                 'id' => 21,
                 'menu_id' => 1,
                 'title' => 'Personas',
@@ -307,7 +291,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.people.index',
                 'parameters' => 'null',
             ),
-            18 => 
+            17 => 
             array (
                 'id' => 22,
                 'menu_id' => 1,
@@ -323,39 +307,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'loans.index',
                 'parameters' => NULL,
             ),
-            19 => 
-            array (
-                'id' => 23,
-                'menu_id' => 1,
-                'title' => 'Tipos de Agentes',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'fa-solid fa-people-line',
-                'color' => NULL,
-                'parent_id' => 11,
-                'order' => 2,
-                'created_at' => '2022-10-28 05:49:27',
-                'updated_at' => '2022-11-07 19:39:19',
-                'route' => 'voyager.agent-types.index',
-                'parameters' => NULL,
-            ),
-            20 => 
-            array (
-                'id' => 25,
-                'menu_id' => 1,
-                'title' => 'Agentes',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'fa-solid fa-person-digging',
-                'color' => '#000000',
-                'parent_id' => 11,
-                'order' => 3,
-                'created_at' => '2022-10-28 13:58:06',
-                'updated_at' => '2022-11-07 19:39:12',
-                'route' => 'voyager.agents.index',
-                'parameters' => NULL,
-            ),
-            21 => 
+            18 => 
             array (
                 'id' => 26,
                 'menu_id' => 1,
@@ -371,7 +323,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'vaults.index',
                 'parameters' => NULL,
             ),
-            22 => 
+            19 => 
             array (
                 'id' => 27,
                 'menu_id' => 1,
@@ -387,7 +339,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'cashiers.index',
                 'parameters' => NULL,
             ),
-            23 => 
+            20 => 
             array (
                 'id' => 28,
                 'menu_id' => 1,
