@@ -96,9 +96,9 @@
                     <h4 class="modal-title"><i class="fa-solid fa-key"></i> Verificación</h4>
                 </div>
                 <div class="modal-body">
-                        <input type="text" id="id">
-                        <input type="text" id="phone">
-                        <input type="text" id="name">
+                        <input type="hidden" id="id">
+                        <input type="hidden" id="phone">
+                        <input type="hidden" id="name">
                         {{-- @php
                             $telefono = $_GET['phone'];
                             
