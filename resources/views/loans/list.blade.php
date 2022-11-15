@@ -4,7 +4,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Fecha Entrega</th>
+                    <th>Fecha Solicitud</th>
                     <th>Nombre Cliente</th>                    
                     <th>Tipo de Préstamos</th>                    
                     <th>Monto Prestado</th>                    
@@ -20,7 +20,7 @@
                 <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
-                    <td>{{$item->people->first_name}} {{$item->people->last_name}}</td>
+                    <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
                     <td>{{$item->typeLoan}}</td>
                     <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
                     <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>
@@ -38,37 +38,42 @@
                             <label class="label label-success">PAGADO</label>
                         @endif
                         @if ($item->status == 1)
-                            <label class="label label-primary">APROBADO</label>                            
+                            <label class="label label-primary">{{$item->delivered=='Si'?'ENTREGADO':'APROBADO'}}</label>                            
                         @endif
                         @if ($item->status == 2)
                             <label class="label label-danger">PENDIENTE</label>                            
                         @endif
                     </td>
                     <td class="no-sort no-click bread-actions text-right">
+                        @if ($item->status == 1 && $item->delivered == 'No')
+                            <a href="#" data-toggle="modal" data-target="#notificar-modal" data-name="{{ $item->people->first_name }} {{ $item->people->last_name1 }} {{ $item->people->last_name2 }}" data-phone="{{$item->people->cell_phone}}" title="Notificar al beneficiario" class="btn btn-sm">
+                                <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i>
+                            </a>
+                            <a title="Entregar dinero al Beneficiario" class="btn btn-sm btn-success" onclick="deliverItem('{{ route('loans-money.deliver', ['loan' => $item->id]) }}',{{$item->id}})" data-toggle="modal" data-target="#deliver-modal">
+                                <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Entregar</span>
+                            </a>
+                        @endif
+
                         <div class="btn-group" style="margin-right: 3px">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 Mas <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" style="left: -90px !important">
-
-                                {{-- <li><a href="#" class="btn-rotation"  data-toggle="modal" data-target="#modal-rotation" >Requisitos</a></li> --}}
-
-                                @if ($item->status == 1)
+                                {{-- @if ($item->status == 1)
                                     <li><a onclick="agentItem('{{ route('loans-agent.update', ['loan' => $item->id]) }}')" class="btn-rotation" data-toggle="modal" data-target="#agent-modal" title="Cambiar Cobrador" >Cambiar Cobradores</a></li>
-                                @endif
-                                @if ($item->status == 1)
-                                    <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" >Imprimir Calendario</a></li>
-                                @endif
-                  
-                                {{-- <li><a href="" class="btn-irremovability" data-toggle="modal" data-target="#modal-irremovability" >Aprobar Requisitos</a></li> --}}
-                        
+                                @endif --}}
+                                @if ($item->status == 1 && $item->delivered == 'Si')
+                                    <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" >Imprimir Calendario</a></li> 
+                                
+                                    <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" >Imprimir Contrato</a></li>
+                                @endif                      
                             </ul>
                         </div>
 
                             <a href="{{ route('loans.show', ['loan' => $item->id]) }}" title="Ver" class="btn btn-sm btn-warning view">
                                 <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
                             </a> 
-                            <a href="{{ route('loans-requirement-daily.create', ['loan' => $item->id]) }}" title="Editar" class="btn btn-sm btn-primary">
+                            <a href="{{ route('loans-requirement-daily.create', ['loan' => $item->id]) }}" title="Requisitos" class="btn btn-sm btn-primary">
                                 <i class="fa-solid fa-file"></i><span class="hidden-xs hidden-sm"> Requisitos</span>
                             </a>
                             
@@ -79,7 +84,7 @@
                             @endif
 
 
-                            @if ($item->status == 1)
+                            @if ($item->status == 1 && $item->delivered == 'Si')
                                 <a href="{{ route('loans-daily.money', ['loan' => $item->id]) }}" title="Abonar Pago"  class="btn btn-sm btn-success">
                                     <i class="voyager-dollar"></i><span class="hidden-xs hidden-sm"> Abonar Pago</span>
                                 </a>
@@ -102,8 +107,8 @@
                     
                 </tr>
                 @empty
-                    <tr class="odd">
-                        <td valign="top" colspan="7" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                    <tr>
+                        <td style="text-align: center" valign="top" colspan="10" class="dataTables_empty">No hay datos disponibles en la tabla</td>
                     </tr>
                 @endforelse
             </tbody>

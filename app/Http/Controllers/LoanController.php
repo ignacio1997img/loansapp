@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Loan;
 use App\Models\LoanDay;
-use App\Models\LoanAgent;
+use App\Models\LoanRoute;
 use App\Models\LoanRequirement;
 use App\Models\User;
 use Psy\CodeCleaner\ReturnTypePass;
@@ -20,6 +20,7 @@ use App\Models\Route;
 use App\Http\Controllers\FileController;
 use App\Models\LoanDayAgent;
 use Illuminate\Support\Composer;
+use PhpParser\Node\Stmt\TryCatch;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -27,6 +28,21 @@ class LoanController extends Controller
 {
     public function index()
     {
+//         $search='ignaci';
+
+//         $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+//             ->where(function($query) use ($search){
+//                 if($search){
+//                     $query->OrwhereHas('people', function($query) use($search){
+//                         $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+//                     });
+//                 }
+//             })
+//             ->where('deleted_at', NULL)->orderBy('id', 'DESC')->get();
+
+// return $data;
+
+
         $collector = User::with(['role' => function($q)
             {
                 $q->where('name','cobrador');
@@ -40,46 +56,32 @@ class LoanController extends Controller
         $user = Auth::user();
         $paginate = request('paginate') ?? 10;
 
-        $data = Loan::with(['loanDay', 'loanAgent', 'loanRequirement', 'people' => function($query) use ($search){
-            if($search){
-                // OrWhereRaw($search ? "id = '$search'" : 1)
-                $query->OrWhereRaw($search ? "first_name like '%$search%'" : 1)
-                ->OrWhereRaw($search ? "last_name like '%$search%'" : 1);
-                // ->OrWhereRaw($search ? "CONCAT(first_name, ' ', last_name) like '%$search%'" : 1)
-                // ->OrWhereRaw($search ? "ci like '%$search%'" : 1)
-                // ->OrWhereRaw($search ? "nua_cua like '%$search%'" : 1)
-                // ->OrWhereRaw($search ? "phone like '%$search%'" : 1);
-            }
-        }])
-        ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
-        // $data = LOa::where(function($query) use ($search){
-        //             $query->OrWhereRaw($search ? "id = '$search'" : 1)
-        //             ->OrWhereRaw($search ? "first_name like '%$search%'" : 1)
-        //             ->OrWhereRaw($search ? "last_name like '%$search%'" : 1)
-        //             ->OrWhereRaw($search ? "CONCAT(first_name, ' ', last_name) like '%$search%'" : 1)
-        //             ->OrWhereRaw($search ? "ci like '%$search%'" : 1);
-        //             // ->OrWhereRaw($search ? "phone like '%$search%'" : 1);
-        //             })
-        //             ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
-                    // $data = 1;
-                    // dd($data->links());
+        $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+            ->where(function($query) use ($search){
+                if($search){
+                    $query->OrwhereHas('people', function($query) use($search){
+                        $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                    })
+                    ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                }
+            })
+            ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
+
         return view('loans.list', compact('data'));
     }
 
     public function create()
     {
-        $people = People::where('deleted_at', null)->where('status',1)->get();
-        // $collector = User::with(['role' => function($q)
-        //     {
-        //         $q->where('name','cobrador');
-        //     }])
-        //     ->get();
+        $people = People::where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
 
         $routes = Route::where('deleted_at', null)->where('status', 1)->orderBy('name')->get();
 
-        // return $collector;
-
         return view('loans.add', compact('people', 'routes'));
+    }
+    public function ajaxNotPeople($id)
+    {
+        return People::where('id', '!=', $id)->where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
+
     }
 
     public function createDaily($id)
@@ -201,6 +203,7 @@ class LoanController extends Controller
         try {
             $loan = Loan::create([
                         'people_id' => $request->people_id,
+                        'guarantor_id' => $request->guarantor_id?$request->guarantor_id:null,
                         'date' => $request->date,
                         'day' => $request->day,
                         'observation' => $request->observation,
@@ -218,52 +221,52 @@ class LoanController extends Controller
                         'register_agentType' => $agent->role,
                         'status' => 2
             ]);
-            LoanAgent::create([
+            LoanRoute::create([
                 'loan_id' => $loan->id,
 
-                'agent_id' => $request->loan_id,
-                'agentType' => $this->agent($request->loan_id)->role,
+                'route_id' => $request->route_id,
 
-                'observation' => 'Primer cobrador del prestamo asignado',
+                'observation' => 'Primer ruta',
 
-                'register_userId' => Auth::user()->id,
-                'register_agentType' => $this->agent(Auth::user()->id)->role
+                'register_userId' => $agent->id,
+                'register_agentType' => $agent->role
             ]);
 
             LoanRequirement::create([
                 'loan_id' => $loan->id,
 
-                'register_userId' => Auth::user()->id,
-                'register_agentType' => $this->agent(Auth::user()->id)->role
+                'register_userId' => $agent->id,
+                'register_agentType' => $agent->role
             ]);
 
+            // return 
 
 
-            $date = date("d-m-Y",strtotime($request->date."+ 1 days"));
-            for($i=1;$i<=$request->day; $i++)
-            {
-                $fecha = Carbon::parse($date);
-                $fecha = $fecha->format("l");
-                if($fecha == 'Sunday')
-                {
-                    $date = date("Y-m-d", strtotime($date));
-                    $date = date("d-m-Y",strtotime($date."+ 1 days"));
-                }
-                $date = date("Y-m-d", strtotime($date));
-                LoanDay::create([
-                    'loan_id' => $loan->id,
-                    'number' => $i,
-                    'debt' => $request->amountDay,
-                    'amount' => $request->amountDay,
+            // $date = date("d-m-Y",strtotime($request->date."+ 1 days"));
+            // for($i=1;$i<=$request->day; $i++)
+            // {
+            //     $fecha = Carbon::parse($date);
+            //     $fecha = $fecha->format("l");
+            //     if($fecha == 'Sunday')
+            //     {
+            //         $date = date("Y-m-d", strtotime($date));
+            //         $date = date("d-m-Y",strtotime($date."+ 1 days"));
+            //     }
+            //     $date = date("Y-m-d", strtotime($date));
+            //     LoanDay::create([
+            //         'loan_id' => $loan->id,
+            //         'number' => $i,
+            //         'debt' => $request->amountDay,
+            //         'amount' => $request->amountDay,
 
-                    'register_userId' => $agent->id,
-                    'register_agentType' => $agent->role,
+            //         'register_userId' => $agent->id,
+            //         'register_agentType' => $agent->role,
 
-                    'date' => $date
-                ]);
-                $date = date("d-m-Y",strtotime($date."+ 1 days"));
+            //         'date' => $date
+            //     ]);
+            //     $date = date("d-m-Y",strtotime($date."+ 1 days"));
 
-            }
+            // }
             // return 1;
 
             DB::commit();
@@ -278,10 +281,10 @@ class LoanController extends Controller
 
     public function show($id)
     {
-        $loan = Loan::with(['loanDay', 'loanAgent'])
-            ->where('deleted_at', null)->get();
+        // $loan = Loan::with(['loanDay', 'loanAgent'])
+        //     ->where('deleted_at', null)->get();
         
-        return $loan;
+        // return $loan;
 
         
         return 1;
@@ -290,7 +293,7 @@ class LoanController extends Controller
 
     public function printCalendar($id)
     {
-        $loan = Loan::with(['people', 'loanDay', 'loanAgent'])
+        $loan = Loan::with(['people', 'loanDay'])
             ->where('deleted_at', null)->where('id', $id)->first();
         // return $loan;
         return view('loans.print-calendar', compact('loan'));
@@ -298,7 +301,6 @@ class LoanController extends Controller
 
     public function destroy($id)
     {
-        // return $id;
         try {
             Loan::where('id', $id)->update([
                 'deleted_at' => Carbon::now(),
@@ -312,7 +314,7 @@ class LoanController extends Controller
                 'deleted_agentType' => $this->agent(Auth::user()->id)->role
             ]);
 
-            LoanAgent::where('loan_id', $id)->update([
+            LoanRoute::where('loan_id', $id)->update([
                 'deleted_at' => Carbon::now(),
                 'deleted_userId' => Auth::user()->id,
                 'deleted_agentType' => $this->agent(Auth::user()->id)->role
@@ -323,7 +325,6 @@ class LoanController extends Controller
                 'deleted_userId' => Auth::user()->id,
                 'deleted_agentType' => $this->agent(Auth::user()->id)->role
             ]);
-
 
             return redirect()->route('loans.index')->with(['message' => 'Anulado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
@@ -337,24 +338,24 @@ class LoanController extends Controller
         DB::beginTransaction();
         try {
 
-            $agent = LoanAgent::where('loan_id', $loan)
-                        ->where('deleted_at', null)
-                        ->first();
-            $agent->update([
-                'status' => 0
-            ]);
+            // $agent = LoanAgent::where('loan_id', $loan)
+            //             ->where('deleted_at', null)
+            //             ->first();
+            // $agent->update([
+            //     'status' => 0
+            // ]);
 
-            LoanAgent::create([
-                'loan_id' => $loan,
+            // LoanAgent::create([
+            //     'loan_id' => $loan,
 
-                'agent_id' => $request->loan_id,
-                'agentType' => $this->agent($request->loan_id)->role,
+            //     'agent_id' => $request->loan_id,
+            //     'agentType' => $this->agent($request->loan_id)->role,
 
-                'observation' => $request->observation,
+            //     'observation' => $request->observation,
 
-                'register_userId' => Auth::user()->id,
-                'register_agentType' => $this->agent(Auth::user()->id)->role
-            ]);
+            //     'register_userId' => Auth::user()->id,
+            //     'register_agentType' => $this->agent(Auth::user()->id)->role
+            // ]);
 
             DB::commit();
             return redirect()->route('loans.index')->with(['message' => 'Cabrador Cambiado.', 'alert-type' => 'success']);
@@ -362,7 +363,7 @@ class LoanController extends Controller
             DB::rollBack();
             return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
-    }
+    }    
 
     public function successLoan($loan)
     {
@@ -383,20 +384,75 @@ class LoanController extends Controller
         }
     }
 
+    public function moneyDeliver($loan)
+    {
+        DB::beginTransaction();
+        try {
+            $user = Auth::user();
+            $agent = $this->agent($user->id);
+            $loan = Loan::where('id', $loan)->first();
+            $loan->update(['delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
+
+            // return Carbon::now();
+
+
+
+            $date = date("d-m-Y",strtotime(Carbon::now()."+ 1 days"));
+            // return $date;
+            for($i=1;$i<=$loan->day; $i++)
+            {
+                $fecha = Carbon::parse($date);
+                $fecha = $fecha->format("l");
+                if($fecha == 'Sunday')
+                {
+                    $date = date("Y-m-d", strtotime($date));
+                    $date = date("d-m-Y",strtotime($date."+ 1 days"));
+                }
+                $date = date("Y-m-d", strtotime($date));
+                LoanDay::create([
+                    'loan_id' => $loan->id,
+                    'number' => $i,
+                    'debt' => $loan->amountDay,
+                    'amount' => $loan->amountDay,
+
+                    'register_userId' => $agent->id,
+                    'register_agentType' => $agent->role,
+
+                    'date' => $date
+                ]);
+                $date = date("d-m-Y",strtotime($date."+ 1 days"));
+
+            }
+
+
+            DB::commit();
+            return redirect()->route('loans.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+
+    }
+
+    public function printContracDaily($loan)
+    {
+        $loan = Loan::where('id', $loan)->first();
+        return view('loans.print.loanDaily', compact('loan'));
+    }
+
 
 
 
     public function dailyMoney($loan)
     {
-        // return $loan;
         $id = $loan;
-        $loan = Loan::with(['loanDay', 'loanAgent', 'loanRequirement', 'people'])
+        $loan = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
             ->where('deleted_at', null)->where('id',$id)->first();
 
         $loanday = LoanDay::where('loan_id', $id)->where('deleted_at', null)->get();
         // return $loanday;
         
-        $agent = LoanAgent::with(['agent'])->where('loan_id', $id)->where('status', 1)->where('deleted_at', null)->first();
+        $agent = LoanRoute::with(['agent'])->where('loan_id', $id)->where('status', 1)->where('deleted_at', null)->first();
 
         // return $agent;
         $register = Auth::user();

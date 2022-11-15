@@ -12,7 +12,9 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "orangehill/iseed": "^3.0",
-        "tcg/voyager": "^1.6"
+        "simplesoftwareio/simple-qrcode": "~4",
+        "tcg/voyager": "^1.6",
+        "villca/numeros-en-letras": "^1.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{{ asset('css/style/dataTable.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style/h.css') }}">
 
+    {{-- show swetalert message --}}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Favicon -->
     <?php $admin_favicon = Voyager::setting('admin.icon_image', ''); ?>
     @if($admin_favicon == '')

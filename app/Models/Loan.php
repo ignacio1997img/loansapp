@@ -11,6 +11,7 @@ class Loan extends Model
 
     protected $fillable = [
         'people_id',
+        'guarantor_id',
         'cashier_id',
         
         'typeLoan',
@@ -25,6 +26,8 @@ class Loan extends Model
         'amountPorcentage',
         'amountTotal',
         'status',
+        'delivered',
+        'dateDelivered',
         
         'inspector_userId',
         'inspector_agentType',
@@ -52,9 +55,9 @@ class Loan extends Model
         return $this->hasMany(LoanDay::class);
     }
 
-    public function loanAgent()
+    public function loanRoute()
     {
-        return $this->hasMany(LoanAgent::class);
+        return $this->hasMany(LoanRoute::class);
     }
 
     public function loanRequirement()

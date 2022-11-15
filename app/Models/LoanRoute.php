@@ -10,7 +10,7 @@ class LoanRoute extends Model
     use HasFactory;
     protected $fillable = [
         'loan_id',
-        'agent_id',
+        'route_id',
         'observation',
         'status',
         'register_userId',
@@ -19,5 +19,15 @@ class LoanRoute extends Model
         'deleted_userId',
         'deleted_agentType'
     ];
+
+    public function agent()
+    {
+        return $this->belongsTo(User::class, 'agent_id');
+    }
+
+    public function loan()
+    {
+        return $this->belongsTo(Loan::class, 'loan_id');
+    }
 
 }

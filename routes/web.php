@@ -7,6 +7,7 @@ use App\Http\Controllers\VaultController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
+use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 
 // use PeopleController
@@ -46,11 +47,14 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/ajax/list/{search?}', [LoanController::class, 'list']);
+    Route::get('loans/ajax/notPeople/{id?}', [LoanController::class, 'ajaxNotPeople'])->name('loans-ajax.notpeople');
     Route::get('loans/{loan?}/print/calendar', [LoanController::class, 'printCalendar'])->name('loans-print.calendar');
     Route::get('loans/{loan?}/requirement/daily/create', [LoanController::class, 'createDaily'])->name('loans-requirement-daily.create');
     Route::post('loans/{loan?}/requirement/daily/store', [LoanController::class, 'storeRequirement'])->name('loans-requirement-daily.store');
     Route::get('loans/daily/{loan?}/requirement/delete/{col?}', [LoanController::class, 'deleteRequirement'])->name('loans-daily-requirement.delete');
     Route::get('loans/daily/{loan?}/requirement/success', [LoanController::class, 'successRequirement'])->name('loans-daily-requirement.success');
+    Route::get('loans/{loan?}/money/deliver', [LoanController::class, 'moneyDeliver'])->name('loans-money.deliver');
+    Route::get('loans/contract/daily/{loan?}', [LoanController::class, 'printContracDaily']);
     Route::get('loans/{loan?}/success', [LoanController::class, 'successLoan'])->name('loans.success');
     Route::post('loans/{loan?}/agent/update', [LoanController::class, 'updateAgent'])->name('loans-agent.update');
 

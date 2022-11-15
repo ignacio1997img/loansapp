@@ -79,7 +79,7 @@
                                 {{-- <i class="fa-brands fa-square-whatsapp"></i> --}}
                                 <p><b>Desea enviar verificacion?</b></p>
                             </div>
-                        <input type="submit" class="btn btn-success pull-right delete-confirm"  onclick="miFunc()" value="Sí, Enviar">
+                        <input type="submit" class="btn btn-success pull-right delete-confirm"  value="Sí, Enviar">
                     
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                 </div>
@@ -96,9 +96,13 @@
                     <h4 class="modal-title"><i class="fa-solid fa-key"></i> Verificación</h4>
                 </div>
                 <div class="modal-body">
-                        <input type="hidden" id="id">
-                        <input type="hidden" id="phone">
-                        <input type="hidden" id="name">
+                        <input type="text" id="id">
+                        <input type="text" id="phone">
+                        <input type="text" id="name">
+                        {{-- @php
+                            $telefono = $_GET['phone'];
+                            
+                        @endphp --}}
                 </div>   
                 
                 <div class="modal-footer">
@@ -180,9 +184,7 @@
 
 @section('javascript')
     <script src="{{ url('js/main.js') }}"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    
+        
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         var countPage = 10, order = 'id', typeOrder = 'desc';
@@ -219,12 +221,16 @@
             }});
 
         }
+        var id=0;
+        var phone =0;
+        var name ='';
         $('#verificar-modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) //captura valor del data-empresa=""
-            var id = button.data('id')
-            var phone = button.data('phone')
-            var name = button.data('name')
+            id = button.data('id')
+            phone = button.data('phone')
+            name = button.data('name')
             var modal = $(this)
+            
             modal.find('.modal-body #id').val(id)
             modal.find('.modal-body #name').val(name)
             modal.find('.modal-body #phone').val(phone)
@@ -232,15 +238,15 @@
 
         function miFunc() {
 
-            let id = $('#id').val();
-            let phone = $('#phone').val();
-            let name = $('#name').val();
+            // var id = $('#id').val();
+            // var phone = $('#phone').val();
+            // var name = $('#name').val();
 
-            // alert(phone)
+            alert(id);
             
             let timerInterval
             Swal.fire({
-                title: 'solicitud de verificacion enviada',
+                title: 'Solicitud de verificacion enviada',
                 html: '<h2><i class="fa-regular fa-envelope"></i></h2>',
                 timer: 2000,
                 timerProgressBar: true,

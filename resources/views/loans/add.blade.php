@@ -8,6 +8,9 @@
         <h1 id="titleHead" class="page-title">
             <i class="fa-solid fa-hand-holding-dollar"></i> Crear Prestamos
         </h1>
+        <a href="{{ route('loans.index') }}" class="btn btn-warning">
+            <i class="fa-solid fa-rotate-left"></i> <span>Volver</span>
+        </a>
     @stop
 
     @section('content')
@@ -23,6 +26,15 @@
                                     <div class="form-group col-md-2">
                                         <small>Fecha</small>
                                         <input type="date" name="date" class="form-control text">
+                                    </div>   
+                                    <div class="form-group col-md-6">
+                                        <small>Asignar Ruta</small>
+                                        <select name="route_id" id="route_id" class="form-control select2" required>
+                                            <option value="" disabled selected>-- Selecciona una ruta --</option>
+                                            @foreach ($routes as $item)
+                                                <option value="{{$item->id}}">{{$item->name}}</option>  
+                                            @endforeach
+                                        </select>
                                     </div>                                  
                                 </div>
                                 <div class="row">
@@ -31,16 +43,16 @@
                                         <select name="people_id" id="people_id" class="form-control select2" required>
                                             <option value="" disabled selected>-- Selecciona un tipo --</option>
                                             @foreach ($people as $item)
-                                                <option value="{{$item->id}}">{{$item->last_name}} {{$item->first_name}}</option>                                                
+                                                <option value="{{$item->id}}">{{$item->last_name1}} {{$item->last_name2}} {{$item->first_name}}</option>                                                
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <small>Asignar Ruta</small>
-                                        <select name="route_id" id="route_id" class="form-control select2" required>
-                                            <option value="" disabled selected>-- Selecciona una ruta --</option>
-                                            @foreach ($routes as $item)
-                                                <option value="{{$item->id}}">{{$item->name}}</option>  
+                                        <small>Asignar Garante</small>
+                                        <select name="guarantor_id" id="guarantor_id" class="form-control select2">
+                                            <option value="" disabled selected>-- Seleccionar un garante --</option>
+                                            @foreach ($people as $item)
+                                                <option value="{{$item->id}}">{{$item->last_name1}} {{$item->last_name2}} {{$item->first_name}}</option>  
                                             @endforeach
                                         </select>
                                     </div>                                    
@@ -88,26 +100,6 @@
                         </div>
                     </div>
                 </div>
-
-               
-{{-- 
-                <div class="row">
-                    <div class="col-md-12 div-hidden div-5">
-                        <div class="panel panel-bordered">
-                            <div class="panel-heading"><h6 class="panel-title">Datos de complementarios</h6></div>
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label for="details_work">Funciones generales</label>
-                                        <textarea class="form-control richTextBox" name="details_work">
-                                           
-                                        </textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="row">
                     <div class="col-md-12 text-right">
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -125,6 +117,51 @@
 
     @section('javascript')
         <script>
+
+            $(function()
+            {
+                $('#people_id').on('change', onselect_guarantor);
+            });
+
+            function onselect_guarantor()
+            {      
+                var people =  $(this).val();
+
+                var guarantor=$("#guarantor_id").val();
+
+                if(people)
+                {
+                    if(people == guarantor || guarantor == null)
+                    {
+                        $.get('{{route('loans-ajax.notpeople')}}/'+people, function(data){
+                            var html_guarantor=    '<option value="" disabled selected>-- Seleccionar un garante --</option>'
+                                for(var i=0; i<data.length; ++i)
+                                    html_guarantor += '<option value="'+data[i].id+'">'+data[i].last_name1+' '+data[i].last_name2+' '+data[i].first_name+'</option>'
+
+                            $('#guarantor_id').html(html_guarantor);                           
+                            
+                        });
+                    }
+                    else
+                    {
+                        $.get('{{route('loans-ajax.notpeople')}}/'+people, function(data){
+                            var html_people=    '<option value="" disabled selected>-- Seleccionar un garante --</option>'
+                                for(var i=0; i<data.length; ++i)
+                                    html_people += '<option value="'+data[i].id+'">'+data[i].last_name1+' '+data[i].last_name2+' '+data[i].first_name+'</option>'
+
+                            $('#guarantor_id').html(html_people);                           
+                            
+                        });
+                    }
+                    
+                }
+                else
+                {
+                    alert(0)
+                }
+            }
+
+
             function subTotal()
             {
                 let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
@@ -153,6 +190,17 @@
                 }
                 return false;        
             }
+
+            $('#modalEditar').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) //captura valor del data-empresa=""
+                var id = button.data('id')
+                var desc = button.data('desc')
+                var grupo = button.data('grupo')
+                var modal = $(this)
+                modal.find('.modal-body #idempresa').val(id)
+                modal.find('.modal-body #grupo').text(grupo)
+                modal.find('.modal-body #desc').val(desc)
+            });
         </script>
     @stop
 

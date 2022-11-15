@@ -10,6 +10,7 @@ class MessageController extends Controller
     public function verification($id)
     {
         $ok = People::where('id', $id)->first();
+        // return $id;
         if($ok->token)
         {
             return view('message.verification-success');

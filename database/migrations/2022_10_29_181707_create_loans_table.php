@@ -16,6 +16,8 @@ class CreateLoansTable extends Migration
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('people_id')->nullable()->constrained('people');
+            $table->foreignId('guarantor_id')->nullable()->constrained('people');
+            
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
             
             $table->string('typeLoan')->nullable();
@@ -34,6 +36,9 @@ class CreateLoansTable extends Migration
 
             $table->text('observation')->nullable();
             $table->smallInteger('status')->nullable();
+            $table->string('delivered')->default('No');
+            $table->date('dateDelivered')->nullable();
+
 
             $table->foreignId('inspector_userId')->nullable()->constrained('users');
             $table->string('inspector_agentType')->nullable();

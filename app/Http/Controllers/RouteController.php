@@ -75,22 +75,28 @@ class RouteController extends Controller
     }
     public function storeCollector(Request $request, $route)
     {
-        $id= $route;
+        // $id= $route;
         // return $id;
         DB::beginTransaction();
         try {
+
+            $ok = RouteCollector::where('route_id', $route)->where('user_id', $request->user_id)->where('deleted_at', null)->first();
+            if($ok)
+            {
+                return redirect()->route('routes.collector.index', ['route'=>$route])->with(['message' => 'El cobrador ya existe.', 'alert-type' => 'error']);
+            }
             RouteCollector::create([
-                'route_id'=>$id,
+                'route_id'=>$route,
                 'user_id'=>$request->user_id,
                 'observation'=>$request->observation,
                 'register_userId'=>Auth::user()->id
             ]);
 
             DB::commit();
-            return redirect()->route('routes.collector.index', ['route'=>$id])->with(['message' => 'Cobrador asignado exitosamente.', 'alert-type' => 'success']);
+            return redirect()->route('routes.collector.index', ['route'=>$route])->with(['message' => 'Cobrador asignado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('routes.collector.index', ['route'=>$id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+            return redirect()->route('routes.collector.index', ['route'=>$route])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
     }
 

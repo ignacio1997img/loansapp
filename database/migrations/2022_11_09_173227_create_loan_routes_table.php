@@ -17,8 +17,7 @@ class CreateLoanRoutesTable extends Migration
             $table->id();            
             $table->foreignId('loan_id')->nullable()->constrained('loans');
             
-            $table->foreignId('agent_id')->nullable()->constrained('users');
-            $table->string('agentType')->nullable();
+            $table->foreignId('route_id')->nullable()->constrained('routes');
 
             $table->text('observation')->nullable();
 

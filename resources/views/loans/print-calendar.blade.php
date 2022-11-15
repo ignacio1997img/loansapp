@@ -91,18 +91,18 @@
                     <table>
                         <tr>
                             <td colspan="3">
-                                <b style="font-size: 15px">Nombre:</b> {{$loan->people->first_name}} {{$loan->people->last_name}}
-                            </td>
-                            <td style="width: 100px">
-
-                            </td>
-                            <td colspan="3">
-                                <b style="font-size: 15px">Total a Pagar:</b> Bs. {{$loan->amountTotal}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
                                 <b style="font-size: 15px">Fecha Prestamo:</b> {{ date("d-m-Y", strtotime($loan->date)) }}
+                            </td>                            
+                            <td style="width: 100px">
+                            </td>
+                            <td colspan="3">
+                                <b style="font-size: 15px">Total a Pagar:</b> Bs. {{$loan->amountTotal}} 
+                            </td>
+                            
+                        </tr>
+                        {{-- <tr>
+                            <td colspan="3">
+                                <b style="font-size: 15px">Total a Pagar:</b> Bs. {{$loan->amountTotal}}                                
                             </td>
                             <td style="width: 100px">
 
@@ -110,7 +110,7 @@
                             <td colspan="3">
                                 <b style="font-size: 15px">Pago Diario:</b> Bs. {{$loan->amountTotal/$loan->day}}
                             </td>
-                        </tr>
+                        </tr> --}}
                     </table>
                 </td>
 

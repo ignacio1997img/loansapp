@@ -8,6 +8,9 @@
         <h1 id="titleHead" class="page-title">
             <i class="fa-solid fa-file"></i> Requisitos
         </h1>
+        <a href="{{ route('loans.index') }}" class="btn btn-warning">
+            <i class="fa-solid fa-rotate-left"></i> <span>Volver</span>
+        </a>
     @stop
 
     @section('content')
@@ -46,8 +49,6 @@
                                     </div>
                                 </div>
                                 </form>  
-                                <br>
-                                <br>
                                 <br>
                                 <br>
                                 <br>
