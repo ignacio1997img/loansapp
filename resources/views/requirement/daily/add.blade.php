@@ -27,20 +27,20 @@
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <small>Fot. CI (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png" name="ci" id="ci" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="ci" id="ci" class="form-control text">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <small>Fot. Luz o Agua (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png" name="luz" id="luz" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="luz" id="luz" class="form-control text">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <small>Foto Croquis (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png" name="croquis" id="croquis" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="croquis" id="croquis" class="form-control text">
                                     </div>
                                     
                                     <div class="form-group col-md-3">
                                         <small>Foto Empresa (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png" name="business" id="business" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="business" id="business" class="form-control text">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -83,7 +83,7 @@
                                                                 <label class="label label-danger">SN</label>
                                                             @else                                                                
                                                                 <a href="{{asset('storage/'.$requirement->ci)}}" title="Ver" target="_blank">
-                                                                    <img src="{{asset('storage/'.$requirement->ci)}}" href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
+                                                                    <img @if(strpos($requirement->ci, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->ci)}}" @endif href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
                                                                 </a> 
                                                             @endif
                                                         </td>
@@ -107,7 +107,7 @@
                                                                 <label class="label label-danger">SN</label>
                                                             @else
                                                                 <a href="{{asset('storage/'.$requirement->luz)}}" title="Ver" target="_blank">
-                                                                    <img src="{{asset('storage/'.$requirement->luz)}}" href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
+                                                                    <img @if(strpos($requirement->luz, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->luz)}}" @endif href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
                                                                 </a> 
                                                             @endif
                                                         </td>
@@ -131,7 +131,7 @@
                                                                 <label class="label label-danger">SN</label>
                                                             @else
                                                                 <a href="{{asset('storage/'.$requirement->croquis)}}" title="Ver" target="_blank">
-                                                                    <img src="{{asset('storage/'.$requirement->croquis)}}" href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
+                                                                    <img @if(strpos($requirement->croquis, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->croquis)}}" @endif  href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
                                                                 </a>                                                                
                                                             @endif                                                            
                                                         </td>
@@ -155,7 +155,7 @@
                                                                 <label class="label label-danger">SN</label>
                                                             @else
                                                                 <a href="{{asset('storage/'.$requirement->business)}}" title="Ver" target="_blank">
-                                                                    <img src="{{asset('storage/'.$requirement->business)}}" href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
+                                                                    <img @if(strpos($requirement->business, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->business)}}" @endif href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
                                                                 </a> 
                                                             @endif
                                                         </td>
@@ -290,7 +290,8 @@
                     switch (ext) {
                         case 'jpg':
                         case 'jpeg':
-                        case 'png': break;
+                        case 'png':
+                        case 'pdf': break;
                         default:
                             swal({
                                 title: "Error",

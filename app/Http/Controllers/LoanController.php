@@ -109,29 +109,59 @@ class LoanController extends Controller
             $ok = LoanRequirement::where('loan_id', $loan)->first();
             $file = $request->file('ci');
             if($file)
-            {                        
-                $ci = $imageObj->image($file, $loan, "Loan/requirement/daily/ci");
+            {                 
+                if($file->getClientOriginalExtension()=='pdf')
+                {
+                    $ci = $imageObj->file($file, $loan, "Loan/requirement/daily/ci");
+                }
+                else
+                {
+                    $ci = $imageObj->image($file, $loan, "Loan/requirement/daily/ci");
+                }                
                 $ok->update(['ci' => $ci]);
             }
 
             $file = $request->file('luz');
             if($file)
-            {                        
-                $luz = $imageObj->image($file, $loan, "Loan/requirement/daily/luz");
+            {               
+                if($file->getClientOriginalExtension()=='pdf')
+                {
+                    $luz = $imageObj->file($file, $loan, "Loan/requirement/daily/luz");                    
+                }
+                else
+                {
+                    $luz = $imageObj->image($file, $loan, "Loan/requirement/daily/luz");
+                }
                 $ok->update(['luz' => $luz]);
             }
 
             $file = $request->file('croquis');
             if($file)
-            {                        
-                $croquis = $imageObj->image($file, $loan, "Loan/requirement/daily/croquis");
+            {         
+                if($file->getClientOriginalExtension()=='pdf')
+                {
+                    $croquis = $imageObj->file($file, $loan, "Loan/requirement/daily/croquis");
+                }
+                else
+                {
+                    $croquis = $imageObj->image($file, $loan, "Loan/requirement/daily/croquis");
+                }
+
                 $ok->update(['croquis' => $croquis]);
             }
 
             $file = $request->file('business');
             if($file)
             {                        
-                $business = $imageObj->image($file, $loan, "Loan/requirement/daily/business");
+                if($file->getClientOriginalExtension()=='pdf')
+                {
+                    $business = $imageObj->file($file, $loan, "Loan/requirement/daily/business");
+                }
+                else
+                {
+                    $business = $imageObj->image($file, $loan, "Loan/requirement/daily/business");
+                }
+
                 $ok->update(['business' => $business]);
             }
             DB::commit();
