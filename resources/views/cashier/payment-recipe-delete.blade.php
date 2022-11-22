@@ -57,7 +57,7 @@
             <tr>
                 <td><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="80px"></td>
                 <td style="text-align: right">
-                    <h3 style="margin-bottom: 0px; margin-top: 5px">CAJAS - GOBERNACIÓN<br> <small>ANULACIÓN DE RECIBO DE PAGO N&deg; </small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 5px">CAJAS - CAPRESI<br> <small>ANULACIÓN DE RECIBO DE PAGO N&deg; </small> </h3>
                 </td>
             </tr>
         </table>

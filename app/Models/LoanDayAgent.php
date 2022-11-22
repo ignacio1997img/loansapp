@@ -10,6 +10,7 @@ class LoanDayAgent extends Model
     use HasFactory;
     protected $fillable = [
         'loanDay_id',
+        'transaction_id',
         'amount',
         'agent_id',
         'agentType',
@@ -27,5 +28,10 @@ class LoanDayAgent extends Model
     public function agent()
     {
         return $this->belongsTo(User::class, 'agent_id');
+    }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
     }
 }

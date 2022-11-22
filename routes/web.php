@@ -60,6 +60,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('loans/{loan?}/daily/money', [LoanController::class, 'dailyMoney'])->name('loans-daily.money');
     Route::post('loans/daily/money/store', [LoanController::class, 'dailyMoneyStore'])->name('loans-daily-money.store');
+    Route::get('loans/daily/money/print/{loan_id}/{transaction_id?}', [LoanController::class, 'printDailyMoney']);//impresionde de pago diario de cada cuota pagada mediante los cajeros de las oficinas
 
     
    

@@ -38,6 +38,7 @@ class CreateLoansTable extends Migration
             $table->smallInteger('status')->nullable();
             $table->string('delivered')->default('No');
             $table->date('dateDelivered')->nullable();
+            $table->string('transaction_id')->nullable();
 
 
             $table->foreignId('inspector_userId')->nullable()->constrained('users');

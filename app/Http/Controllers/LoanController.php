@@ -17,6 +17,7 @@ use Psy\TabCompletion\Matcher\FunctionsMatcher;
 use TCG\Voyager\Models\Role;
 use App\Models\Route;
 use Illuminate\Support\Facades\Http;
+use App\Models\Transaction;
 
 use App\Http\Controllers\FileController;
 use App\Models\LoanDayAgent;
@@ -479,6 +480,7 @@ class LoanController extends Controller
 
     public function printContracDaily($loan)
     {
+        // return 1;
         $loan = Loan::where('id', $loan)->first();
         return view('loans.print.loanDaily', compact('loan'));
     }
@@ -511,7 +513,8 @@ class LoanController extends Controller
 // funcion para guardar el dinero diario en ncada prestamos
     public function dailyMoneyStore(Request $request)
     {
-        // return $request;
+        $code = Transaction::all()->count();
+
         $loan =Loan::where('id', $request->loan_id)->first();
         if($request->amount > $loan->debt)
         {
@@ -519,7 +522,8 @@ class LoanController extends Controller
         }
         DB::beginTransaction();
         try {
-
+            $transaction = Transaction::create(['transaction'=>$code+1]);
+            $loan->update(['transaction_id'=>$transaction->transaction]);
             $amount = $request->amount;
             
             $ok = LoanDay::where('loan_id', $request->loan_id)->where('date', $request->date)->where('debt', '>', 0)->first();
@@ -541,6 +545,7 @@ class LoanController extends Controller
 
                 LoanDayAgent::create([
                     'loanDay_id' => $ok->id,
+                    'transaction_id'=>$transaction->id,
                     'amount' => $debt,
                     'agent_id' => $request->agent_id,
                     'agentType' => $this->agent($request->agent_id)->role
@@ -571,6 +576,7 @@ class LoanController extends Controller
 
                     LoanDayAgent::create([
                         'loanDay_id' => $item->id,
+                        'transaction_id'=>$transaction->id,
                         'amount' => $debt,
                         'agent_id' => $request->agent_id,
                         'agentType' => $this->agent($request->agent_id)->role
@@ -597,11 +603,31 @@ class LoanController extends Controller
             // Loan::where('id', $request->loan_id)->decrement('debt', $request->amount);
             // LoanDay::where('id', $request->day_id)->decrement('debt', $request->amount);
             DB::commit();
-            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success']);
+            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id, 'transaction_id'=>$transaction->id]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }        
+    }
+
+    public function printDailyMoney($loan_id, $transaction_id)
+    {
+        $transaction_id =$transaction_id;
+        $loan = Loan::where('id', $loan_id)->first();
+
+        $loanDayAgent = DB::table('loan_days as ld')
+            ->join('loan_day_agents as la', 'la.loanDay_id', 'ld.id')
+            ->join('users as u', 'u.id', 'la.agent_id')
+            ->join('transactions as t', 't.id', 'la.transaction_id')
+            ->where('ld.loan_id', $loan_id)
+            ->where('t.id', $transaction_id)
+            ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent')
+            ->get();
+
+        // return $loanDayAgent;
+
+        
+        return view('loansPrint.print-dailyMoneyCash', compact('loan', 'transaction_id', 'loanDayAgent'));
     }
 
 

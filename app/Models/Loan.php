@@ -28,6 +28,7 @@ class Loan extends Model
         'status',
         'delivered',
         'dateDelivered',
+        'transaction_id',
         
         'inspector_userId',
         'inspector_agentType',

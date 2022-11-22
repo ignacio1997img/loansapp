@@ -16,6 +16,7 @@ class CreateLoanDayAgentsTable extends Migration
         Schema::create('loan_day_agents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('loanDay_id')->nullable()->constrained('loan_days');
+            $table->foreignId('transaction_id')->nullable()->constrained('transactions');
             
             $table->decimal('amount',11, 2)->nullable();
             $table->foreignId('agent_id')->nullable()->constrained('users');
