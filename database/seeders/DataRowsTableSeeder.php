@@ -1568,7 +1568,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 0,
-                'details' => '{"validation":{"rule":"required"}}',
+                'details' => 'null',
                 'order' => 3,
             ),
             97 => 
