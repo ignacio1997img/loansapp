@@ -172,7 +172,7 @@
                     COD TRANS:
                 </td>
                 <td style="text-align: center; width: 60%">
-                    {{$transaction_id}}
+                    {{$transaction->transaction}}
                     {{-- {{str_pad($transaction_id, 15, '0', STR_PAD_LEFT);}} --}}
                 </td>
             </tr>

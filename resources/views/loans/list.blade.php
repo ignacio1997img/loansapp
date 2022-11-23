@@ -63,6 +63,10 @@
                                     <li><a onclick="agentItem('{{ route('loans-agent.update', ['loan' => $item->id]) }}')" class="btn-rotation" data-toggle="modal" data-target="#agent-modal" title="Cambiar Cobrador" >Cambiar Cobradores</a></li>
                                 @endif --}}
                                 @if ($item->status == 1 && $item->delivered == 'Si')
+                                    <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" >Transacciones</a></li> 
+                                @endif
+                                @if ($item->status == 1 )
+                                {{-- @if ($item->status == 1 && $item->delivered == 'Si') --}}
                                     <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" >Imprimir Calendario</a></li> 
                                 
                                     <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" >Imprimir Contrato</a></li>

@@ -200,7 +200,8 @@
                                 
                                 <p><b>Desea entregar el dinero al beneficiario?</b></p>
                             </div>
-                        <input type="submit" class="btn btn-success pull-right delete-confirm" onclick="printContract(1)" value="Sí, entregar">
+                        {{-- <input type="submit" class="btn btn-success pull-right delete-confirm" onclick="printContract(1)" value="Sí, entregar"> --}}
+                        <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, entregar">
                     </form>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                 </div>

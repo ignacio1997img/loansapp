@@ -8,6 +8,7 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\TransactionController;
 use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +50,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('loans', LoanController::class);
     Route::get('loans/ajax/list/{search?}', [LoanController::class, 'list']);
     Route::get('loans/ajax/notPeople/{id?}', [LoanController::class, 'ajaxNotPeople'])->name('loans-ajax.notpeople');
+    Route::get('loans/{loan?}/list/transaction', [TransactionController::class, 'listTransaction'])->name('loans-list.transaction');
     Route::get('loans/{loan?}/print/calendar', [LoanController::class, 'printCalendar'])->name('loans-print.calendar');
     Route::get('loans/{loan?}/requirement/daily/create', [LoanController::class, 'createDaily'])->name('loans-requirement-daily.create');
     Route::post('loans/{loan?}/requirement/daily/store', [LoanController::class, 'storeRequirement'])->name('loans-requirement-daily.store');
@@ -122,6 +124,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 });
 Route::get('loans/loanDay/late', [AjaxController::class, 'late'])->name('loans-loanDay.late');
+Route::get('loans/loanDay/notificationLate', [AjaxController::class, 'notificationLate'])->name('loans-loanDay.notificationLate');
 
 Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
 

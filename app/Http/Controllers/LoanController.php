@@ -29,26 +29,8 @@ use function PHPUnit\Framework\returnSelf;
 class LoanController extends Controller
 {
     public function index()
-    {
-
-        // $date = date("Y-m-d");
-        // // return $date;
-        
-        $data = DB::table('loans as l')
-            ->join('loan_days as ld', 'ld.loan_id', 'l.id')
-            ->join('people as p', 'p.id', 'l.people_id')
-            ->where('l.deleted_at', null)
-            ->where('ld.late', 1)
-            ->where('ld.debt', '>', 0)
-            ->select('l.id as loan', 'ld.id as loanDay', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone')
-            ->get();
-        foreach($data as $item)
-        {
-            
-        }
-        
-        return $data;
-
+    {    
+        // return 1;
         $collector = User::with(['role' => function($q)
             {
                 $q->where('name','cobrador');
@@ -517,7 +499,9 @@ class LoanController extends Controller
 // funcion para guardar el dinero diario en ncada prestamos
     public function dailyMoneyStore(Request $request)
     {
-        $code = Transaction::all()->count();
+        $code = Transaction::all()->max('id');
+        $code = $code?$code:0;
+        // return $code;
 
         $loan =Loan::where('id', $request->loan_id)->first();
         if($request->amount > $loan->debt)
@@ -658,9 +642,11 @@ class LoanController extends Controller
             ->where('t.id', $transaction_id)
             ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent', 'ld.late')
             ->get();
+        
+        $transaction = Transaction::find($transaction_id);
 
         
-        return view('loansPrint.print-dailyMoneyCash', compact('loan', 'transaction_id', 'loanDayAgent'));
+        return view('loansPrint.print-dailyMoneyCash', compact('loan', 'transaction', 'loanDayAgent'));
     }
 
 

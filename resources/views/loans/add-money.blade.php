@@ -329,7 +329,8 @@
                                                                         <br>
                                                                         @if($day_f == $aux)
                                                                             @if ($loan->loanDay[$number]->debt==0)
-                                                                                <label class="label label-success">Pagado</label>
+                                                                                {{-- <label class="label label-success">Pagado</label> --}}
+                                                                                <img src="{{ asset('images/icon/pagado.png') }}" width="80px">
                                                                             @else
                                                                                 <label class="label label-primary">{{$loan->loanDay[$number]->amount - $loan->loanDay[$number]->debt}}</label>-<label class="label label-danger">{{$loan->loanDay[$number]->amount}}</label>                                                                                          
                                                                             @endif
@@ -410,7 +411,9 @@
                                                                         <br>
                                                                         {{-- @if($day_l == $aux) --}}
                                                                             @if ($loan->loanDay[$number]->debt==0)
-                                                                                <label class="label label-success">Pagado</label>
+                                                                                {{-- <label class="label label-success">Pagado</label> --}}
+                                                                                <img src="{{ asset('images/icon/pagado.png') }}" width="80px">
+
                                                                             @else
                                                                                 <label class="label label-primary">{{$loan->loanDay[$number]->amount - $loan->loanDay[$number]->debt}}</label>-<label class="label label-danger">{{$loan->loanDay[$number]->amount}}</label>                                                                                          
                                                                             @endif
@@ -432,7 +435,8 @@
                                                                                 <br>
                                                                                 @if($aux <= $day_l)
                                                                                     @if ($loan->loanDay[$number]->debt==0)
-                                                                                        <label class="label label-success">Pagado</label>
+                                                                                        {{-- <label class="label label-success">Pagado</label> --}}
+                                                                                        <img src="{{ asset('images/icon/pagado.png') }}" width="80px">
                                                                                     @else
                                                                                         <label class="label label-primary">{{$loan->loanDay[$number]->amount - $loan->loanDay[$number]->debt}}</label>-<label class="label label-danger">{{$loan->loanDay[$number]->amount}}</label>                                                                                          
                                                                                     @endif

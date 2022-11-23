@@ -109,10 +109,6 @@
 </div>
 <script>
     function miFunc() {
-
-        let phone = $('#phone').val();
-        let name = $('#name').val();
-
         let timerInterval
         Swal.fire({
             title: 'Notificacion enviada',
@@ -134,23 +130,12 @@
                 console.log('I was closed by the timer')
             }
         })
+        
 
-        url = "http://api.trabajostop.com/?number=59163286317&message=Hola **.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊";
 
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.send();
-        // xhr.responseType = "json";
-
-        // Swal.fire({
-        //     position: 'top-end',
-        //     icon: 'success',
-        //     title: 'Your work has been saved',
-        //     showConfirmButton: false,
-        //     timer: 10000
-        // })
-
-        // window.open("http://api.trabajostop.com:3001/?number=59167285914&message=hola")
+        $.get('{{route('loans-loanDay.notificationLate')}}', function (data) {
+                    // alert(2);
+        });
         $("#notificar-modal").modal('hide');
     }
 </script>
