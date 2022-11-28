@@ -23,6 +23,9 @@ class CreateLoanDaysTable extends Migration
             $table->decimal('debt',11, 2)->nullable();
             $table->decimal('amount',11, 2)->nullable();
 
+            $table->smallInteger('late')->default(0);
+            $table->decimal('lateN',8,2)->nullable();
+
             $table->timestamps();
             $table->foreignId('register_userId')->nullable()->constrained('users');
             $table->string('register_agentType')->nullable();

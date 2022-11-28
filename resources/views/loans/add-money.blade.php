@@ -210,8 +210,9 @@
                                                                         $ok=true;
                                                                         $count++;
                                                                     @endphp                                     
-                                                                    <td @if($day_f == $aux) style="height: 50px; text-align: center; background-color: #F8FF07" @else style="height: 50px; text-align: center" @endif> <small style="font-size: 25px">{{$aux}} </small>
-                                                                        @if( $day_f == $aux && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i>@endif
+                                                                    <td @if($day_f == $aux) style="height: 50px; text-align: center; background-color: #F8FF07" @else style="height: 50px; text-align: center" @endif>
+                                                                        <small @if($day_f == $aux && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{$aux}} </small>
+                                                                        @if( $day_f == $aux && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i>@endif
 
                                                                         <br>
                                                                         @if($day_f == $aux)
@@ -235,7 +236,8 @@
                                                                                 $count++;
                                                                             @endphp
                                                                             <td @if($day_f == $aux || $count == 24) style="height: 50px; text-align: center; background-color: #F8FF07" @else style="height: 50px; text-align: center" @endif>
-                                                                                <small style="font-size: 25px">{{ $aux <= $day_l1? $aux:''}}</small> @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i> @endif
+                                                                                <small @if($count <= 24 && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{ $aux <= $day_l1? $aux:''}}</small>
+                                                                                @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i> @endif
 
                                                                                 <br>
                                                                                 @if($count <= 24)
@@ -251,7 +253,7 @@
                                                                             </td>    
                                                                         @else
                                                                             <td style="height: 50px; text-align: center; background-color: #CCCFD2"><small style="font-size: 25px">{{ $aux <= $day_l1? $aux:''}}</small>
-                                                                                @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i> @endif
+                                                                                @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i> @endif
                                                                             </td>
                                                                         @endif                                                                                       
                                                                     @else
@@ -320,8 +322,9 @@
                                                                         $ok=true;
                                                                     @endphp                 
                                                                                        {{-- Primer numero del calendario --}}
-                                                                    <td @if($day_f == $aux) style="height: 80px; text-align: center; background-color: #F8FF07" @else style="height: 80px; text-align: center" @endif> <small style="font-size: 25px">{{$aux}}</small>
-                                                                        @if( $day_f == $aux && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i>@endif
+                                                                    <td @if($day_f == $aux) style="height: 80px; text-align: center; background-color: #F8FF07" @else style="height: 80px; text-align: center" @endif>
+                                                                        <small @if($day_f == $aux && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{$aux}}</small>
+                                                                        @if( $day_f == $aux && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i>@endif
                                                                         
                                                                         <br>
                                                                         @if($day_f == $aux)
@@ -341,13 +344,15 @@
                                                                             $aux++;
                                                                         @endphp  
                                                                         @if ($i != 7)
-                                                                            <td @if($day_f == $aux) style="height: 80px; text-align: center; background-color: #F8FF07" @else style="height: 80px; text-align: center" @endif>
-                                                                                <small style="font-size: 25px">{{ $aux <= $day_l1? $aux:''}}</small> @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i> @endif
+                                                                            <td @if($day_f == $aux) style="height: 80px; text-align: center; background-color: #F8FF07;" @else style="height: 80px; text-align: center" @endif>
+                                                                                <small @if($aux >= $day_f && $aux <= $day_l1 && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{ $aux <= $day_l1? $aux:''}}</small>
+                                                                                @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i> @endif
                                                                                 {{-- para mostrar su deuda de cada numero --}}
                                                                                 <br>
                                                                                 @if($aux >= $day_f && $aux <= $day_l1)
                                                                                     @if ($loan->loanDay[$number]->debt==0)
-                                                                                        <label class="label label-success">Pagado</label>
+                                                                                        {{-- <label class="label label-success">Pagado</label> --}}
+                                                                                        <img src="{{ asset('images/icon/pagado.png') }}" width="80px">
                                                                                     @else
                                                                                         <label class="label label-primary">{{$loan->loanDay[$number]->amount - $loan->loanDay[$number]->debt}}</label>-<label class="label label-danger">{{$loan->loanDay[$number]->amount}}</label>                                                                                          
                                                                                     @endif
@@ -358,7 +363,7 @@
                                                                             </td>    
                                                                         @else
                                                                             <td style="height: 80px; text-align: center; background-color: #CCCFD2"><small style="font-size: 25px">{{ $aux <= $day_l1? $aux:''}}</small>
-                                                                                @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i> @endif
+                                                                                @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i> @endif
                                                                             </td>
                                                                         @endif                                                                                       
                                                                     @else
@@ -398,8 +403,9 @@
                                                                         $aux++;
                                                                         $ok=true;
                                                                     @endphp                                     
-                                                                    <td @if($day_l == $aux) style="height: 80px; text-align: center; background-color: #F8FF07" @else style="height: 80px; text-align: center" @endif> <small style="font-size: 25px">{{$aux}}</small>
-                                                                        @if( $day_l == $aux && $date === $year2.'-'.$month_f2.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i>@endif
+                                                                    <td @if($day_l == $aux) style="height: 80px; text-align: center; background-color: #F8FF07" @else style="height: 80px; text-align: center" @endif>
+                                                                        <small @if($loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{$aux}}</small>
+                                                                        @if( $day_l == $aux && $date === $year2.'-'.$month_f2.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i>@endif
 
                                                                         <br>
                                                                         {{-- @if($day_l == $aux) --}}
@@ -420,8 +426,8 @@
                                                                         @endphp  
                                                                         @if ($i != 7)
                                                                             <td @if($day_l == $aux) style="height: 80px; text-align: center; background-color: #F8FF07" @else style="height: 80px; text-align: center" @endif>
-                                                                                <small style="font-size: 25px">{{ $aux <= $day_l2? $aux:''}}</small>
-                                                                                @if( $aux <= $day_l2 && $date === $year2.'-'.$month_f2.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i>@endif
+                                                                                <small @if($aux <= $day_l && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{ $aux <= $day_l2? $aux:''}}</small>
+                                                                                @if( $aux <= $day_l2 && $date === $year2.'-'.$month_f2.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i>@endif
 
                                                                                 <br>
                                                                                 @if($aux <= $day_l)
@@ -437,7 +443,7 @@
                                                                             </td>    
                                                                         @else
                                                                             <td style="height: 80px; text-align: center; background-color: #CCCFD2"><small style="font-size: 25px">{{ $aux <= $day_l2? $aux:''}}</small>
-                                                                                @if( $aux <= $day_l2 && $date === $year2.'-'.$month_f2.($aux <= 9 ? '-0'.$aux : $aux)) <i class="fa-solid fa-calendar-days"></i>@endif
+                                                                                @if( $aux <= $day_l2 && $date === $year2.'-'.$month_f2.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i>@endif
                                                                             </td>
                                                                         @endif                                                                                       
                                                                     @else
@@ -465,7 +471,7 @@
                                     </div> --}}
                                     <canvas id="myChart"></canvas>
                                 </div>
-                                <hr>
+                                {{-- <hr> --}}
                                 <div class="row">
                                     <table width="100%" cellpadding="20">
                                         <tr>
@@ -477,10 +483,10 @@
                                             <td class="text-right"><h3>{{ number_format($loan->debt, 2, ',', '.') }} <small>Bs.</small></h3></td>
                                         </tr>
                                         
-                                        <tr>                                            
+                                        {{-- <tr>                                            
                                             <td><small>TOTAL PAGADO</small></td>
                                             <td class="text-right"><h3>{{ number_format($loan->amountTotal, 2, ',', '.') }} <small>Bs.</small></h3></td>
-                                        </tr>
+                                        </tr> --}}
                                     </table>
                                 </div>
                                 <h3 id="h4" style="text-align: center"><i class="voyager-dollar"></i> Detalle del Prestamo</h3>

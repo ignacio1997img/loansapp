@@ -112,10 +112,13 @@
         </table>
         <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 12px">
             <tr style="text-align: center">
-                <th class="border" style="width: 50%">
-                    FECHA
+                <th class="border" style="width: 5%">
+                    ATRASO
                 </th>
-                <th class="border" style="width: 50%">
+                <th class="border" style="width: 70%">
+                    DIAS PAGADO
+                </th>                
+                <th class="border" style="width: 25%">
                     TOTAL
                 </th>
             </tr>
@@ -125,8 +128,11 @@
             @foreach ($loanDayAgent as $item)
                 <tr>
                     <td style="text-align: left">
-                        {{Carbon\Carbon::parse($item->date)->format('d/m/Y')}}
+                        {{$item->late?'SI':'NO'}}
                     </td>
+                    <td style="text-align: left">
+                        {{Carbon\Carbon::parse($item->date)->format('d/m/Y')}}
+                    </td>                    
                     <td style="text-align: right">
                         {{$item->amount}}
                     </td>
@@ -136,11 +142,11 @@
                 </tr>
             @endforeach
             <tr>
-                <th class="border" style="text-align: center; width: 50%">
+                <th colspan="2" class="border" style="text-align: center; width: 75%">
                     TOTAL (BS)
                 </th>
-                <th class="border" style="text-align: right; width: 50%">
-                    {{$total}}
+                <th class="border" style="text-align: right; width: 25%">
+                    {{ number_format($total, 2) }}
                 </th>
             </tr>
         </table>
@@ -154,19 +160,20 @@
         </table>
         <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 12px">
             <tr>
-                <td style="text-align: right">
+                <td style="text-align: right; width: 40%">
                     {{strtoupper($loanDayAgent[0]->agentType)}}:
                 </td>
-                <td style="text-align: center">
+                <td style="text-align: center; width: 60%">
                     {{strtoupper($loanDayAgent[0]->name)}}
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right">
+                <td style="text-align: right; width: 40%">
                     COD TRANS:
                 </td>
-                <td style="text-align: center">
-                    {{str_pad($transaction_id, 15, '0', STR_PAD_LEFT);}}
+                <td style="text-align: center; width: 60%">
+                    {{$transaction_id}}
+                    {{-- {{str_pad($transaction_id, 15, '0', STR_PAD_LEFT);}} --}}
                 </td>
             </tr>
         </table>
@@ -201,7 +208,7 @@
         <table width="100%" style="font-size: 8px">
             <tr style="text-align: center">
                 <td>
-                    <small><b>SISTEMA LOANSAPP V1</b></small>
+                    <small><b>LOANSAPP V1</b></small>
                 </td>
             </tr>
         </table>

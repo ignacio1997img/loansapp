@@ -30,20 +30,24 @@ class LoanController extends Controller
 {
     public function index()
     {
-//         $search='ignaci';
 
-//         $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
-//             ->where(function($query) use ($search){
-//                 if($search){
-//                     $query->OrwhereHas('people', function($query) use($search){
-//                         $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
-//                     });
-//                 }
-//             })
-//             ->where('deleted_at', NULL)->orderBy('id', 'DESC')->get();
-
-// return $data;
-
+        // $date = date("Y-m-d");
+        // // return $date;
+        
+        $data = DB::table('loans as l')
+            ->join('loan_days as ld', 'ld.loan_id', 'l.id')
+            ->join('people as p', 'p.id', 'l.people_id')
+            ->where('l.deleted_at', null)
+            ->where('ld.late', 1)
+            ->where('ld.debt', '>', 0)
+            ->select('l.id as loan', 'ld.id as loanDay', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone')
+            ->get();
+        foreach($data as $item)
+        {
+            
+        }
+        
+        return $data;
 
         $collector = User::with(['role' => function($q)
             {
@@ -406,7 +410,7 @@ class LoanController extends Controller
         DB::beginTransaction();
         try {
             $ok = Loan::where('id', $loan)->first();
-            Http::get('http://api.trabajostop.com/?number=591'.$ok->people->cell_phone.'&message=hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
+            Http::get('http://api.trabajostop.com/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
             // return $loan;
             Loan::where('id', $loan)->update([
                 'status' => 1,
@@ -588,24 +592,55 @@ class LoanController extends Controller
                     }
 
                 }
+            
+            $loanDayAgent = DB::table('loan_days as ld')
+                ->join('loan_day_agents as la', 'la.loanDay_id', 'ld.id')
+                ->join('users as u', 'u.id', 'la.agent_id')
+                ->join('transactions as t', 't.id', 'la.transaction_id')
+                ->where('ld.loan_id', $loan->id)
+                ->where('t.id', $transaction->id)
+                ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent', 'ld.late')
+                ->get();
+            
+            $cadena = '';
+            
+            $cant = count($loanDayAgent);
+            $i=1;
+            foreach($loanDayAgent as $item)
+            {
+                $cadena=$cadena.($item->late==1?'             SI':'             NO').'              '.Carbon::parse($item->date)->format('d/m/Y').'                             '.$item->amount.($i!=$cant?'%0A':'');
+                $i++;
+            }
+            Http::get('http://api.trabajostop.com/?number=591'.$loan->people->cell_phone.'&message=
+                            *COMPROBANTE DE PAGO*
+                                        *CAPRESI*
+
+            FECHA: '.date('d/m/Y').'
+            BENEFICIARIO: '.$loan->people->last_name1.' '.$loan->people->last_name2.' '.$loan->people->first_name.'
+            CI: '.$loan->people->ci.'
+
+                                    *DETALLE DEL PAGO*
+            *ATRASO*    |          *DIAS PAGADO*          |   *TOTAL*
+            ______________________________________________%0A'.
+            $cadena.'
+            ______________________________________________
+            TOTAL (BS)                                            |     '.number_format($request->amount,2).'
+            
+                                    *ATENDIDO POR*
+            '.strtoupper($loanDayAgent[0]->agentType).':        '.strtoupper($loanDayAgent[0]->name).'
+            COD TRANS:      '.$transaction->transaction.'
+
+
+            
+            Gracias🤝😊');
 
             }
             // return 1;
-
-
-
-            // LoanDayAgent::create([
-            //     'loanDay_id' => $request->day_id,
-            //     'amount' => $request->amount,
-            //     'agent_id' => $request->agent_id,
-            //     'agentType' => $this->agent($request->agent_id)->role
-            // ]);
-            // Loan::where('id', $request->loan_id)->decrement('debt', $request->amount);
-            // LoanDay::where('id', $request->day_id)->decrement('debt', $request->amount);
             DB::commit();
             return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id, 'transaction_id'=>$transaction->id]);
         } catch (\Throwable $th) {
             DB::rollBack();
+            // return 0;
             return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }        
     }
@@ -621,10 +656,8 @@ class LoanController extends Controller
             ->join('transactions as t', 't.id', 'la.transaction_id')
             ->where('ld.loan_id', $loan_id)
             ->where('t.id', $transaction_id)
-            ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent')
+            ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent', 'ld.late')
             ->get();
-
-        // return $loanDayAgent;
 
         
         return view('loansPrint.print-dailyMoneyCash', compact('loan', 'transaction_id', 'loanDayAgent'));

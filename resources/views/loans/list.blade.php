@@ -34,9 +34,9 @@
                         @endif
                     </td>
                     <td style="text-align: right">
-                        @if ($item->status == 0)
+                        {{-- @if ($item->debt == 0)
                             <label class="label label-success">PAGADO</label>
-                        @endif
+                        @endif --}}
                         @if ($item->status == 1)
                             <label class="label label-primary">{{$item->delivered=='Si'?'ENTREGADO':'APROBADO'}}</label>                            
                         @endif
@@ -70,10 +70,10 @@
                             </ul>
                         </div>
 
-                            <a href="{{ route('loans.show', ['loan' => $item->id]) }}" title="Ver" class="btn btn-sm btn-warning view">
+                            {{-- <a href="{{ route('loans.show', ['loan' => $item->id]) }}" title="Ver" class="btn btn-sm btn-warning view">
                                 <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                            </a> 
-                            <a href="{{ route('loans-requirement-daily.create', ['loan' => $item->id]) }}" title="Requisitos" class="btn btn-sm btn-primary">
+                            </a>  --}}
+                            <a href="{{ route('loans-requirement-daily.create', ['loan' => $item->id]) }}" title="Requisitos" class="btn btn-sm btn-warning">
                                 <i class="fa-solid fa-file"></i><span class="hidden-xs hidden-sm"> Requisitos</span>
                             </a>
                             
@@ -86,7 +86,7 @@
 
                             @if ($item->status == 1 && $item->delivered == 'Si')
                                 <a href="{{ route('loans-daily.money', ['loan' => $item->id]) }}" title="Abonar Pago"  class="btn btn-sm btn-success">
-                                    <i class="voyager-dollar"></i><span class="hidden-xs hidden-sm"> Abonar Pago</span>
+                                    <i class="voyager-dollar"></i><span class="hidden-xs hidden-sm"> {{$item->debt == 0?'Ver':'Abonar Pago'}}</span>
                                 </a>
                             @endif
 

@@ -183,7 +183,7 @@ class MenuItemsTableSeeder extends Seeder
             array (
                 'id' => 11,
                 'menu_id' => 1,
-                'title' => 'Parametros',
+                'title' => 'Parámetros',
                 'url' => '',
                 'target' => '_self',
                 'icon_class' => 'fa-solid fa-align-left',
@@ -191,59 +191,11 @@ class MenuItemsTableSeeder extends Seeder
                 'parent_id' => NULL,
                 'order' => 8,
                 'created_at' => '2022-10-26 17:33:41',
-                'updated_at' => '2022-10-31 03:25:09',
+                'updated_at' => '2022-11-22 01:14:29',
                 'route' => 'voyager.categories.index',
                 'parameters' => 'null',
             ),
             11 => 
-            array (
-                'id' => 12,
-                'menu_id' => 1,
-                'title' => 'Posts',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-news',
-                'color' => NULL,
-                'parent_id' => NULL,
-                'order' => 4,
-                'created_at' => '2022-10-26 17:33:41',
-                'updated_at' => '2022-10-29 16:36:23',
-                'route' => 'voyager.posts.index',
-                'parameters' => NULL,
-            ),
-            12 => 
-            array (
-                'id' => 13,
-                'menu_id' => 1,
-                'title' => 'Pages',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-file-text',
-                'color' => NULL,
-                'parent_id' => NULL,
-                'order' => 5,
-                'created_at' => '2022-10-26 17:33:41',
-                'updated_at' => '2022-10-29 16:36:23',
-                'route' => 'voyager.pages.index',
-                'parameters' => NULL,
-            ),
-            13 => 
-            array (
-                'id' => 14,
-                'menu_id' => 1,
-                'title' => 'Parámetros',
-                'url' => '',
-                'target' => '_self',
-                'icon_class' => 'voyager-params',
-                'color' => '#000000',
-                'parent_id' => NULL,
-                'order' => 7,
-                'created_at' => '2022-10-26 18:38:45',
-                'updated_at' => '2022-10-29 16:36:23',
-                'route' => NULL,
-                'parameters' => '',
-            ),
-            14 => 
             array (
                 'id' => 15,
                 'menu_id' => 1,
@@ -259,7 +211,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => NULL,
                 'parameters' => '',
             ),
-            15 => 
+            12 => 
             array (
                 'id' => 18,
                 'menu_id' => 1,
@@ -275,7 +227,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'clear.cache',
                 'parameters' => NULL,
             ),
-            16 => 
+            13 => 
             array (
                 'id' => 21,
                 'menu_id' => 1,
@@ -291,7 +243,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'voyager.people.index',
                 'parameters' => 'null',
             ),
-            17 => 
+            14 => 
             array (
                 'id' => 22,
                 'menu_id' => 1,
@@ -307,7 +259,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'loans.index',
                 'parameters' => NULL,
             ),
-            18 => 
+            15 => 
             array (
                 'id' => 26,
                 'menu_id' => 1,
@@ -323,7 +275,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'vaults.index',
                 'parameters' => NULL,
             ),
-            19 => 
+            16 => 
             array (
                 'id' => 27,
                 'menu_id' => 1,
@@ -339,7 +291,7 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'cashiers.index',
                 'parameters' => NULL,
             ),
-            20 => 
+            17 => 
             array (
                 'id' => 28,
                 'menu_id' => 1,

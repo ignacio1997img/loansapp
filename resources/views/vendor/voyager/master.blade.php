@@ -128,6 +128,25 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
 
 <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
+<script>
+    
+    $(function() {
+        setInterval(            
+            function () 
+            {           
+                // alert(1);     
+                $.get('{{route('loans-loanDay.late')}}', function (data) {
+                    // alert(2);
+                });
+            }, 8000 //10000 en medio minuto se recargará solo la campana de notificación..
+        );
+       
+    });
+
+</script>
+
+
+
 
 <script>
     @if(Session::has('alerts'))

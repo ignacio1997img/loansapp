@@ -30,6 +30,9 @@
                     @endforeach
                 @endif
             </ol>
+            <a href="#" data-toggle="modal" data-target="#notificar-modal" title="Notificar a todos los deudores" class="btn btn-sm">
+                <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i> <small></small>
+            </a>
             @show
         </div>
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
@@ -51,6 +54,7 @@
                     @foreach($nav_items as $name => $item)
                     <li {!! isset($item['classes']) && !empty($item['classes']) ? 'class="'.$item['classes'].'"' : '' !!}>
                         @if(isset($item['route']) && $item['route'] == 'voyager.logout')
+                        
                         <form action="{{ route('voyager.logout') }}" method="POST">
                             {{ csrf_field() }}
                             <button type="submit" class="btn btn-danger btn-block">
@@ -76,3 +80,77 @@
         </ul>
     </div>
 </nav>
+
+<div class="modal modal-primary fade" data-backdrop="static" tabindex="-1" id="notificar-modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="fa-brands fa-square-whatsapp"></i> Notificar</h4>
+            </div>
+            <div class="modal-body">
+                    {{-- <input type="hidden" id="id"> --}}
+                    <input type="hidden" id="phone">
+                    <input type="hidden" id="name">
+            </div>   
+            
+            <div class="modal-footer">
+                <div class="text-center" style="text-transform:uppercase">
+                    <i class="fa-brands fa-square-whatsapp" style="color: #52ce5f; font-size: 5em;"></i>
+                    <br>
+                    <p><b>Desea notificar a todos los deudores?</b></p>
+                </div>
+                <input type="submit" class="btn btn-dark pull-right delete-confirm"  onclick="miFunc()" value="Sí, Enviar">
+                
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function miFunc() {
+
+        let phone = $('#phone').val();
+        let name = $('#name').val();
+
+        let timerInterval
+        Swal.fire({
+            title: 'Notificacion enviada',
+            html: '<h2><i class="fa-regular fa-envelope"></i></h2>',
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+                }, 50)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+
+        url = "http://api.trabajostop.com/?number=59163286317&message=Hola **.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊";
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.send();
+        // xhr.responseType = "json";
+
+        // Swal.fire({
+        //     position: 'top-end',
+        //     icon: 'success',
+        //     title: 'Your work has been saved',
+        //     showConfirmButton: false,
+        //     timer: 10000
+        // })
+
+        // window.open("http://api.trabajostop.com:3001/?number=59167285914&message=hola")
+        $("#notificar-modal").modal('hide');
+    }
+</script>

@@ -7,6 +7,7 @@ use App\Http\Controllers\VaultController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
+use App\Http\Controllers\AjaxController;
 use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 
@@ -116,8 +117,11 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+    
+
 
 });
+Route::get('loans/loanDay/late', [AjaxController::class, 'late'])->name('loans-loanDay.late');
 
 Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
 

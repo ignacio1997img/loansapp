@@ -17,6 +17,9 @@ class LoanDay extends Model
         'number',
         'date',
 
+        'late',
+        'lateN',
+
         'register_userId',
         'register_agentType',
 
