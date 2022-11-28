@@ -10,7 +10,7 @@ class CashierMovement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'cashier_id', 'user_id', 'amount', 'description', 'type'
+        'cashier_id', 'user_id', 'balance', 'amount', 'description', 'type'
     ];
 
     public function cashier(){

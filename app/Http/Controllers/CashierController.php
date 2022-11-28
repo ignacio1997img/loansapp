@@ -14,6 +14,7 @@ use App\Models\VaultDetail;
 use App\Models\VaultDetailCash;
 use App\Models\CashierMovement;
 
+
 class CashierController extends Controller
 {
     
@@ -71,6 +72,7 @@ class CashierController extends Controller
                     CashierMovement::create([
                         'user_id' => Auth::user()->id,
                         'cashier_id' => $cashier->id,
+                        'balance' => $request->amount,
                         'amount' => $request->amount,
                         'description' => 'Monto de apertura de caja.',
                         'type' => 'ingreso'
@@ -103,7 +105,7 @@ class CashierController extends Controller
                 return redirect()->route('cashiers.index')->with(['message' => 'Registro guardado exitosamente.', 'alert-type' => 'success', 'id_cashier_open' => $cashier->id]);
             } catch (\Throwable $th) {
                 DB::rollback();
-                return $th;
+                // return $th;
                 //throw $th;
                 return redirect()->route('cashiers.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
             }
@@ -113,7 +115,7 @@ class CashierController extends Controller
     }
 
 
-    //para que el cajero acepte el monto de dinero y abilite la caja
+    //*** Para que los cajeros Acepte o rechase el dinero dado por Boveda o gerente
     public function change_status($id, Request $request){
         // return $id;
         DB::beginTransaction();
@@ -142,10 +144,11 @@ class CashierController extends Controller
                     'type' => 'ingreso',
                     'status' => 'aprobado'
                 ]);
+                // return $vault_detail;
                 foreach ($cashier->vault_details->cash as $item) {
                     if($item->quantity > 0){
                         VaultDetailCash::create([
-                            'vaults_detail_id' => $vault_detail->id,
+                            'vault_detail_id' => $vault_detail->id,
                             'cash_value' => $item->cash_value,
                             'quantity' => $item->quantity
                         ]);
@@ -162,12 +165,31 @@ class CashierController extends Controller
         }
     }
 
+    //***para cerrar la caja el cajero vista 
     public function close($id){
-        // return 234234;
+        // return $id;
         $cashier = Cashier::with(['movements' => function($q){
             $q->where('deleted_at', NULL);
         }])
         ->where('id', $id)->where('deleted_at', NULL)->first();
+        // return $cashier;
         return view('cashier.close', compact('cashier'));
     }
+
+    public function print_open($id){
+        $cashier = Cashier::with(['user', 'vault_details' => function($q){
+            $q->where('deleted_at', NULL);
+        }, 'vault_details.cash' => function($q){
+            $q->where('deleted_at', NULL);
+        }, 'movements' => function($q){
+            $q->where('deleted_at', NULL);
+        }])->where('id', $id)->first();
+        // dd($cashier);
+        $view = view('cashier.print-open', compact('cashier'));
+        return $view;
+        // $pdf = \App::make('dompdf.wrapper');
+        // $pdf->loadHTML($view);
+        // return $pdf->download();
+    }
+
 }

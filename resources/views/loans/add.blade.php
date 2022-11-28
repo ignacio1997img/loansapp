@@ -2,7 +2,7 @@
 
 @section('page_title', 'Crear prestamos')
 
-{{-- @if (auth()->user()->hasPermission('add_contracts') || auth()->user()->hasPermission('edit_contracts')) --}}
+@if (auth()->user()->hasPermission('add_loans'))
 
     @section('page_header')
         <h1 id="titleHead" class="page-title">
@@ -22,6 +22,19 @@
                         <div class="panel panel-bordered">
                             <div class="panel-heading"><h6 class="panel-title">Detalle del Prestamos</h6></div>
                             <div class="panel-body">
+                                @if (!$cashier)  
+                                    <div class="alert alert-warning">
+                                        <strong>Advertencia:</strong>
+                                        <p>No puedes crear un nuevo prestamo debido a que no tiene una caja asignada.</p>
+                                    </div>
+                                @else     
+                                    @if ($cashier->status != 'abierta')
+                                        <div class="alert alert-warning">
+                                            <strong>Advertencia:</strong>
+                                            <p>No puedes crear un nuevo prestamo debido a que no tiene una caja activa.</p>
+                                        </div>
+                                    @endif
+                                @endif
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Fecha</small>
@@ -100,11 +113,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 text-right">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </div>
+                @if ($cashier)    
+                    @if ($cashier->status == 'abierta')
+
+                        <input type="hidden" name="cashier_id" value="{{$cashier->id}}">
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    @endif
+                @endif
+                
             </form>              
         </div>
     @stop
@@ -204,4 +224,4 @@
         </script>
     @stop
 
-{{-- @endif --}}
+@endif

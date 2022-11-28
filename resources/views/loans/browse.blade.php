@@ -2,24 +2,46 @@
 
 @section('page_title', 'Viendo Prestamos')
 
+@if (auth()->user()->hasPermission('browse_loans'))
+
 @section('page_header')
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body" style="padding: 0px">
-                        <div class="col-md-8" style="padding: 0px">
+                        <div class="col-md-4" style="padding: 0px">
                             <h1 id="titleHead" class="page-title">
                                 <i class="fa-solid fa-hand-holding-dollar"></i> Prestamos
                             </h1>
+
+                            
                         </div>
-                        <div class="col-md-4 text-right" style="margin-top: 30px">
-                            @if (auth()->user()->hasPermission('add_people'))
-                            <a href="{{ route('loans.create') }}" class="btn btn-success">
-                                <i class="voyager-plus"></i> <span>Crear</span>
-                            </a>
+                        <div class="col-md-8 text-right" style="padding: 0px">
+                            <h1 id="titleHead" class="page-title money">
+                                <i class="fa-solid fa-dollar-sign"></i> {{$balance}}
+                            </h1>
+                            @if (auth()->user()->hasPermission('add_loans'))
+                                <a href="{{ route('loans.create') }}" class="btn btn-success">
+                                    <i class="voyager-plus"></i> <span>Crear</span>
+                                </a>
                             @endif
+
+                            
                         </div>
+
+
+                        {{-- <div class="col-md-8 text-right" style="margin-top: 0px;">                            
+                            @if (auth()->user()->hasPermission('add_loans'))
+                            <h1 id="titleHead" class="page-title money">
+                                <i class="fa-solid fa-dollar-sign"></i>{{$balance}}dd
+                            </h1>
+                                <a href="{{ route('loans.create') }}" class="btn btn-success">
+                                    <i class="voyager-plus"></i> <span>Crear</span>
+                                </a>
+                                
+                            @endif
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -34,7 +56,7 @@
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-sm-10">
+                            <div class="col-sm-8">
                                 <div class="dataTables_length" id="dataTable_length">
                                     <label>Mostrar <select id="select-paginate" class="form-control input-sm">
                                         <option value="10">10</option>
@@ -44,8 +66,19 @@
                                     </select> registros</label>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            {{-- <div class="col-sm-2">
                                 <input type="text" id="input-search" class="form-control">
+                            </div> --}}
+                            <div class="col-sm-4" style="margin-bottom: 0px">
+                                <input type="text" id="input-search" class="form-control" placeholder="Ingrese busqueda..."> <br>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" checked>En Pagos</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="aprobado">Por Entregar</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="verificado">Por Aprobar</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pendiente">Pendientes</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pagado">Pagados</label>
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="rechazado">Rechazados</label>
                             </div>
                         </div>
                         <div class="row" id="div-results" style="min-height: 120px"></div>
@@ -154,6 +187,32 @@
         </div>
     </div>
 
+    <div class="modal modal-primary fade" data-backdrop="static" tabindex="-1" id="rechazar-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="fa-solid fa-thumbs-down"></i> Desea rechazar el siguiente registro?</h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" id="rechazar_form" method="GET">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="id" id="id">
+
+                            <div class="text-center" style="text-transform:uppercase">
+                                <i class="fa-solid fa-thumbs-down" style="color: #353d47; font-size: 5em;"></i>
+                                <br>
+                                
+                                <p><b>Desea rechazar el siguiente registro?</b></p>
+                            </div>
+                        <input type="submit" class="btn btn-dark pull-right delete-confirm" value="Sí, rechazar">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal modal-success fade" data-backdrop="static" tabindex="-1" id="notificar-modal" role="dialog">
         <div class="modal-dialog">
@@ -190,9 +249,22 @@
                     <h4 class="modal-title"><i class="fa-solid fa-money-check-dollar"></i> Entregar Dinero</h4>
                 </div>
                 <div class="modal-footer">
-                    <form action="#" id="deliver_form" method="GET">
+                                @if (!$cashier)  
+                                    <div class="alert alert-warning">
+                                        <strong>Advertencia:</strong>
+                                        <p>No puedes entregar el prestamo debido a que no tiene una caja asignada.</p>
+                                    </div>
+                                @else     
+                                    @if ($cashier->status != 'abierta')
+                                        <div class="alert alert-warning">
+                                            <strong>Advertencia:</strong>
+                                            <p>No puedes entregar el prestamo debido a que no tiene una caja activa.</p>
+                                        </div>
+                                    @endif
+                                @endif
+                    <form action="#" id="deliver_form" method="POST">
                         {{ csrf_field() }}
-                        {{-- <input type="text" name="id" id="id" value=""> --}}
+                            <input type="text" name="cashier_id" value="{{$cashier_id}}">
 
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-solid fa-money-check-dollar" style="color: rgb(68, 68, 68); font-size: 5em;"></i>
@@ -200,8 +272,16 @@
                                 
                                 <p><b>Desea entregar el dinero al beneficiario?</b></p>
                             </div>
+                            <br>
+                            <br>
                         {{-- <input type="submit" class="btn btn-success pull-right delete-confirm" onclick="printContract(1)" value="Sí, entregar"> --}}
-                        <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, entregar">
+
+
+                        @if ($cashier)    
+                            @if ($cashier->status == 'abierta')
+                                <input type="submit" id="btn-submit-delivered" style="display:block" class="btn btn-success pull-right delete-confirm" value="Sí, entregar">
+                            @endif
+                        @endif                        
                     </form>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                 </div>
@@ -271,8 +351,36 @@
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         var countPage = 10, order = 'id', typeOrder = 'desc';
+
+        var balance = 0;
+        var cashier_id = {{$cashier_id}}
+        $(function() {
+            balance = {{$balance}};
+            
+            
+            setInterval(            
+                function () 
+                {         
+                    // alert(cashier_id)   
+                    $.get('{{route('loans-cashier.balance')}}/'+cashier_id, function (data) {
+                        balance =data;
+                        // alert(balance)
+                        $('.money').html('<i class="fa-solid fa-dollar-sign"></i>'+data);
+                    });
+                }, 5000 //para actualizar el balance de cada caja
+            );
+        
+        });
+
+
+
+
         $(document).ready(() => {
             list();
+
+            $('.radio-type').click(function(){
+                list();
+            });
             
             $('#input-search').on('keyup', function(e){
                 if(e.keyCode == 13) {
@@ -289,14 +397,19 @@
 
         function list(page = 1){
             // $('#div-results').loading({message: 'Cargando...'});
+
+            // $("#div-results").LoadingOverlay("show");
+            let type = $(".radio-type:checked").val();
+            // alert(type)
+
             var loader = '<div class="col-md-12 bg"><div class="loader" id="loader-3"></div></div>'
             $('#div-results').html(loader);
 
-            let url = '{{ url("admin/loans/ajax/list") }}';
+            let url = "{{ url('admin/loans/ajax/list')}}/"+cashier_id;
             let search = $('#input-search').val() ? $('#input-search').val() : '';
 
             $.ajax({
-                url: `${url}/${search}?paginate=${countPage}&page=${page}`,
+                url: `${url}/${type}/${search}?paginate=${countPage}&page=${page}`,
                 type: 'get',
                 
                 success: function(result){
@@ -309,6 +422,9 @@
             $('#delete_form').attr('action', url);
         }
         
+        function rechazarItem(url){
+            $('#rechazar_form').attr('action', url);
+        }
         function successItem(url){
             $('#success_form').attr('action', url);
         }
@@ -319,10 +435,29 @@
 
         var loanC = 0;
 
-        function deliverItem(url, id){
+        function deliverItem(url, id, amountTotal){
+            
             $('#deliver_form').attr('action', url);
             loanC = id;
-            // alert($loanC);
+            // alert(parseFloat(balance).toFixed(2))
+            if(parseFloat(amountTotal).toFixed(2) > parseFloat(balance).toFixed(2) && cashier_id!=0)
+            {
+                // $('#btn-submit-delivered').attr('disabled', 'disabled');
+                $('#btn-submit-delivered').css('display', 'none');
+
+                Swal.fire({
+                    target: document.getElementById('deliver_form'),
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Su saldo disponible de Caja es insuficiente!',
+                    // footer: '<a href="">Why do I have this issue?</a>'
+                })
+                // $("#deliver-modal").modal('hide');
+            }
+            if(parseFloat(amountTotal).toFixed(2) < parseFloat(balance).toFixed(2) && cashier_id!=0)
+            {
+                $('#btn-submit-delivered').css('display', 'block');
+            }
         }
 
 
@@ -394,6 +529,12 @@
             window.open("{{ url('admin/loans/contract/daily') }}/"+loanC, "Recibo", `width=700, height=500`)
         }
 
-       
+
+
+
+        
+        
+
     </script>
 @stop
+@endif

@@ -20,6 +20,7 @@ class LoanDay extends Model
         'late',
         'lateN',
 
+        'status',
         'register_userId',
         'register_agentType',
 

@@ -48,7 +48,8 @@ Route::group(['prefix' => 'admin'], function () {
 
 
     Route::resource('loans', LoanController::class);
-    Route::get('loans/ajax/list/{search?}', [LoanController::class, 'list']);
+    Route::get('loans/ajax/list/{cashier_id}/{type}/{search?}', [LoanController::class, 'list']);
+    Route::get('loans/{loan?}/rechazar', [LoanController::class, 'rechazar'])->name('loans.rechazar'); //para rechazar  los perestamos
     Route::get('loans/ajax/notPeople/{id?}', [LoanController::class, 'ajaxNotPeople'])->name('loans-ajax.notpeople');
     Route::get('loans/{loan?}/list/transaction', [TransactionController::class, 'listTransaction'])->name('loans-list.transaction');
     Route::get('loans/{loan?}/print/calendar', [LoanController::class, 'printCalendar'])->name('loans-print.calendar');
@@ -56,15 +57,16 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('loans/{loan?}/requirement/daily/store', [LoanController::class, 'storeRequirement'])->name('loans-requirement-daily.store');
     Route::get('loans/daily/{loan?}/requirement/delete/{col?}', [LoanController::class, 'deleteRequirement'])->name('loans-daily-requirement.delete');
     Route::get('loans/daily/{loan?}/requirement/success', [LoanController::class, 'successRequirement'])->name('loans-daily-requirement.success');
-    Route::get('loans/{loan?}/money/deliver', [LoanController::class, 'moneyDeliver'])->name('loans-money.deliver');
+    Route::post('loans/{loan?}/money/deliver', [LoanController::class, 'moneyDeliver'])->name('loans-money.deliver');
     Route::get('loans/contract/daily/{loan?}', [LoanController::class, 'printContracDaily']);
     Route::get('loans/{loan?}/success', [LoanController::class, 'successLoan'])->name('loans.success');
     Route::post('loans/{loan?}/agent/update', [LoanController::class, 'updateAgent'])->name('loans-agent.update');
 
-    Route::get('loans/{loan?}/daily/money', [LoanController::class, 'dailyMoney'])->name('loans-daily.money');
+    Route::get('loans/{loan}/daily/money/{cashier_id?}', [LoanController::class, 'dailyMoney'])->name('loans-daily.money');//para abrir la ventana de abonar dinero a un prestamo
     Route::post('loans/daily/money/store', [LoanController::class, 'dailyMoneyStore'])->name('loans-daily-money.store');
     Route::get('loans/daily/money/print/{loan_id}/{transaction_id?}', [LoanController::class, 'printDailyMoney']);//impresionde de pago diario de cada cuota pagada mediante los cajeros de las oficinas
 
+    Route::get('loans/cashier/balance/{id?}', [AjaxController::class, 'balanceCashier'])->name('loans-cashier.balance');//para mostrar el saldo de cada caja en la parte de browse
     
    
 
@@ -96,16 +98,16 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::resource('vaults', VaultController::class);
 
-    Route::post('vaults/{id}/details/store', [VaultController::class, 'details_store'])->name('vaults.details.store');
+    Route::post('vaults/{id}/details/store', [VaultController::class, 'details_store'])->name('vaults.details.store');//***para agregar ingreso y egreso a la boveda
     Route::post('vaults/{id}/open', [VaultController::class, 'open'])->name('vaults.open');
     Route::get('vaults/{id}/close', [VaultController::class, 'close'])->name('vaults.close');
-    Route::post('vaults/{id}/close/store', [VaultController::class, 'close_store'])->name('vaults.close.store');
-    Route::get('vaults/{vault}/print/status', [VaultController::class, 'print_status'])->name('vaults.print.status');
+    Route::post('vaults/{id}/close/store', [VaultController::class, 'close_store'])->name('vaults.close.store');//***Para guardar cuando se cierre de boveda
+    Route::get('vaults/{vault}/print/status', [VaultController::class, 'print_status'])->name('vaults.print.status');//***
 
 
     Route::resource('cashiers', CashierController::class);
-    Route::post('cashiers/{cashier}/change/status', [CashierController::class, 'change_status'])->name('cashiers.change.status');//para que acepta los cajeros el  monto dado de
-    Route::get('cashiers/{cashier}/close/', [CashierController::class, 'close'])->name('cashiers.close');//para cerrar la caja el cajero vista 
+    Route::post('cashiers/{cashier}/change/status', [CashierController::class, 'change_status'])->name('cashiers.change.status');//*** Para que los cajeros Acepte o rechase el dinero dado por Boveda o gerente
+    Route::get('cashiers/{cashier}/close/', [CashierController::class, 'close'])->name('cashiers.close');//***para cerrar la caja el cajero vista 
     Route::post('cashiers/{cashier}/close/store', [CashierController::class, 'close_store'])->name('cashiers.close.store'); //para que el cajerop cierre la caja 
     // Route::get('cashiers/{cashier}/confirm_close', [CashierController::class, 'confirm_close'])->name('cashiers.confirm_close');
     // Route::post('cashiers/{cashier}/confirm_close/store', [CashierController::class, 'confirm_close_store'])->name('cashiers.confirm_close.store');

@@ -90,8 +90,9 @@
                                             ],
                                         ];
 
-                                        // Asignar monto del último cierre a los cortes de billetes de apertura y cierre
+                                        // Asignar monto del último cierre a los cortes de billetes de apertura y cierre     PAR5A LOS SEGUNDO EN ADEKLANTE DE LOS CIERRE
                                         if($vault_closure){
+                                            // dd(1);
                                             foreach($vault_closure->details as $detail){
                                                 // dd($detail->cash_value);
                                                 $vault_close[$detail->cash_value]['open'] += $detail->quantity;
@@ -100,12 +101,14 @@
                                         }
                                         // dd($vault_close);
 
-                                        // Agregar o restar a los cortes de billetes de cierre según los movimiento de bóveda
+                                        // Agregar o restar a los cortes de billetes de cierre según los movimiento de bóveda para eL PRIMER CIERRE Y LOS DEMAS
                                         if($vault){
+                                            // dd(2);
                                             foreach($vault->details as $detail){
                                                 foreach($detail->cash as $cash){
                                                     if($detail->type == 'ingreso'){
                                                         $vault_close[$cash->cash_value]['close'] += $cash->quantity;
+                                                        
                                                     }else{
                                                         $vault_close[$cash->cash_value]['close'] -= $cash->quantity;
                                                     }

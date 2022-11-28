@@ -10,28 +10,21 @@ use App\Models\VaultDetail;
 use App\Models\VaultDetailCash;
 use App\Models\VaultClosure;
 use App\Models\VaultClosureDetail;
+
+use App\Models\Cashier;
 use Illuminate\Support\Facades\DB;
 
 class VaultController extends Controller
 {
     public function index()    
     {
-        // if(auth()->user()->hasRole('admin'))
-        // {
-        //     return redirect()->route('login')->with(['message' => 'Ocurrió un error, Administrador del sistema no puede crear vobeda.', 'alert-type' => 'error']);
-        // }
-        // $vault = Vault::with(['details.cash' => function($q){
-        //             $q->where('deleted_at', NULL);
-        //         }, 'details' => function($q){
-        //             $q->where('deleted_at', NULL);
-        //         }])->where('deleted_at', NULL)->first();
 
         $vault = Vault::with(['details.cash' => function($q){
                     $q->where('deleted_at', NULL);
                 }, 'details' => function($q){
                     $q->where('deleted_at', NULL);
                 }])->where('deleted_at', NULL)->first();
-        
+        // return $vault;
     
         return view('vaults.browse', compact('vault'));
     }
@@ -56,7 +49,7 @@ class VaultController extends Controller
         }
     }
 
-    //para agregar movimiento a la  Boveda
+    //***para agregar ingreso y egreso a la boveda
     public function details_store($id, Request $request){
         DB::beginTransaction();
         try {
@@ -123,12 +116,13 @@ class VaultController extends Controller
         return view('vaults.close', compact('vault', 'vault_closure'));
     } 
 
+    //***Para guardar cuando se cierre de boveda
     public function close_store($id, Request $request){
-        // return 1;
-        // $cashier_open = Cashier::where('status', 'abierta')->where('deleted_at', NULL)->count();
-        // if($cashier_open){
-        //     return redirect()->route('vaults.index')->with(['message' => 'No puedes cerrar bóveda porque existe una caja abierta.', 'alert-type' => 'error']);
-        // }
+        $cashier_open = Cashier::whereRaw("status = 'abierta' or status = 'apertura pendiente'")->where('deleted_at', NULL)->count();
+        // return $cashier_open;
+        if($cashier_open){
+            return redirect()->route('vaults.index')->with(['message' => 'No puedes cerrar bóveda porque existe una caja abierta.', 'alert-type' => 'error']);
+        }
 
         DB::beginTransaction();
         try {
@@ -155,9 +149,19 @@ class VaultController extends Controller
             return redirect()->route('vaults.index')->with(['message' => 'Bóveda cerrada exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollback();
-            // dd($th);
+            // dd(0);
             return redirect()->route('vaults.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
+    }
+
+    // ***para imprimir Boveda en General
+    public function print_status($id){
+        $vault = Vault::with(['user', 'details.cash' => function($q){
+            $q->where('deleted_at', NULL);
+        }, 'details' => function($q){
+            $q->where('deleted_at', NULL);
+        }])->where('id', $id)->where('deleted_at', NULL)->first();
+        return view('vaults.print.print-vaults', compact('vault'));
     }
 
 }

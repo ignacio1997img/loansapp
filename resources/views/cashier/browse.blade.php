@@ -66,16 +66,21 @@
                                                 <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->close_at))}}<br><small>{{\Carbon\Carbon::parse($item->close_at)->diffForHumans()}}.</small></td>
                                 
                                                 <td style="text-align: right">
-                                                    <a href="#" title="Ver" class="btn btn-sm btn-default pull-right" onclick="openWindow({{$item->id}})">
-                                                        <i class="voyager-file-text"></i> <span class="hidden-xs hidden-sm">Imprimir apertura</span>
-                                                    </a>
+                                                    @if ($item->status == 'abierta' || $item->status == 'apertura pendiente')
+                                                        
+                                                        <a href="#" title="Imprimir" class="btn btn-danger" onclick="openWindow({{$item->id}})">
+                                                            <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir apertura</span>
+                                                        </a>
+
+                                                    @endif
+
                                                     @if ($item->status == "cierre pendiente")
                                                         <a href="{{route('cashiers.confirm_close',['cashier' => $item->id])}}" title="Ver" class="btn btn-sm btn-danger pull-right">
                                                             <i class="voyager-lock"></i> <span class="hidden-xs hidden-sm">Confirmar Cierre de Caja</span>
                                                         </a>
                                                     @endif
                                                     <div class="no-sort no-click bread-actions text-right">
-                                                        @if(auth()->user()->hasPermission('read_income'))
+                                                        {{-- @if(auth()->user()->hasPermission('read_income'))
                                                             
                                                             <a href="{{route('income_view',$item->id)}}" title="Ver" target="_blank" class="btn btn-sm btn-info view">
                                                                 <i class="voyager-file-text"></i> <span class="hidden-xs hidden-sm">Ver</span>
@@ -93,7 +98,7 @@
                                                                 </button>
                                                             @endif
                                                         @endif
-                                                    </div>
+                                                    </div> --}}
                                                 </td>
                                             </tr>
                                         @empty

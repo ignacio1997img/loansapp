@@ -13,42 +13,43 @@
                             <h1 id="titleHead" class="page-title">
                                 <i class="fa-solid fa-vault"></i> Bóveda
                             </h1>
-                        </div>
+                        </div>                       
                         <div class="col-md-8 text-right" style="margin-top: 30px">
-                            @if (auth()->user()->hasPermission('print_vaults') && $vault)
-                                <a href="{{ route('vaults.print.status', ['vault' => $vault ? $vault->id : 0]) }}" target="_blank" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-print"></i> <span>Imprimir</span>
-                                </a>
-                            @endif                                    
-                            @if ($vault)
-                                @if ($vault->status == 'activa')
-                                    @if (auth()->user()->hasPermission('movements_vaults'))
-                                        <a href="#" data-toggle="modal" data-target="#vaults-details-modal" class="btn btn-primary">
-                                            <i class="fa-solid fa-money-bill-1-wave"></i> <span>Agregar Ingresos</span>
-                                        </a>
-                                        <a href="#" data-toggle="modal" data-target="#vaults-egreso-modal" class="btn btn-success">
-                                            <i class="fa-solid fa-money-bill-1-wave"></i> <span>Agregar Egresos</span>
-                                        </a>
-                                    @endif                                    
-                                    @if (auth()->user()->hasPermission('close_vaults'))
-                                        <a href="{{ route('vaults.close', ['id' => $vault ? $vault->id : 0]) }}" class="btn btn-danger">
-                                            <i class="voyager-lock"></i> <span>Cerrar Bóvedas</span>
-                                        </a>
-                                    @endif                                    
-                                @else
-                                    @if (auth()->user()->hasPermission('open_vaults'))
-                                        <a href="#" data-toggle="modal" data-target="#vaults-open-modal" class="btn btn-dark">
-                                            <i class="voyager-key"></i> <span>Abrir Bóveda</span>
-                                        </a>
-                                    @endif                                    
-                                @endif
-                            @else
-                                @if (auth()->user()->hasPermission('add_vaults'))
-                                    <a href="#" data-toggle="modal" data-target="#vaults-create-modal" class="btn btn-danger">
-                                        <i class="fa-solid fa-vault"></i> <span>Crear bóveda</span>
+                            @if (!auth()->user()->hasRole('admin'))   
+                                @if (auth()->user()->hasPermission('print_vaults') && $vault)
+                                    <a href="{{ route('vaults.print.status', ['vault' => $vault ? $vault->id : 0]) }}" target="_blank" class="btn btn-default">
+                                        <i class="glyphicon glyphicon-print"></i> <span>Imprimir</span>
                                     </a>
+                                @endif                                    
+                                @if ($vault)
+                                    @if ($vault->status == 'activa')
+                                        @if (auth()->user()->hasPermission('movements_vaults'))
+                                            <a href="#" data-toggle="modal" data-target="#vaults-details-modal" class="btn btn-primary">
+                                                <i class="fa-solid fa-money-bill-1-wave"></i> <span>Agregar Ingresos</span>
+                                            </a>
+                                            <a href="#" data-toggle="modal" data-target="#vaults-egreso-modal" class="btn btn-success">
+                                                <i class="fa-solid fa-money-bill-1-wave"></i> <span>Agregar Egresos</span>
+                                            </a>
+                                        @endif                                    
+                                        @if (auth()->user()->hasPermission('close_vaults'))
+                                            <a href="{{ route('vaults.close', ['id' => $vault ? $vault->id : 0]) }}" class="btn btn-danger">
+                                                <i class="voyager-lock"></i> <span>Cerrar Bóvedas</span>
+                                            </a>
+                                        @endif                                    
+                                    @else
+                                        @if (auth()->user()->hasPermission('open_vaults'))
+                                            <a href="#" data-toggle="modal" data-target="#vaults-open-modal" class="btn btn-dark">
+                                                <i class="voyager-key"></i> <span>Abrir Bóveda</span>
+                                            </a>
+                                        @endif                                    
+                                    @endif
+                                @else
+                                    @if (auth()->user()->hasPermission('add_vaults'))
+                                        <a href="#" data-toggle="modal" data-target="#vaults-create-modal" class="btn btn-danger">
+                                            <i class="fa-solid fa-vault"></i> <span>Crear bóveda</span>
+                                        </a>
+                                    @endif                                
                                 @endif
-                                
                             @endif
                         </div>
                     </div>

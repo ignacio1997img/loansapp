@@ -43,8 +43,11 @@ class Loan extends Model
 
         'deleted_userId',
         'deleted_agentType',
-    ];
 
+        'delivered_userId',
+        'delivered_agentType',
+        'cashierRegister_id'
+    ];
 
     public function people()
     {

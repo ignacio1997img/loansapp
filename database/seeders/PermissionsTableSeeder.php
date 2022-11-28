@@ -45,8 +45,60 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('settings');
 
 
-        Permission::generateFor('type_loans');
-        Permission::generateFor('agent_types');
+        // Permission::generateFor('type_loans');
+        // Permission::generateFor('agent_types');
+
+        // boveda
+        $keys = [
+            'browse_vaults',
+            'add_vaults',
+            'open_vaults',
+            'movements_vaults',
+            'close_vaults',
+            'print_vaults',
+            
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'vaults',
+            ]);
+        }
+
+        // para crear prestamos varios
+        $keys = [
+            'browse_loans',
+            'add_loans',
+            'read_loans',
+            'delete_loans',
+
+            'successLoan_loans',//para que el gerente apruebe el prestamo
+            'deliverMoney_loans', //para quye entregen el dinero al beneficiario
+
+
+            'addMoneyDaily_loans',
+
+            // 'addMoneyDaily_loans',
+
+            // 'open_vaults',
+            // 'movements_vaults',
+            // 'close_vaults',
+            // 'print_vaults',
+            
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'loans',
+            ]);
+        }
+
+
+        
+
+        // _________________________________________________________
 
 
         //  Rutas
@@ -73,24 +125,7 @@ class PermissionsTableSeeder extends Seeder
         }
 
 
-// boveda
-
-        $keys = [
-            'browse_vaults',
-            'add_vaults',
-            'open_vaults',
-            'movements_vaults',
-            'close_vaults',
-            'print_vaults',
-            
-        ];
-
-        foreach ($keys as $key) {
-            Permission::firstOrCreate([
-                'key'        => $key,
-                'table_name' => 'vaults',
-            ]);
-        }
+        
 
         // cajeros
         $keys = [

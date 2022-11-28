@@ -35,9 +35,13 @@ class CreateLoansTable extends Migration
             // $table->foreignId('agentCollection_id')->nullable()->constrained('agent_collections');
 
             $table->text('observation')->nullable();
-            $table->smallInteger('status')->nullable();
+            $table->string('status')->nullable('pendiente');
+
             $table->string('delivered')->default('No');
             $table->date('dateDelivered')->nullable();
+            $table->foreignId('delivered_userId')->nullable()->constrained('users');
+            $table->string('delivered_agentType')->nullable();
+
             $table->string('transaction_id')->nullable();
 
 
@@ -48,8 +52,10 @@ class CreateLoansTable extends Migration
             $table->string('success_agentType')->nullable();
 
             $table->timestamps();
+            $table->foreignId('cashierRegister_id')->nullable()->constrained('cashiers');
             $table->foreignId('register_userId')->nullable()->constrained('users');
             $table->string('register_agentType')->nullable();
+
             $table->softDeletes();
             $table->foreignId('deleted_userId')->nullable()->constrained('users');
             $table->string('deleted_agentType')->nullable();

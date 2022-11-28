@@ -66,10 +66,11 @@
                         @php
                             $cashier_in = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');
 
-                            $sub = \App\Models\Adition::
-                                                                                          where('cashier_id', $cashier->id)
-                                                                                          ->where('deleted_at', null)
-                                                                                          ->sum('cant');
+                            // $sub = \App\Models\Adition::
+                            //                                                               where('cashier_id', $cashier->id)
+                            //                                                               ->where('deleted_at', null)
+                            //                                                               ->sum('cant');
+                            $sub =101010;
                             $movements = $cashier_in + $sub;
                             $total = $movements;
                         @endphp

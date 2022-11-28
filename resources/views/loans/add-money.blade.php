@@ -124,6 +124,7 @@
                             @csrf
                                 <div class="row">
                                     <input type="hidden" name="date" value="{{$date}}">
+                                    <input type="hidden" name="cashier_id" value="{{$cashier_id}}">
                                        
                                     <div class="form-group col-md-8">
                                         <input type="hidden" name="loan_id" value="{{$loan->id}}">

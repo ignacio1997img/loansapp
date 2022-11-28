@@ -23,48 +23,162 @@ use App\Http\Controllers\FileController;
 use App\Models\LoanDayAgent;
 use Illuminate\Support\Composer;
 use PhpParser\Node\Stmt\TryCatch;
+use App\Models\Cashier;
+use App\Models\CashierMovement;
 
+use function PHPSTORM_META\type;
 use function PHPUnit\Framework\returnSelf;
 
 class LoanController extends Controller
 {
     public function index()
     {    
-        // return 1;
         $collector = User::with(['role' => function($q)
             {
                 $q->where('name','cobrador');
-            }])
-            ->get();
+            }])->get();
 
-        return view('loans.browse', compact('collector'));
+
+        $user_id = Auth::user()->id;
+
+        $cashier = Cashier::with(['movements' => function($q){
+                $q->where('deleted_at', NULL);
+            }])
+            ->where('user_id', Auth::user()->id)
+            ->where('status', '<>', 'cerrada')
+            ->where('deleted_at', NULL)->first();
+        $balance = 0;
+        if($cashier)
+        {
+            $cashier_id = $cashier->id;
+            $balance = $cashier->movements[0]->balance;
+        }
+        else
+        {
+            $cashier_id = 0;
+        }
+        // return $balance;
+
+        return view('loans.browse', compact('collector', 'cashier', 'cashier_id', 'balance'));
     }
 
-    public function list($search = null){
+    public function list($cashier_id, $type, $search = null){
         $user = Auth::user();
         $paginate = request('paginate') ?? 10;
-
-        $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
-            ->where(function($query) use ($search){
-                if($search){
-                    $query->OrwhereHas('people', function($query) use($search){
-                        $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+        switch($type)
+        {
+            case 'pendiente':
+                $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrwhereHas('people', function($query) use($search){
+                                $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                            })
+                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                        }
                     })
-                    ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
-                }
-            })
-            ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
+                    ->where('deleted_at', NULL)->where('status', 'pendiente')->orderBy('id', 'DESC')->paginate($paginate);
+                return view('loans.list', compact('data', 'cashier_id'));
+                break;
+            case 'entregado':
+                    $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                        ->where(function($query) use ($search){
+                            if($search){
+                                $query->OrwhereHas('people', function($query) use($search){
+                                    $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                                })
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                            }
+                        })
+                        ->where('deleted_at', NULL)->where('status', 'entregado')->where('debt', '!=', 0)->orderBy('id', 'DESC')->paginate($paginate);
+                    return view('loans.list', compact('data', 'cashier_id'));
+                    break;
+            case 'verificado':
+                $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrwhereHas('people', function($query) use($search){
+                                $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                            })
+                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)->where('status', 'verificado')->orderBy('id', 'DESC')->paginate($paginate);
+                return view('loans.list', compact('data', 'cashier_id'));
+                break;
+            case 'aprobado':
+                    $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                        ->where(function($query) use ($search){
+                            if($search){
+                                $query->OrwhereHas('people', function($query) use($search){
+                                    $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                                })
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                            }
+                        })
+                        ->where('deleted_at', NULL)->where('status', 'aprobado')->orderBy('id', 'DESC')->paginate($paginate);
+                    return view('loans.list', compact('data', 'cashier_id'));
+                    break;
+            case 'pagado':
+                $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrwhereHas('people', function($query) use($search){
+                                $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                            })
+                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)->where('debt', 0)->orderBy('id', 'DESC')->paginate($paginate);
+                return view('loans.list', compact('data', 'cashier_id'));
+                break;
+            case 'rechazado':
+                    $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                        ->where(function($query) use ($search){
+                            if($search){
+                                $query->OrwhereHas('people', function($query) use($search){
+                                    $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                                })
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                            }
+                        })
+                        ->where('deleted_at', NULL)->where('status', 'rechazado')->orderBy('id', 'DESC')->paginate($paginate);
+                    return view('loans.list', compact('data', 'cashier_id'));
+                    break;
+        }
 
-        return view('loans.list', compact('data'));
+      
+
+        // $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+        //     ->where(function($query) use ($search){
+        //         if($search){
+        //             $query->OrwhereHas('people', function($query) use($search){
+        //                 $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+        //             })
+        //             ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+        //         }
+        //     })
+        //     ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
+
+        // return view('loans.list', compact('data', 'cashier_id'));
     }
 
     public function create()
     {
+        $cashier = Cashier::with(['movements' => function($q){
+            $q->where('deleted_at', NULL);
+        }, 'vault_details.cash' => function($q){
+            $q->where('deleted_at', NULL);
+        }])
+        ->where('user_id', Auth::user()->id)
+        ->where('status', '<>', 'cerrada')
+        ->where('deleted_at', NULL)->first();
+
         $people = People::where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
 
         $routes = Route::where('deleted_at', null)->where('status', 1)->orderBy('name')->get();
 
-        return view('loans.add', compact('people', 'routes'));
+        return view('loans.add', compact('people', 'routes', 'cashier'));
     }
     public function ajaxNotPeople($id)
     {
@@ -194,14 +308,15 @@ class LoanController extends Controller
 
     public function successRequirement($loan)
     {
-
-        $url="http://api.trabajostop.com/?number=59163286317&message=hola"; //a qui pones tu url externa
-        echo "<a href='$url'>caca</a>";
+        // return $loan;
+        // $url="http://api.trabajostop.com/?number=59163286317&message=hola"; //a qui pones tu url externa
+        // echo "<a href='$url'>caca</a>";
 
         DB::beginTransaction();
         try {
+            Loan::where('id', $loan)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
             LoanRequirement::where('loan_id',$loan)
-                ->update(['status'=>1,
+                ->update(['status'=>'1',
                         'success_userId' => Auth::user()->id,
                         'success_agentType' => $this->agent(Auth::user()->id)->role
                         ]);
@@ -217,7 +332,6 @@ class LoanController extends Controller
 
     public function store(Request $request)
     {
-        // return $request;
         DB::beginTransaction();
         $user = Auth::user();
         $agent = $this->agent($user->id);
@@ -225,6 +339,7 @@ class LoanController extends Controller
         try {
             $loan = Loan::create([
                         'people_id' => $request->people_id,
+                        'cashierRegister_id' => $request->cashier_id,
                         'guarantor_id' => $request->guarantor_id?$request->guarantor_id:null,
                         'date' => $request->date,
                         'day' => $request->day,
@@ -241,7 +356,7 @@ class LoanController extends Controller
 
                         'register_userId' => $agent->id,
                         'register_agentType' => $agent->role,
-                        'status' => 2
+                        'status' => 'pendiente'
             ]);
             LoanRoute::create([
                 'loan_id' => $loan->id,
@@ -354,6 +469,32 @@ class LoanController extends Controller
         }
     }
 
+    public function rechazar($id)
+    {
+        // return $id;
+        try {
+            Loan::where('id', $id)->update([
+                'status' => 'rechazado',
+            ]);
+
+            LoanDay::where('loan_id', $id)->update([
+                'status' => 0
+            ]);
+
+            LoanRoute::where('loan_id', $id)->update([
+                'status' => 0
+            ]);
+            
+            LoanRequirement::where('loan_id', $id)->update([
+                'status' => 0
+            ]);
+
+            return redirect()->route('loans.index')->with(['message' => 'Rechazado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+    }
+
     public function updateAgent(Request $request, $loan)
     {
         // return $request;
@@ -393,9 +534,10 @@ class LoanController extends Controller
         try {
             $ok = Loan::where('id', $loan)->first();
             Http::get('http://api.trabajostop.com/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
+            
             // return $loan;
             Loan::where('id', $loan)->update([
-                'status' => 1,
+                'status' => 'aprobado',
                 'success_userId' => Auth::user()->id,
                 'success_agentType' => $this->agent(Auth::user()->id)->role
             ]);
@@ -411,16 +553,27 @@ class LoanController extends Controller
     }
 
     // funcion para entregar dinero al beneficiario
-    public function moneyDeliver($loan)
+    public function moneyDeliver(Request $request, $loan)
     {
+        // return $request;
         DB::beginTransaction();
         try {
+            $loan = Loan::where('id', $loan)->first();
+            $loan->update(['cashier_id'=>$request->cashier_id,'delivered_userId'=>Auth::user()->id, 'delivered_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'entregado', 'delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
+            // return $loan->amountTotal;
+
+            $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
+            // return $movement;
+            $movement->decrement('balance', $loan->amountTotal);
+
+
             $user = Auth::user();
             $agent = $this->agent($user->id);
-            $loan = Loan::where('id', $loan)->first();
-            $loan->update(['delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
-
             // return $loan;
+
+            // $loan->update([]);
+
+            
 
 
 
@@ -475,8 +628,9 @@ class LoanController extends Controller
 
 
     // para ver el prestamos y poder abonar o pagar el dinero
-    public function dailyMoney($loan)
+    public function dailyMoney($loan, $cashier_id)
     {
+        // return $cashier_id;
         $id = $loan;
         $loan = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people', 'guarantor'])
             ->where('deleted_at', null)->where('id',$id)->first();
@@ -493,7 +647,7 @@ class LoanController extends Controller
         // return $loanday;
 
 
-        return view('loans.add-money', compact('loan', 'route', 'loanday', 'register', 'date'));
+        return view('loans.add-money', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id'));
 
     }
 // funcion para guardar el dinero diario en ncada prestamos
@@ -506,7 +660,7 @@ class LoanController extends Controller
         $loan =Loan::where('id', $request->loan_id)->first();
         if($request->amount > $loan->debt)
         {
-            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Monto Incorrecto.', 'alert-type' => 'error']);
+            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id, 'cashier_id'=>$request->cashier_id])->with(['message' => 'Monto Incorrecto.', 'alert-type' => 'error']);
         }
         DB::beginTransaction();
         try {
@@ -533,12 +687,14 @@ class LoanController extends Controller
 
                 LoanDayAgent::create([
                     'loanDay_id' => $ok->id,
+                    'cashier_id' => $request->cashier_id,
                     'transaction_id'=>$transaction->id,
                     'amount' => $debt,
                     'agent_id' => $request->agent_id,
                     'agentType' => $this->agent($request->agent_id)->role
                 ]);
                 Loan::where('id', $request->loan_id)->decrement('debt', $debt);
+                CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->increment('balance', $debt);
 
             }
 
@@ -564,11 +720,14 @@ class LoanController extends Controller
 
                     LoanDayAgent::create([
                         'loanDay_id' => $item->id,
+                        'cashier_id' => $request->cashier_id,
                         'transaction_id'=>$transaction->id,
                         'amount' => $debt,
                         'agent_id' => $request->agent_id,
                         'agentType' => $this->agent($request->agent_id)->role
                     ]);
+                    CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->increment('balance', $debt);
+
                     Loan::where('id', $request->loan_id)->decrement('debt', $debt);
                     if($amount<=1)
                     {
@@ -621,11 +780,11 @@ class LoanController extends Controller
             }
             // return 1;
             DB::commit();
-            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id, 'transaction_id'=>$transaction->id]);
+            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id, 'cashier_id'=>$request->cashier_id])->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id, 'transaction_id'=>$transaction->id]);
         } catch (\Throwable $th) {
             DB::rollBack();
             // return 0;
-            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id, 'cashier_id'=>$request->cashier_id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }        
     }
 

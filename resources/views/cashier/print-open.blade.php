@@ -55,9 +55,9 @@
     <div style="height: 45vh" @if ($i == 1) class="show-print" @else class="border-bottom" @endif>
         <table width="100%">
             <tr>
-                <td><img src="{{ asset('storage/'.str_replace('.', '-cropped.',$busine->busine->image)) }}" alt="GYM" width="80px"></td>
+                <td><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="80px"></td>
                 <td style="text-align: right">
-                    <h3 style="margin-bottom: 0px; margin-top: 5px">CAJAS - {{$busine->busine->name}}<br> <small>ENTREGA DE FONDOS</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 5px">CAJAS - LOANSAPP<br> <small>ENTREGA DE FONDOS</small> </h3>
                 </td>
             </tr>
         </table>

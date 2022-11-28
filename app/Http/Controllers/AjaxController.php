@@ -8,6 +8,9 @@ use App\Models\LoanDay;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
+use App\Models\Cashier;
+use App\Models\CashierMovement;
+use Illuminate\Support\Facades\Auth;
 
 class AjaxController extends Controller
 {
@@ -79,6 +82,24 @@ class AjaxController extends Controller
     Gracias🤝😊');
         }
         return true;
+    }
+
+
+    public function balanceCashier($cashier_id)
+    {
+        $cashier = Cashier::with(['movements' => function($q){
+            $q->where('deleted_at', NULL);
+        }])
+        ->where('id', $cashier_id)
+        ->where('status', '=', 'abierta')
+        ->where('deleted_at', NULL)->first();
+
+        $balance = 0;
+        if($cashier)
+        {
+            $balance = $cashier->movements[0]->balance;
+        }
+        return $balance;
     }
 
   

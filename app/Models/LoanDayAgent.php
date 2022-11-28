@@ -11,6 +11,7 @@ class LoanDayAgent extends Model
     protected $fillable = [
         'loanDay_id',
         'transaction_id',
+        'cashier_id',
         'amount',
         'agent_id',
         'agentType',
