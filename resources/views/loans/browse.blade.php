@@ -264,7 +264,7 @@
                                 @endif
                     <form action="#" id="deliver_form" method="POST">
                         {{ csrf_field() }}
-                            <input type="text" name="cashier_id" value="{{$cashier_id}}">
+                            <input type="hidden" name="cashier_id" value="{{$cashier_id}}">
 
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-solid fa-money-check-dollar" style="color: rgb(68, 68, 68); font-size: 5em;"></i>
