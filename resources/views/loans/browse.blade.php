@@ -266,7 +266,7 @@
 @stop
 
 @section('javascript')
-    <script src="{{ url('js/main.js') }}"></script>
+    {{-- <script src="{{ url('js/main.js') }}"></script> --}}
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
         var countPage = 10, order = 'id', typeOrder = 'desc';
@@ -352,7 +352,7 @@
                 }
             })
 
-            url = "http://api.trabajostop.com/?number=591"+phone+"&message=Hola *"+name+"*.%0A%0A*SU SOICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficia para entregarle su solicitud de prestamos%0A%0AGracias😊";
+            url = "http://api.trabajostop.com/?number=591"+phone+"&message=Hola *"+name+"*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊";
 
             const xhr = new XMLHttpRequest();
             xhr.open("GET", url);

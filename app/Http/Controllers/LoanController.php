@@ -16,6 +16,7 @@ use Psy\CodeCleaner\ReturnTypePass;
 use Psy\TabCompletion\Matcher\FunctionsMatcher;
 use TCG\Voyager\Models\Role;
 use App\Models\Route;
+use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\FileController;
 use App\Models\LoanDayAgent;
@@ -206,6 +207,10 @@ class LoanController extends Controller
 
     public function successRequirement($loan)
     {
+
+        $url="http://api.trabajostop.com/?number=59163286317&message=hola"; //a qui pones tu url externa
+        echo "<a href='$url'>caca</a>";
+
         DB::beginTransaction();
         try {
             LoanRequirement::where('loan_id',$loan)
@@ -399,12 +404,16 @@ class LoanController extends Controller
     {
         DB::beginTransaction();
         try {
+            $ok = Loan::where('id', $loan)->first();
+            Http::get('http://api.trabajostop.com/?number=591'.$ok->people->cell_phone.'&message=hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
             // return $loan;
             Loan::where('id', $loan)->update([
                 'status' => 1,
                 'success_userId' => Auth::user()->id,
                 'success_agentType' => $this->agent(Auth::user()->id)->role
             ]);
+        
+
 
             DB::commit();
             return redirect()->route('loans.index')->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success']);
@@ -414,6 +423,7 @@ class LoanController extends Controller
         }
     }
 
+    // funcion para entregar dinero al beneficiario
     public function moneyDeliver($loan)
     {
         DB::beginTransaction();
@@ -423,17 +433,20 @@ class LoanController extends Controller
             $loan = Loan::where('id', $loan)->first();
             $loan->update(['delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
 
-            // return Carbon::now();
+            // return $loan;
 
 
 
-            $date = date("d-m-Y",strtotime(Carbon::now()."+ 1 days"));
-            // return $date;
+            // $date = date("d-m-Y",strtotime(Carbon::now()."+ 1 days"));
+            $date = date("d-m-Y",strtotime(date('y-m-d h:i:s')."+ 1 days"));
+
+         
             for($i=1;$i<=$loan->day; $i++)
             {
                 $fecha = Carbon::parse($date);
                 $fecha = $fecha->format("l");
-                if($fecha == 'Sunday')
+                // return $fecha;
+                if($fecha == 'Sunday' )
                 {
                     $date = date("Y-m-d", strtotime($date));
                     $date = date("d-m-Y",strtotime($date."+ 1 days"));
@@ -442,8 +455,8 @@ class LoanController extends Controller
                 LoanDay::create([
                     'loan_id' => $loan->id,
                     'number' => $i,
-                    'debt' => $loan->amountDay,
-                    'amount' => $loan->amountDay,
+                    'debt' => $loan->amountTotal/$loan->day,
+                    'amount' => $loan->amountTotal/$loan->day,
 
                     'register_userId' => $agent->id,
                     'register_agentType' => $agent->role,
@@ -473,38 +486,116 @@ class LoanController extends Controller
 
 
 
+    // para ver el prestamos y poder abonar o pagar el dinero
     public function dailyMoney($loan)
     {
         $id = $loan;
-        $loan = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+        $loan = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people', 'guarantor'])
             ->where('deleted_at', null)->where('id',$id)->first();
 
-        $loanday = LoanDay::where('loan_id', $id)->where('deleted_at', null)->get();
+        $loanday = LoanDay::where('loan_id', $id)->where('deleted_at', null)->orderBy('number', 'ASC')->get();
         // return $loanday;
         
-        $agent = LoanRoute::with(['agent'])->where('loan_id', $id)->where('status', 1)->where('deleted_at', null)->first();
+        $route = LoanRoute::with(['route'])->where('loan_id', $id)->where('status', 1)->where('deleted_at', null)->first();
 
-        // return $agent;
+        // return $id;
         $register = Auth::user();
         // return $register->role->name;
+        $date = date('Y-m-d');
+        // return $loanday;
 
 
-        return view('loans.add-money', compact('loan', 'agent', 'loanday', 'register'));
+        return view('loans.add-money', compact('loan', 'route', 'loanday', 'register', 'date'));
 
     }
-
+// funcion para guardar el dinero diario en ncada prestamos
     public function dailyMoneyStore(Request $request)
     {
+        // return $request;
+        $loan =Loan::where('id', $request->loan_id)->first();
+        if($request->amount > $loan->debt)
+        {
+            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Monto Incorrecto.', 'alert-type' => 'error']);
+        }
         DB::beginTransaction();
         try {
-            LoanDayAgent::create([
-                'loanDay_id' => $request->day_id,
-                'amount' => $request->amount,
-                'agent_id' => $request->agent_id,
-                'agentType' => $this->agent($request->agent_id)->role
-            ]);
-            Loan::where('id', $request->loan_id)->decrement('debt', $request->amount);
-            LoanDay::where('id', $request->day_id)->decrement('debt', $request->amount);
+
+            $amount = $request->amount;
+            
+            $ok = LoanDay::where('loan_id', $request->loan_id)->where('date', $request->date)->where('debt', '>', 0)->first();
+            // return $request;
+            if($ok)
+            {
+                // return "fecha actual";
+                $debt = $ok->debt;
+                if($amount > $debt)
+                {
+                    $amount = $amount-$debt;
+                }
+                else
+                {                    
+                    $debt = $amount;
+                    $amount = 0;
+                }
+                LoanDay::where('id', $ok->id)->decrement('debt', $debt);
+
+                LoanDayAgent::create([
+                    'loanDay_id' => $ok->id,
+                    'amount' => $debt,
+                    'agent_id' => $request->agent_id,
+                    'agentType' => $this->agent($request->agent_id)->role
+                ]);
+                Loan::where('id', $request->loan_id)->decrement('debt', $debt);
+
+            }
+
+            if($amount>0)
+            {
+                // return $amount;
+                $day = LoanDay::where('loan_id', $request->loan_id)->where('debt', '>', 0)->orderBy('number', 'ASC')->get();
+                // return $day;
+                foreach($day as $item)
+                {
+                    $debt = $item->debt;
+                    if($amount > $debt)
+                    {
+                        $amount = $amount-$debt;
+                    }
+                    else
+                    {                    
+                        $debt = $amount;
+                        $amount = 0;
+                    }
+
+                    LoanDay::where('id', $item->id)->decrement('debt', $debt);
+
+                    LoanDayAgent::create([
+                        'loanDay_id' => $item->id,
+                        'amount' => $debt,
+                        'agent_id' => $request->agent_id,
+                        'agentType' => $this->agent($request->agent_id)->role
+                    ]);
+                    Loan::where('id', $request->loan_id)->decrement('debt', $debt);
+                    if($amount<=1)
+                    {
+                        break;
+                    }
+
+                }
+
+            }
+            // return 1;
+
+
+
+            // LoanDayAgent::create([
+            //     'loanDay_id' => $request->day_id,
+            //     'amount' => $request->amount,
+            //     'agent_id' => $request->agent_id,
+            //     'agentType' => $this->agent($request->agent_id)->role
+            // ]);
+            // Loan::where('id', $request->loan_id)->decrement('debt', $request->amount);
+            // LoanDay::where('id', $request->day_id)->decrement('debt', $request->amount);
             DB::commit();
             return redirect()->route('loans-daily.money', ['loan' => $request->loan_id])->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {

@@ -49,6 +49,10 @@ class Loan extends Model
     {
         return $this->belongsTo(People::class, 'people_id');
     }
+    public function guarantor()
+    {
+        return $this->belongsTo(People::class, 'guarantor_id');
+    }
 
     public function loanDay()
     {

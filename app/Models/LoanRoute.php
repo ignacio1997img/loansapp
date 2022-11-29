@@ -20,10 +20,15 @@ class LoanRoute extends Model
         'deleted_agentType'
     ];
 
-    public function agent()
+    public function route()
     {
-        return $this->belongsTo(User::class, 'agent_id');
+        return $this->belongsTo(Route::class, 'route_id');
     }
+
+    // public function agent()
+    // {
+    //     return $this->belongsTo(User::class, 'agent_id');
+    // }
 
     public function loan()
     {

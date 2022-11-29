@@ -15,7 +15,6 @@
 
     @section('content')
         <div class="page-content edit-add container-fluid">    
-            
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-bordered">
@@ -27,20 +26,20 @@
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <small>Fot. CI (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="ci" id="ci" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="ci" id="ci" class="form-control text imageLength">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <small>Fot. Luz o Agua (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="luz" id="luz" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="luz" id="luz" class="form-control text imageLength">
                                     </div>
                                     <div class="form-group col-md-3">
                                         <small>Foto Croquis (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="croquis" id="croquis" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="croquis" id="croquis" class="form-control text imageLength">
                                     </div>
                                     
                                     <div class="form-group col-md-3">
                                         <small>Foto Empresa (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="business" id="business" class="form-control text">
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="business" id="business" class="form-control text imageLength">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -80,16 +79,16 @@
                                                         <td style="height: 50px">Fotocopia Carnet Identidad</td>
                                                         <td style="text-align: center">
                                                             @if (!$requirement->ci)
-                                                                <label class="label label-danger">SN</label>
+                                                                <label class="label label-danger">Sin datos</label>
                                                             @else                                                                
                                                                 <a href="{{asset('storage/'.$requirement->ci)}}" title="Ver" target="_blank">
                                                                     <img @if(strpos($requirement->ci, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->ci)}}" @endif href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
                                                                 </a> 
                                                             @endif
                                                         </td>
-                                                        @if ($requirement->status == 2)
+                                                        @if ($requirement->status == 2)                                                        
                                                         <td class="no-sort no-click bread-actions text-right">
-                                                            @if ($requirement->croquis)
+                                                            @if ($requirement->ci)
                                                                 <form action="{{ route('loans-daily-requirement.delete', ['loan'=>$requirement->loan_id, 'col'=>0]) }}" method="GET">
                                                                     {{ csrf_field() }}
                                                                     <button type="submit" title="Borrar" class="btn btn-sm btn-danger delete" >
@@ -104,7 +103,7 @@
                                                         <td style="height: 50px">Fotocopia de Luz o Agua</td>
                                                         <td style="text-align: center">
                                                             @if (!$requirement->luz)
-                                                                <label class="label label-danger">SN</label>
+                                                                <label class="label label-danger">Sin datos</label>
                                                             @else
                                                                 <a href="{{asset('storage/'.$requirement->luz)}}" title="Ver" target="_blank">
                                                                     <img @if(strpos($requirement->luz, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->luz)}}" @endif href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
@@ -113,7 +112,7 @@
                                                         </td>
                                                         @if ($requirement->status == 2)
                                                         <td class="no-sort no-click bread-actions text-right">
-                                                            @if ($requirement->croquis)
+                                                            @if ($requirement->luz)
                                                                 <form action="{{ route('loans-daily-requirement.delete', ['loan'=>$requirement->loan_id, 'col'=>1]) }}" method="GET">
                                                                     {{ csrf_field() }}
                                                                     <button type="submit" title="Borrar" class="btn btn-sm btn-danger delete" >
@@ -128,7 +127,7 @@
                                                         <td style="height: 50px">Foto de Croquis</td>
                                                         <td style="text-align: center">
                                                             @if (!$requirement->croquis)
-                                                                <label class="label label-danger">SN</label>
+                                                                <label class="label label-danger">Sin datos</label>
                                                             @else
                                                                 <a href="{{asset('storage/'.$requirement->croquis)}}" title="Ver" target="_blank">
                                                                     <img @if(strpos($requirement->croquis, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->croquis)}}" @endif  href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
@@ -152,7 +151,7 @@
                                                         <td style="height: 50px">Foto del Negocio</td>
                                                         <td style="text-align: center">
                                                             @if (!$requirement->business)
-                                                                <label class="label label-danger">SN</label>
+                                                                <label class="label label-danger">Sin datos</label>
                                                             @else
                                                                 <a href="{{asset('storage/'.$requirement->business)}}" title="Ver" target="_blank">
                                                                     <img @if(strpos($requirement->business, ".pdf")) src="{{asset('images/icon/pdf.png')}}" @else src="{{asset('storage/'.$requirement->business)}}" @endif href="{{asset('storage/'.$requirement->croquis)}}" class="zoom" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"/>
@@ -230,14 +229,14 @@
     @endsection
 
     @section('javascript')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> --}}
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.5/sweetalert2.min.js"></script> --}}
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+    {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
+{{-- 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.8.0/sweetalert2.min.js"></script>
-    
+     --}}
         <script>
             $(document).ready(function(){
                 $('.zoom').hover(function() {
@@ -252,29 +251,16 @@
                 $('#delete_form').attr('action', url);
             }
 
-            $(document).on('change','.text',function(){
-                // this.files[0].size recupera el tamaño del archivo
-                // alert(this.files[0].size);
-
-                // swal({
-                //         title: "Error",
-                //         text: "El Campo Nro. CITE tiene que tener minimo 2 letras y 5 numeros.\nEjemplo: DF-1/2022",
-                //         // text: "Esta acción ya no se podrá deshacer, Así que piénsalo bien.",
-                //         type: "error",
-                //         showCancelButton: false
-                //         });
-                
-                
+            $(document).on('change','.imageLength',function(){
                 var fileName = this.files[0].name;
                 var fileSize = this.files[0].size;
 
-                if(fileSize > 5000000){
-                    swal({
-                        title: "Error",
-                        text: "El archivo no debe superar los 5MB",
-                        type: "error",
-                        showCancelButton: false
-                    });
+                if(fileSize > 10000000){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'El archivo no debe superar los 10 MB!'
+                    })
                     this.value = '';
                     this.files[0].name = '';
                 }
@@ -285,20 +271,18 @@
                     // Convertimos en minúscula porque 
                     // la extensión del archivo puede estar en mayúscula
                     ext = ext.toLowerCase();
-                    accept="image/jpeg,image/jpg,image/png"
                     // console.log(ext);
                     switch (ext) {
                         case 'jpg':
                         case 'jpeg':
-                        case 'png':
+                        case 'png': 
                         case 'pdf': break;
                         default:
-                            swal({
-                                title: "Error",
-                                text: "El archivo no tiene la extensión adecuada",
-                                type: "error",
-                                showCancelButton: false
-                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'El archivo no tiene la extensión adecuada!'
+                            })
                             this.value = ''; // reset del valor
                             this.files[0].name = '';
                     }
