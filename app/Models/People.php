@@ -35,5 +35,9 @@ class People extends Model
         'register_userId',
         'deleted_at',
         'deleted_userId'
-    ];  
+    ]; 
+    public function name()
+    {
+        return $this->last_name1.' '.$this->last_name2.' '.$this->first_name;
+    }
 }

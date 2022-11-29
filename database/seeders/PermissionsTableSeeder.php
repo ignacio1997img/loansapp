@@ -77,7 +77,7 @@ class PermissionsTableSeeder extends Seeder
             'deliverMoney_loans', //para quye entregen el dinero al beneficiario
 
 
-            'addMoneyDaily_loans',
+            'addMoneyDaily_loans',//para agregar o pagar el prestamo diario
 
             // 'addMoneyDaily_loans',
 

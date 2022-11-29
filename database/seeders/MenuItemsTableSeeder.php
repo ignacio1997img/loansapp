@@ -191,9 +191,9 @@ class MenuItemsTableSeeder extends Seeder
                 'parent_id' => NULL,
                 'order' => 6,
                 'created_at' => '2022-10-26 17:33:41',
-                'updated_at' => '2022-11-22 01:29:45',
-                'route' => 'voyager.categories.index',
-                'parameters' => 'null',
+                'updated_at' => '2022-11-29 16:54:32',
+                'route' => NULL,
+                'parameters' => '',
             ),
             11 => 
             array (

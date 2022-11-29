@@ -118,35 +118,45 @@
 
                             <h3 id="h3"><i class="voyager-dollar"></i> Detalle del Pago</h3>
                             <hr>
-                            @if ($loan->debt != 0)                                
-                            
-                            <form id="agent" action="{{route('loans-daily-money.store')}}" method="POST">
-                            @csrf
-                                <div class="row">
-                                    <input type="hidden" name="date" value="{{$date}}">
-                                    <input type="hidden" name="cashier_id" value="{{$cashier_id}}">
-                                       
-                                    <div class="form-group col-md-8">
-                                        <input type="hidden" name="loan_id" value="{{$loan->id}}">
-                                    </div>  
-                                    <div class="form-group col-md-2">
-                                        <small>Cuota</small>
-                                        <input type="text" name="amount" id="amount" onkeypress='return inputNumeric(event)' onchange="subTotal()" onkeyup="subTotal()" id="bloquear" style="text-align: right" class="form-control text" required>                                    
-                                        <b class="text-danger" id="label-amount" style="display:none">El monto ingresado es mayor a la deuda pendiente..</b>
-                                    </div>   
-                                    <div class="form-group col-md-2">
-                                        <small>Registrado Por</small>
-                                        <select name="agent_id" id="agent_id" class="form-control select2" required>
-                                            <option value="{{$register->id}}" selected>{{$register->name}} - {{$register->role->name}}</option>                                  
-                                        </select>
-                                    </div>                                
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 text-right">
-                                        <button type="submit" id="btn-sumit" disabled class="btn btn-success"><i class="fa-solid fa-money-bill"></i> Pagar</button>
+                            @if ($cashier_id==0 && $loan->debt != 0 )  
+                                    <div class="alert alert-warning">
+                                        <strong>Advertencia:</strong>
+                                        <p>No puedes crear un nuevo prestamo debido a que no tiene una caja asignada.</p>
                                     </div>
-                                </div>
-                            </form> 
+                            @endif
+                            @if (auth()->user()->hasPermission('addMoneyDaily_loans'))
+                                
+                            
+                                @if ($loan->debt != 0 && $cashier_id!=0)                                
+                                
+                                    <form id="agent" action="{{route('loans-daily-money.store')}}" method="POST">
+                                    @csrf
+                                        <div class="row">
+                                            <input type="hidden" name="date" value="{{$date}}">
+                                            <input type="hidden" name="cashier_id" value="{{$cashier_id}}">
+                                            
+                                            <div class="form-group col-md-8">
+                                                <input type="hidden" name="loan_id" value="{{$loan->id}}">
+                                            </div>  
+                                            <div class="form-group col-md-2">
+                                                <small>Cuota</small>
+                                                <input type="text" name="amount" id="amount" onkeypress='return inputNumeric(event)' onchange="subTotal()" onkeyup="subTotal()" style="text-align: right" class="form-control text" required>                                    
+                                                <b class="text-danger" id="label-amount" style="display:none">El monto ingresado es mayor a la deuda pendiente..</b>
+                                            </div>   
+                                            <div class="form-group col-md-2">
+                                                <small>Registrado Por</small>
+                                                <select name="agent_id" id="agent_id" class="form-control select2" required>
+                                                    <option value="{{$register->id}}" selected>{{$register->name}} - {{$register->role->name}}</option>                                  
+                                                </select>
+                                            </div>                                
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <button type="submit" id="btn-sumit" disabled class="btn btn-success"><i class="fa-solid fa-money-bill"></i> Pagar</button>
+                                            </div>
+                                        </div>
+                                    </form> 
+                                @endif
                             @endif
                             <div class="col-md-8">
                                 <table width="100%" border="1" cellpadding="5" style="font-size: 12px">
@@ -605,7 +615,7 @@
         </script>
         <script>
             $(document).ready(function(){
-                $("#bloquear").on('paste', function(e){
+                $("#amount").on('paste', function(e){
                     e.preventDefault();
                     // alert('Esta acción está prohibida');
                 })                

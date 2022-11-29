@@ -32,7 +32,7 @@
                         <div class="col-md-6">
                             <form name="form_close" action="{{ route('cashiers.confirm_close.store', ['cashier' => $cashier->id]) }}" method="post">
                                 @csrf
-                                <table class="table table-hover">
+                                <table id="dataStyle" class="table table-hover">
                                     <thead>
                                         <tr>
                                             <th>Corte</th>
@@ -100,10 +100,12 @@
                         </div>
                         @php
                             $cashier_in = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');
+                            $cashier_balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');
 
-                            $sub = \App\Models\Adition::where('cashier_id', $cashier->id)
-                                                        ->where('deleted_at', null)
-                                                        ->sum('cant');
+                            // $sub = \App\Models\Adition::where('cashier_id', $cashier->id)
+                            //                             ->where('deleted_at', null)
+                            //                             ->sum('cant');
+                            $sub =0;
                             $movements = $cashier_in + $sub;
                             $total = $movements;
                         @endphp
@@ -118,19 +120,20 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p style="margin-top: 20px">Servicios Atendido</p>
+                                    <p style="margin-top: 20px">Dinero disponible en Caja</p>
                                 </div>
                                 <div class="col-md-6">
-                                <h3 class="text-right" style="padding-right: 20px">{{ number_format($sub, 2, ',', '.') }}</h3>
+                                    <h3 class="text-right" style="padding-right: 20px">{{ number_format($cashier_balance, 2, ',', '.') }}</h3>
                                 </div>
                             </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p style="margin-top: 20px">Total</p>
+                                    <p style="margin-top: 20px">Total a enviar bóveda</p>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="panel-heading" style="border-bottom:0;">
-                                        <h3 class="text-right" style="padding-right: 20px">{{ number_format($total, 2, ',', '.') }}</h3>
+                                        <h3 class="text-right" style="padding-right: 20px">{{ number_format($cashier_balance, 2, ',', '.') }}</h3>
                                     </div>
                                 </div>
                             </div>

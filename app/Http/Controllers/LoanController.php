@@ -564,7 +564,7 @@ class LoanController extends Controller
 
             $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
             // return $movement;
-            $movement->decrement('balance', $loan->amountTotal);
+            $movement->decrement('balance', $loan->amountLoan);
 
 
             $user = Auth::user();

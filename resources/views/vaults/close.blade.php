@@ -202,7 +202,7 @@
                                                 @if ($detail->type == 'ingreso')
                                                     <label class="label label-success">Ingreso</label>
                                                 @else
-                                                <label class="label label-danger">Egreso</label>
+                                                    <label class="label label-danger">Egreso</label>
                                                 @endif
                                                 <br>
                                                 {{-- <b>Nro de chaque: </b> {{ $detail->bill_number ?? 'S/N' }} <br> --}}

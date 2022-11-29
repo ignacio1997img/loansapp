@@ -55,10 +55,14 @@ class PermissionRoleTableSeeder extends Seeder
         //############## Cajero ####################
         $role = Role::where('name', 'cajeros')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
+                                            table_name = "people" or
+
                                             `key` = "browse_loans" or
                                             `key` = "add_loans" or
 
-                                            `key` = "deliverMoney_loans" or
+                                            `key` = "deliverMoney_loans" or 
+                                            
+                                            `key` = "addMoneyDaily_loans" or 
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());

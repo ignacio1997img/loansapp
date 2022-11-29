@@ -26,6 +26,7 @@
                                 <div class="panel-body">
                                     @php
                                         $cashier_in = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');
+                                        $cashier_balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');
                                         // dd($cashier_in);
                                         // $cashier_out = $cashier->movements->where('type', 'egreso')->where('deleted_at', NULL)->sum('amount');
                                         // $payments = $cashier->payments->where('deleted_at', NULL)->sum('amount');
@@ -59,6 +60,40 @@
                     </div>
 
                     @if ($cashier->status == 'abierta')
+
+                        @php
+                            $loans = \App\Models\Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                                        ->where('deleted_at', null)->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
+                            $loanTotal = 0;
+                            foreach ($loans as $item) {
+                                $loanTotal+= $item->amountLoan;
+                            }
+
+                            $trans = \DB::table('loans as l')
+                                    ->join('loan_days as ld', 'ld.loan_id', 'l.id')
+                                    ->join('loan_day_agents as lda', 'lda.loanDay_id', 'ld.id')
+                                    ->join('transactions as t', 't.id', 'lda.transaction_id')
+                                    ->join('users as u', 'u.id', 'lda.agent_id')
+                                    ->join('people as p', 'p.id', 'l.people_id')
+                                    ->where('lda.status', 1)
+                                    ->where('lda.deleted_at', null)
+                                    ->where('lda.cashier_id', $cashier->id)
+
+                                    ->where('ld.deleted_at', null)
+                                    ->where('ld.status', 1)
+
+                                    ->where('l.deleted_at', null)
+
+                                    ->select('l.id as loan', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.id as people', 'lda.transaction_id', 't.transaction', 't.created_at')
+                                    ->groupBy('loan', 'transaction')
+                                    ->orderBy('transaction', 'ASC')
+                                    ->get();
+                            $transTotal = 0;
+                            foreach ($trans as $item) {
+                                $transTotal+= $item->amount;
+                            }
+                                // dd($loans);
+                        @endphp
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
@@ -71,18 +106,22 @@
                                                         <td class="text-right"><h3>{{ number_format($cashier_in, 2, ',', '.') }} <small>Bs.</small></h3></td>
                                                     </tr>
                                                     <tr>
-                                                        <td><small>Servicios Atendido</small></td>
-                                                        <td class="text-right"><h3>{{ number_format($amount, 2, ',', '.') }} <small>Bs.</small></h3></td>
-                                                    </tr>
-                                                    {{-- <tr>
-                                                        <td><small>Pagos realizados ({{ $cashier->payments->where('deleted_at', NULL)->count() }})</small></td>
-                                                        <td class="text-right"><h3>{{ number_format($payments, 2, ',', '.') }} <small>Bs.</small></h3></td>
-                                                    </tr> --}}
-                                                    <tr>
-                                                        <td><small>TOTAL EN CAJA</small></td>
-                                                        <td class="text-right"><h3>{{ number_format($total, 2, ',', '.') }} <small>Bs.</small></h3></td>
+                                                        <td><small>Dinero disponible en Caja</small></td>
+                                                        <td class="text-right"><h3>{{ number_format($cashier_balance, 2, ',', '.') }} <small>Bs.</small></h3></td>
                                                     </tr>
                                                 </table>
+                                                <hr>
+                                                <table width="100%" cellpadding="20">
+                                                    <tr>
+                                                        <td><small>Pagos Cobrados</small></td>
+                                                        <td class="text-right"><h3>{{ number_format($transTotal, 2, ',', '.') }} <small>Bs.</small></h3></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><small>Prestamos Entregados</small></td>
+                                                        <td class="text-right"><h3>{{ number_format($loanTotal, 2, ',', '.') }} <small>Bs.</small></h3></td>
+                                                    </tr>
+                                                </table>
+                                            
                                             </div>
                                             <div class="col-md-6">
                                                 <canvas id="myChart"></canvas>
@@ -94,29 +133,51 @@
                         </div>
 
                         <div class="row">
+                            
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
-                                        <h3>Detalle de servicios realizados</h3>
-                                        <table id="dataTable" class="table table-bordered table-bordered">
+                                        <h3 id="h3">Prestamos Entregados <label class="label label-danger">Egreso</label></h3>
+                                        <table id="dataStyle" class="table table-bordered table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th style="text-align: center">Id</th>
-                                                    <th style="text-align: center">Cliente</th>
-                                                    <th style="text-align: center">Servicios</th>
-                                                    <th style="text-align: center">Plan</th>
-                                                    <th style="text-align: right">Monto Cobrado</th>
-                                                    <th style="text-align: center">Monto Tatal</th>
-                                                    <th style="text-align: right">Acciones</th>
+                                                    <th>Id</th>
+                                                    <th>Fecha de Entrega</th>
+                                                    <th>Nombre Cliente</th>                    
+                                                    <th>Tipo de Préstamos</th>                    
+                                                    <th>Monto Prestado</th>                    
+                                                    {{-- <th>Interés a Cobrar</th>   
+                                                    <th>Total a Pagar</th>  --}}
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @php
-                                                    $cont = 0;
-                                                    $total = 0;
-                                                    $i = 1;
+                                                    $amountLoanTotal = 0;
                                                 @endphp
-
+                                                @forelse ($loans as $item)
+                                                    <tr>
+                                                        <td>{{ $item->id }}</td>
+                                                        <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
+                                                        <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
+                                                        <td>{{$item->typeLoan}}</td>
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
+                                                        {{-- <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td> --}}        
+                                                    </tr>
+                                                    @php
+                                                        $amountLoanTotal+= $item->amountLoan;
+                                                    @endphp
+                                                @empty
+                                                    <tr>
+                                                        <td style="text-align: center" valign="top" colspan="5" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                    </tr>
+                                                @endforelse
+                                                @if ($amountLoanTotal != 0)
+                                                    <tr>
+                                                        <td colspan="4">Total</td>
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$amountLoanTotal}}</td>     
+                                                    </tr>
+                                                @endif
                                                 
                                             </tbody>
                                         </table>
@@ -124,20 +185,26 @@
                                 </div>
                             </div>
                         </div>
+                        @php
+
+                            
+                                // dd($trans);
+                        @endphp
 
                         <div class="row">
+                            
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
-                                        <h3>Detalle de movimientos de caja</h3>
-                                        <table class="table table-bordered">
+                                        <h3 id="h3">Cobros Realizados <label class="label label-success">Ingreso</label></h3>
+                                        <table id="dataStyle" class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>N&deg;</th>
-                                                    <th>Detalle</th>
-                                                    <th>Tipo</th>
-                                                    <th class="text-right">Monto</th>
-                                                    {{-- <th class="text-right">Acciones</th> --}}
+                                                    <th style="text-align: center; width:12%">N&deg; Transacción</th>                                                    
+                                                    <th style="text-align: center">Fecha</th>
+                                                    <th style="text-align: center">Atendido Por</th>
+                                                    <th style="text-align: center">Monto</th>
+                                                    {{-- <th style="text-align: right">Acciones</th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -145,29 +212,29 @@
                                                     $cont = 1;
                                                     $total_movements = 0;
                                                 @endphp
-                                                @foreach ($cashier->movements->where('deleted_at', NULL) as $item)
+                                                @forelse ($trans as $item)
                                                     <tr>
-                                                        <td>{{ $cont }}</td>
-                                                        <td>{{ $item->description }}</td>
-                                                        <td><label class="label label-{{ $item->type == 'ingreso' ? 'success' : 'danger' }}">{{ $item->type }}</label></td>
-                                                        <td class="text-right">{{ $item->amount }}</td>
-                                                        {{-- <td class="text-right">
-                                                            <button type="button" onclick="print_transfer({{ $item->id }})" title="Imprimir" class="btn btn-default"><i class="glyphicon glyphicon-print"></i> Imprimir</button>
-                                                        </td> --}}
+                                                        <td style="text-align: center">{{$item->transaction}}</td>
+                                                        <td style="text-align: center">
+                                                            {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
+                                                        </td>
+                                                        <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
+                                                        <td style="text-align: right">BS. {{$item->amount}}</td>
                                                     </tr>
                                                     @php
-                                                        $cont++;
-                                                        if($item->type == 'ingreso'){
-                                                            $total_movements += $item->amount;
-                                                        }else{
-                                                            $total_movements -= $item->amount;
-                                                        }
+                                                        $total_movements+= $item->amount;
                                                     @endphp
-                                                @endforeach
-                                                <tr>
-                                                    <td colspan="3"><h5>TOTAL</h5></td>
-                                                    <td  colspan="1" class="text-right"><h4><small>Bs.</small> {{ number_format($total_movements, 2, ',', '.') }}</h4></td>
-                                                </tr>
+                                                 @empty
+                                                    <tr>
+                                                        <td style="text-align: center" valign="top" colspan="4" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                    </tr>
+                                                @endforelse
+                                                @if ($total_movements != 0)
+                                                    <tr>
+                                                        <td colspan="3">Total</td>
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
+                                                    </tr>
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
@@ -298,6 +365,27 @@
                         </div>
                     </div>
 
+                    <form action="{{ route('cashiers.close.revert', ['cashier' => $cashier->id]) }}" method="post">
+                        @csrf
+                        <div class="modal fade" tabindex="-1" id="cashier-revert-modal" role="dialog">
+                            <div class="modal-dialog modal-success">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title"><i class="voyager-key"></i> Reabrir Caja</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-muted">Si reabre la caja deberá realizar el arqueo nuevamente, ¿Desea continuar?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-success">Si, reabrir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
                 @endif
             @else
                 <div class="row">
@@ -322,15 +410,19 @@
                 $(document).ready(function(){
                     const data = {
                         labels: [
-                            'Dinero Asignado a Caja',
-                            'Servicios Atendido'
+                            // 'Dinero Asignado a Caja',
+                            'Dinero Disponible en Caja',
+                            'Pagos Cobrados',
+                            'Prestamos Entregados'
                         ],
                         datasets: [{
                             label: 'My First Dataset',
-                            data: ["{{ $cashier_in }}", "{{ $amount }}"],
+                            data: ["{{ $cashier_balance }}", "{{$transTotal}}", "{{$loanTotal}}"],
                             backgroundColor: [
-                            'rgb(54, 162, 257)',
-                            'rgb(54, 205, 1)'
+                            // 'rgb(54, 162, 257)',
+                            'rgb(54, 162, 117)',
+                            'rgb(12, 55, 101)',
+                            'red'
                             ],
                             hoverOffset: 4
                         }]
