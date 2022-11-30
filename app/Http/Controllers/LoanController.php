@@ -215,7 +215,7 @@ class LoanController extends Controller
             $imageObj = new FileController;
             $ok = LoanRequirement::where('loan_id', $loan)->first();
             $file = $request->file('ci');
-            return $loan;
+            return $ok;
             if($file)
             {                 
                 if($file->getClientOriginalExtension()=='pdf')
@@ -276,6 +276,7 @@ class LoanController extends Controller
             return redirect()->route('loans-requirement-daily.create', ['loan'=>$loan])->with(['message' => 'Requisitos registrado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
+            return $th;
             return redirect()->route('loans-requirement-daily.create', ['loan'=>$loan])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
         
