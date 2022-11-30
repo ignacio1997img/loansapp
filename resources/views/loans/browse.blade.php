@@ -439,7 +439,8 @@
             
             $('#deliver_form').attr('action', url);
             loanC = id;
-            // alert(parseFloat(balance).toFixed(2))
+            alert(parseFloat(balance).toFixed(2))
+            alert(parseFloat(amountTotal).toFixed(2))
             if(amountTotal > balance && cashier_id!=0)
             {
                 // $('#btn-submit-delivered').attr('disabled', 'disabled');
