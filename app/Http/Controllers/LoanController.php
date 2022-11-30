@@ -221,14 +221,14 @@ class LoanController extends Controller
                 if($file->getClientOriginalExtension()=='pdf')
                 {
                     $ci = $imageObj->file($file, $loan, "Loan/requirement/daily/ci");
-                    return 0;
+                    // return 0;
                 }
                 else
                 {
                     $ci = $imageObj->image($file, $loan, "Loan/requirement/daily/ci");
-                    return 1;
+                    // return 1;
                 }                
-                // $ok->update(['ci' => $ci]);
+                $ok->update(['ci' => $ci]);
             }
 
             $file = $request->file('luz');
