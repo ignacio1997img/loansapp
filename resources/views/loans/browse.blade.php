@@ -440,7 +440,7 @@
             $('#deliver_form').attr('action', url);
             loanC = id;
             // alert(parseFloat(balance).toFixed(2))
-            if(parseFloat(amountTotal).toFixed(2) > parseFloat(balance).toFixed(2) && cashier_id!=0)
+            if(amountTotal > balance && cashier_id!=0)
             {
                 // $('#btn-submit-delivered').attr('disabled', 'disabled');
                 $('#btn-submit-delivered').css('display', 'none');
@@ -454,7 +454,7 @@
                 })
                 // $("#deliver-modal").modal('hide');
             }
-            if(parseFloat(amountTotal).toFixed(2) < parseFloat(balance).toFixed(2) && cashier_id!=0)
+            if(amountTotal < balance && cashier_id!=0)
             {
                 $('#btn-submit-delivered').css('display', 'block');
             }
