@@ -73,6 +73,7 @@
                                 <input type="text" id="input-search" class="form-control" placeholder="Ingrese busqueda..."> <br>
                             </div>
                             <div class="col-md-12 text-right">
+                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
                                 <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" checked>En Pagos</label>
                                 <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="aprobado">Por Entregar</label>
                                 <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="verificado">Por Aprobar</label>

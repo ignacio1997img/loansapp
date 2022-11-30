@@ -145,20 +145,25 @@ class LoanController extends Controller
                         ->where('deleted_at', NULL)->where('status', 'rechazado')->orderBy('id', 'DESC')->paginate($paginate);
                     return view('loans.list', compact('data', 'cashier_id'));
                     break;
+            case 'todo':
+                    $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                        ->where(function($query) use ($search){
+                            if($search){
+                                $query->OrwhereHas('people', function($query) use($search){
+                                    $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                                })
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                            }
+                        })
+                        ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
+                    return view('loans.list', compact('data', 'cashier_id'));
+                    break;
+
         }
 
       
 
-        // $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
-        //     ->where(function($query) use ($search){
-        //         if($search){
-        //             $query->OrwhereHas('people', function($query) use($search){
-        //                 $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
-        //             })
-        //             ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
-        //         }
-        //     })
-        //     ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
+        
 
         // return view('loans.list', compact('data', 'cashier_id'));
     }
