@@ -215,7 +215,7 @@ class LoanController extends Controller
             $imageObj = new FileController;
             $ok = LoanRequirement::where('loan_id', $loan)->first();
             $file = $request->file('ci');
-            dd($request);
+            // dd($request);
             if($file)
             {                 
                 if($file->getClientOriginalExtension()=='pdf')
