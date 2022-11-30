@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-// use Intervention\Image;
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image;
+// use Intervention\Image\ImageManagerStatic as Image;
 
 class FileController extends Controller
 {
