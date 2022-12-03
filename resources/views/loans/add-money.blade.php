@@ -186,6 +186,7 @@
                                             $month_f1 = $inicio1->format("m");
                                             $day_f1 = date('d', mktime(0,0,0, $month_f1, 1, $year1));
                                             $day_l1 = date("d", mktime(0,0,0, $month_f1+1, 0, $year1));
+                                            // dd($day_f1);
                         
                                             $date1 = $year1.'-'.$month_f1.'-'.$day_f1;
                                             $week1 = \Carbon\Carbon::parse($date1);
@@ -219,10 +220,18 @@
                                                                     @php
                                                                         $aux++;
                                                                         $ok=true;
-                                                                        $count++;
+                                                                        // $count++;
                                                                     @endphp                                     
                                                                     <td @if($day_f == $aux) style="height: 50px; text-align: center; background-color: #F8FF07" @else style="height: 50px; text-align: center" @endif>
-                                                                        <small @if($day_f == $aux && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{$aux}} </small>
+                                                                        <small @if($day_f == $aux && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>
+                                                                            {{$aux}}
+                                                                            @php
+                                                                                if($day_f == $aux)
+                                                                                {
+                                                                                    $count++;
+                                                                                }
+                                                                            @endphp
+                                                                        </small>
                                                                         @if( $day_f == $aux && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i>@endif
 
                                                                         <br>
@@ -234,6 +243,7 @@
                                                                             @endif
                                                                             @php
                                                                                 $number++;
+                                                                                // dd($number);
                                                                             @endphp
                                                                         @endif
                                                                     </td>
@@ -241,17 +251,22 @@
                                                                     @if ($ok)
                                                                         @php
                                                                             $aux++;
+                                                                            // dd($count);
                                                                         @endphp  
                                                                         @if ($i != 7)
                                                                             @php
-                                                                                $count++;
+                                                                                if($count !=0 || $day_f == $aux )
+                                                                                {
+                                                                                    $count++;
+                                                                                }
+                                                                                // $count++;
                                                                             @endphp
                                                                             <td @if($day_f == $aux || $count == 24) style="height: 50px; text-align: center; background-color: #F8FF07" @else style="height: 50px; text-align: center" @endif>
                                                                                 <small @if($count <= 24 && $loan->loanDay[$number]->late==1) style="font-size: 25px; color:#FF0000;" @else style="font-size: 25px;"@endif>{{ $aux <= $day_l1? $aux:''}}</small>
                                                                                 @if( $aux <= $day_l1 && $date === $year1.'-'.$month_f1.($aux <= 9 ? '-0'.$aux : '-'.$aux)) <i class="fa-solid fa-calendar-days"></i> @endif
 
                                                                                 <br>
-                                                                                @if($count <= 24)
+                                                                                @if($count !=0 && $count <= 24)
                                                                                     @if ($loan->loanDay[$number]->debt==0)
                                                                                         <label class="label label-success">Pagado</label>
                                                                                     @else

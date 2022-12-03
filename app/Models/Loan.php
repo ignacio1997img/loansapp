@@ -14,6 +14,7 @@ class Loan extends Model
         'guarantor_id',
         'cashier_id',
         
+        'code',
         'typeLoan',
         'date',
         'day',

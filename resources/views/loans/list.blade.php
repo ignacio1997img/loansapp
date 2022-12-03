@@ -3,7 +3,7 @@
         <table id="dataStyle" class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Codigo</th>
                     <th>Fecha Solicitud</th>
                     <th>Nombre Cliente</th>                    
                     <th>Tipo de Préstamos</th>                    
@@ -18,7 +18,7 @@
             <tbody>
                 @forelse ($data as $item)
                 <tr>
-                    <td>{{ $item->id }}</td>
+                    <td>{{ $item->code }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
                     <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
                     <td>{{$item->typeLoan}}</td>

@@ -20,6 +20,8 @@ class CreateLoansTable extends Migration
             
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
             
+            $table->string('code')->nullable();
+
             $table->string('typeLoan')->nullable();
             $table->date('date')->nullable();
             $table->integer('day')->nullable();

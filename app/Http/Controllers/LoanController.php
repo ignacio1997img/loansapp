@@ -74,7 +74,8 @@ class LoanController extends Controller
                             $query->OrwhereHas('people', function($query) use($search){
                                 $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                             })
-                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
                     ->where('deleted_at', NULL)->where('status', 'pendiente')->orderBy('id', 'DESC')->paginate($paginate);
@@ -87,7 +88,8 @@ class LoanController extends Controller
                                 $query->OrwhereHas('people', function($query) use($search){
                                     $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                                 })
-                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                                ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
                         ->where('deleted_at', NULL)->where('status', 'entregado')->where('debt', '!=', 0)->orderBy('id', 'DESC')->paginate($paginate);
@@ -100,7 +102,8 @@ class LoanController extends Controller
                             $query->OrwhereHas('people', function($query) use($search){
                                 $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                             })
-                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
                     ->where('deleted_at', NULL)->where('status', 'verificado')->orderBy('id', 'DESC')->paginate($paginate);
@@ -113,7 +116,8 @@ class LoanController extends Controller
                                 $query->OrwhereHas('people', function($query) use($search){
                                     $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                                 })
-                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                                ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
                         ->where('deleted_at', NULL)->where('status', 'aprobado')->orderBy('id', 'DESC')->paginate($paginate);
@@ -126,7 +130,8 @@ class LoanController extends Controller
                             $query->OrwhereHas('people', function($query) use($search){
                                 $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                             })
-                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
                     ->where('deleted_at', NULL)->where('debt', 0)->orderBy('id', 'DESC')->paginate($paginate);
@@ -139,7 +144,8 @@ class LoanController extends Controller
                                 $query->OrwhereHas('people', function($query) use($search){
                                     $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                                 })
-                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                                ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
                         ->where('deleted_at', NULL)->where('status', 'rechazado')->orderBy('id', 'DESC')->paginate($paginate);
@@ -152,7 +158,8 @@ class LoanController extends Controller
                                 $query->OrwhereHas('people', function($query) use($search){
                                     $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                                 })
-                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1);
+                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                                ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
                         ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
@@ -367,6 +374,8 @@ class LoanController extends Controller
                         'register_agentType' => $agent->role,
                         'status' => 'pendiente'
             ]);
+
+            $loan->update(['code'=>'CP-'.str_pad($loan->id, 5, "0", STR_PAD_LEFT)]);
             LoanRoute::create([
                 'loan_id' => $loan->id,
 

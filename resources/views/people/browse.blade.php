@@ -28,6 +28,14 @@
 @stop
 
 @section('content')
+
+{{-- <form name="form_search" id="form-search" action="{{ route('people.import') }}" method="post" enctype="multipart/form-data">
+
+    @csrf
+<input type="file" name="file">
+<button type="submit">aceptar</button>
+</form> --}}
+
     <div class="page-content browse container-fluid">
         <div class="row">
             <div class="col-md-12">

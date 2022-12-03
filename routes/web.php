@@ -8,6 +8,8 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
 use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
@@ -24,14 +26,16 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', [TemplateController::class, 'index']);
+
 Route::get('login', function () {
     return redirect('admin/login');
 })->name('login');
 
-Route::get('/', function () {
-    // return view('welcome');
-    return redirect('admin');
-});
+// Route::get('/', function () {
+//     return redirect('admin');
+// });
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -45,6 +49,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::delete('people/{people?}/sponsor/{sponsor?}/delete', [PeopleController::class, 'destroySponsor'])->name('people-sponsor.delete');
     Route::get('people/{people?}/sponsor/{sponsor?}/inhabilitar', [PeopleController::class, 'inhabilitarSponsor'])->name('people-sponsor.inhabilitar');
     Route::get('people/{people?}/sponsor/{sponsor?}/habilitar', [PeopleController::class, 'habilitarSponsor'])->name('people-sponsor.habilitar');
+
+    Route::post('people/importar', [PeopleController::class, 'import'])->name('people.import');
 
 
     Route::resource('loans', LoanController::class);
@@ -119,6 +125,16 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 
+    //____________________________________________________________________________REPORTE________________________________________________________________________
+    //::::::::::::::::::::dailyCollection:::::::::::
+    Route::get('print/dailyCollection', [ReportController::class, 'dailyCollection'])->name('print.dailyCollection');
+    Route::post('print/dailyCollection/list', [ReportController::class, 'dailyCollectionList'])->name('print-dailyCollection.list');
+
+
+
+
+
+
 
 
 
@@ -129,6 +145,12 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Route::get('loans/loanDay/late', [AjaxController::class, 'late'])->name('loans-loanDay.late');
 Route::get('loans/loanDay/notificationLate', [AjaxController::class, 'notificationLate'])->name('loans-loanDay.notificationLate');
+
+Route::post('template/loan/search', [TemplateController::class, 'searchLoan'])->name('template-loan.search');
+Route::post('template/loan/search/codeVerification', [TemplateController::class, 'codeVerification'])->name('template-loan-search.codeverification');
+Route::get('template/loan/search/verification/{loan?}/{phone?}/{code?}', [TemplateController::class, 'verification'])->name('template-loan-search.verification');
+
+
 
 Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
 

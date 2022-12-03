@@ -8,6 +8,8 @@ use App\Models\PeopleSponsor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PeopleImport;
 class PeopleController extends Controller
 {
     public function index()
@@ -126,5 +128,13 @@ class PeopleController extends Controller
             DB::rollBack();
             return redirect()->route('people-sponsor.index', ['id'=>$people])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file');
+        Excel::import(new PeopleImport, $file);
+        return 1;
+
     }
 }
