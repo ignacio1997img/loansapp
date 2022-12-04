@@ -29,8 +29,9 @@ class PeopleController extends Controller
         $data = People::where(function($query) use ($search){
                     $query->OrWhereRaw($search ? "id = '$search'" : 1)
                     ->OrWhereRaw($search ? "first_name like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "last_name like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "CONCAT(first_name, ' ', last_name) like '%$search%'" : 1)
+                    ->OrWhereRaw($search ? "last_name1 like '%$search%'" : 1)
+                    ->OrWhereRaw($search ? "last_name2 like '%$search%'" : 1)
+                    ->OrWhereRaw($search ? "CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%'" : 1)
                     ->OrWhereRaw($search ? "ci like '%$search%'" : 1);
                     // ->OrWhereRaw($search ? "phone like '%$search%'" : 1);
                     })

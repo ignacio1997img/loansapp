@@ -24,37 +24,69 @@
                                 <form id="agent" action="{{route('loans-requirement-daily.store', ['loan'=>$requirement->loan_id])}}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                 <div class="row">
-                                    <div class="form-group col-md-3">
-                                        <small>Fot. CI (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="ci" id="ci" class="form-control text imageLength">
+                                    <div class="form-group col-md-6">
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <input type="hidden" class="form-control" placeholder="lat" name="lat" id="lat" value="{{$requirement->latitude}}">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <input type="hidden" class="form-control" placeholder="lng" name="lng" id="lng" value="{{$requirement->longitude}}">
+                                            </div>
+                                        </div>
+                            
+                                        <div id="map" style="height:400px;" class="my-3"></div>
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <small>Fot. Luz o Agua (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="luz" id="luz" class="form-control text imageLength">
+                                    <div class="form-group col-md-6">
+                                        
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <small>Fot. CI (imagen)</small>
+                                                <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="ci" id="ci" class="form-control text imageLength">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <small>Fot. Luz o Agua (imagen)</small>
+                                                <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="luz" id="luz" class="form-control text imageLength">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <small>Foto Croquis (imagen)</small>
+                                                <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="croquis" id="croquis" class="form-control text imageLength">
+                                            </div>
+                                            
+                                            <div class="form-group col-md-6">
+                                                <small>Foto Empresa (imagen)</small>
+                                                <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="business" id="business" class="form-control text imageLength">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <small>Foto Croquis (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="croquis" id="croquis" class="form-control text imageLength">
-                                    </div>
+                                </div>
+                                </form> 
+
+                                {{-- <div class="mapform" > --}}
+                                
+                    
                                     
-                                    <div class="form-group col-md-3">
-                                        <small>Foto Empresa (imagen)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="business" id="business" class="form-control text imageLength">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 text-right">
-                                        <button type="submit" class="btn btn-primary">Guardar</button>
-                                    </div>
-                                </div>
-                                </form>  
+                                {{-- </div> --}}
+
+
+
+                                
                                 <br>
-                                <br>
-                                <br>
+                                @else
+                                <div id="map" style="height:400px;" class="my-3"></div>
                                 @endif
 
-                                {{-- @if ($ok && $requirement->status==2) --}}
-                                @if ($requirement->status==2)
+                                @if ($ok && $requirement->status==2 && $requirement->latitude!=NULL && $requirement->longitude!=NULL)
+                                {{-- @if ($requirement->status==2) --}}
                                     <div class="row">
                                         <div class="col-md-12 text-left">
                                             <button class="btn btn-success" data-toggle="modal" data-target="#success-modal">Aprobar Requisitos</button>
@@ -290,6 +322,46 @@
             });
             
         </script>
+
+        <script>
+            let map;
+            let lats = parseFloat('{{$requirement->latitude}}');
+            let lons = parseFloat('{{$requirement->longitude}}');
+            // alert(lats)
+            // center: { lat: -14.835043886073231, lng: -64.90415811538696 },
+            // var lons =
+            function initMap() {
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: { lat: -14.82694641121911, lng: -64.89879369735718 },
+                    zoom: 12,
+                    scrollwheel: false,
+                });
+
+                const uluru = { lat: lats, lng: lons};
+                let marker = new google.maps.Marker({
+                    position: uluru,
+                    map: map,
+                    draggable: true
+                });
+            // alert(lats)
+
+                google.maps.event.addListener(marker,'position_changed',
+                    function (){
+                        let lat = marker.position.lat()
+                        let lng = marker.position.lng()
+                        $('#lat').val(lat)
+                        $('#lng').val(lng)
+                    })
+
+                google.maps.event.addListener(map,'click',
+                function (event){
+                    pos = event.latLng
+                    marker.setPosition(pos)
+                })
+            }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHduwrb9r-FF2ArkvpkSv329Xmi_7gyRM&callback=initMap"
+                type="text/javascript"></script>
         
     @stop
 

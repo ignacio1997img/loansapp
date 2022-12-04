@@ -11,6 +11,8 @@ class LoanRequirement extends Model
 
     protected $fillable = [
         'loan_id',
+        'latitude',
+        'longitude',
         'ci',
         'luz',
         'croquis',

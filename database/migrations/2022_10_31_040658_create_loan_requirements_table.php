@@ -17,6 +17,9 @@ class CreateLoanRequirementsTable extends Migration
             $table->id();
             $table->foreignId('loan_id')->nullable()->constrained('loans');
 
+            $table->decimal('latitude',9,6)->nullable();
+            $table->decimal('longitude', 9,6)->nullable();
+
             $table->string('ci', 500)->nullable();
             $table->string('luz', 500)->nullable();
             $table->string('croquis', 500)->nullable();

@@ -217,6 +217,7 @@ class LoanController extends Controller
 
     public function storeRequirement(Request $request, $loan)
     {
+        // return $request;
         DB::beginTransaction();
         try {
             $imageObj = new FileController;
@@ -281,6 +282,16 @@ class LoanController extends Controller
 
                 $ok->update(['business' => $business]);
             }
+
+            if($request->lat)
+            {
+                $ok->update(['latitude' => $request->lat]);
+            }
+            if($request->lng)
+            {
+                $ok->update(['longitude' => $request->lng]);
+            }
+
             DB::commit();
             return redirect()->route('loans-requirement-daily.create', ['loan'=>$loan])->with(['message' => 'Requisitos registrado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {

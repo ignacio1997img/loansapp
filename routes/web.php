@@ -8,6 +8,7 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\CollectorController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
@@ -93,6 +94,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('routes/{route?}/collector/{collector?}/inhabilitar', [RouteController::class, 'inhabilitarCollector'])->name('routes.collector.inhabilitar');
     Route::get('routes/{route?}/collector/{collector?}/habilitar', [RouteController::class, 'habilitarCollector'])->name('routes.collector.habilitar');
     Route::delete('routes/{route?}/collector/{collector?}/delete', [RouteController::class, 'deleteCollector'])->name('routes.collector.delete');
+
+
+    Route::resource('collectors', CollectorController::class);
+    Route::get('collectors/ajax/list/{search?}', [PeopleController::class, 'list']);
+
 
 
 
