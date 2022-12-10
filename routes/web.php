@@ -137,6 +137,10 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('print/dailyCollection/list', [ReportController::class, 'dailyCollectionList'])->name('print-dailyCollection.list');
 
 
+    Route::get('print/dailyList', [ReportController::class, 'dailyList'])->name('print.dailyList');
+    Route::post('print/dailyList/list', [ReportController::class, 'dailyListList'])->name('print-dailyList.list');
+
+
 
 
 

@@ -187,6 +187,19 @@ class LoanController extends Controller
         ->where('deleted_at', NULL)->first();
 
         $people = People::where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
+        
+        // $people = DB::table('people as p')
+        //             ->leftJoin('loans as l', 'l.people_id', 'p.id')
+                    
+        //             // ->where('l.debt',0)
+
+        //             ->where('p.status',1)
+        //             ->where('p.token','!=', null)
+        //             ->select('p.id', 'p.first_name', 'p.last_name1', 'p.last_name2')
+        //             ->groupBy('p.id')
+        //             ->get();
+        // return $people;
+        
 
         $routes = Route::where('deleted_at', null)->where('status', 1)->orderBy('name')->get();
 

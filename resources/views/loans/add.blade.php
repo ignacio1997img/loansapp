@@ -64,13 +64,20 @@
                                         </select>
                                     </div>                                  
                                 </div>
+
+                                {{-- <select>
+                                    <optgroup label="Group Name">
+                                        <option>Nested option</option>
+                                    </optgroup>
+                                </select> --}}
+
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <small>Beneficiario del Prestamo</small>
                                         <select name="people_id" id="people_id" class="form-control select2" required>
                                             <option value="" disabled selected>-- Selecciona un tipo --</option>
                                             @foreach ($people as $item)
-                                                <option value="{{$item->id}}">{{$item->last_name1}} {{$item->last_name2}} {{$item->first_name}}</option>                                                
+                                                <option @if($item->status == 'entregado' && $item->debt > 0 ) disabled @endif value="{{$item->id}}" >{{$item->last_name1}} {{$item->last_name2}} {{$item->first_name}}</option>                                                
                                             @endforeach
                                         </select>
                                     </div>
@@ -84,7 +91,7 @@
                                         </select>
                                     </div>                                    
                                 </div>
-                                <input type="text" name="type" id="text_type">
+                                <input type="hidden" name="type" id="text_type">
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Monto a Prestar</small>
@@ -93,28 +100,28 @@
                                     <div class="form-group col-md-2">
                                         <small>Dias Total A Pagar</small>
                                         <input type="number" id="day1" value="24" style="text-align: right" disabled onkeypress='return inputNumeric(event)' onchange="diasPagar()" onkeyup="diasPagar()" class="form-control text">
-                                        <input type="number" name="day" id="day" onkeypress='return inputNumeric(event)' value="24" class="form-control">
+                                        <input type="hidden" name="day" id="day" onkeypress='return inputNumeric(event)' value="24" class="form-control">
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos</small>
                                         <input type="number" id="porcentage1" style="text-align: right" disabled value="20" onkeypress='return inputNumeric(event)' onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
-                                        <input type="number" name="porcentage" id="porcentage" onkeypress='return inputNumeric(event)' value="20" class="form-control">
+                                        <input type="hidden" name="porcentage" id="porcentage" onkeypress='return inputNumeric(event)' value="20" class="form-control">
                                     </div>    
                                     <div class="form-group col-md-2">
                                         <small>Interes a Pagar</small>
                                         <input type="number" id="amountPorcentage1" style="text-align: right" disabled value="0" onkeypress='return inputNumeric(event)' onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
-                                        <input type="number" name="amountPorcentage" id="amountPorcentage" onkeypress='return inputNumeric(event)' value="0" class="form-control">
+                                        <input type="hidden" name="amountPorcentage" id="amountPorcentage" onkeypress='return inputNumeric(event)' value="0" class="form-control">
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Pago Diario</small>
                                         <input type="number" id="amountDay1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="number" name="amountDay" id="amountDay"onkeypress='return inputNumeric(event)' value="0" class="form-control">
+                                        <input type="hidden" name="amountDay" id="amountDay"onkeypress='return inputNumeric(event)' value="0" class="form-control">
                                         <b class="text-danger" id="label-amount" style="display:none">Incorrecto..</b>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Total a Pagar</small>
                                         <input type="number" id="amountTotal1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="number" name="amountTotal" id="amountTotal" value="0" class="form-control">
+                                        <input type="hidden" name="amountTotal" id="amountTotal" value="0" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row">

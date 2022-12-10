@@ -79,6 +79,14 @@
         <table width="100%" cellpadding="5" style="font-size: 10px">
             <tr>
                 <th style="text-align: right; width: 10%">
+                    CODIGO:
+                </th>
+                <td>
+                    {{ $loan->code }}
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: right; width: 10%">
                     FECHA:
                 </th>
                 <td>
