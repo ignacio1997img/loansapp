@@ -13,6 +13,11 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 class FileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function image($file, $id, $type){
         // return $type;
         Storage::makeDirectory($type.'/'.date('F').date('Y'));

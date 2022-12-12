@@ -39,7 +39,7 @@ Route::get('login', function () {
 // });
 
 
-Route::group(['prefix' => 'admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Voyager::routes();
 
     // Route::resources('people', PeopleController::class);

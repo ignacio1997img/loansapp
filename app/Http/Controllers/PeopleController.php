@@ -12,6 +12,11 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PeopleImport;
 class PeopleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         return view('people.browse');
