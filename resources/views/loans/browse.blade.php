@@ -23,7 +23,7 @@
                             </h1>
                             @if (auth()->user()->hasPermission('add_loans'))
                                 <a href="{{ route('loans.create') }}" class="btn btn-success">
-                                    <i class="voyager-plus"></i> <span>Crear</span>
+                                    <i class="voyager-plus"></i> <span>Prestamo Diario</span>
                                 </a>
                             @endif
 
@@ -446,6 +446,7 @@
             // {
             //     alert('si')
             // }
+            alert(amountTotal);
             if(amountTotal > balance && cashier_id!=0)
             {
                 // $('#btn-submit-delivered').attr('disabled', 'disabled');

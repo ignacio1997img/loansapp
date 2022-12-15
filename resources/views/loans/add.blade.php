@@ -20,7 +20,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-bordered">
-                            <div class="panel-heading"><h6 class="panel-title">Detalle del Prestamos</h6></div>
+                            <div class="panel-heading">
+                                <h5 id="h4" class="panel-title">Detalle del Prestamos &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    {{-- <br> --}}
+                                    {{-- <div class="col-md-12 text-right"> --}}
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario" checked>Prestamo diario</label>
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial">Prestamo Diario Especial </label>
+                                    {{-- </div> --}}
+                                </h5>
+                            </div>
                             <div class="panel-body">
                                 @if (!$cashier)  
                                     <div class="alert alert-warning">
@@ -35,6 +43,12 @@
                                         </div>
                                     @endif
                                 @endif
+                                {{-- <div class="row">                                    
+                                    <div class="col-md-12 text-right">
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario">Prestamo diario</label>
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial" checked>Prestamo Diario Especial </label>
+                                    </div>
+                                </div> --}}
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Fecha</small>
@@ -70,6 +84,7 @@
                                         </select>
                                     </div>                                    
                                 </div>
+                                <input type="text" name="type" id="text_type">
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Monto a Prestar</small>
@@ -77,29 +92,29 @@
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Dias Total A Pagar</small>
-                                        <input type="number" value="24" style="text-align: right" disabled class="form-control text">
-                                        <input type="hidden" name="day" id="day" value="24" class="form-control">
+                                        <input type="number" id="day1" value="24" style="text-align: right" disabled onkeypress='return inputNumeric(event)' onchange="diasPagar()" onkeyup="diasPagar()" class="form-control text">
+                                        <input type="number" name="day" id="day" onkeypress='return inputNumeric(event)' value="24" class="form-control">
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos</small>
-                                        <input type="number" id="porcentage1" style="text-align: right" disabled value="20" class="form-control text">
-                                        <input type="hidden" name="porcentage" id="porcentage"value="20" class="form-control">
+                                        <input type="number" id="porcentage1" style="text-align: right" disabled value="20" onkeypress='return inputNumeric(event)' onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
+                                        <input type="number" name="porcentage" id="porcentage" onkeypress='return inputNumeric(event)' value="20" class="form-control">
+                                    </div>    
+                                    <div class="form-group col-md-2">
+                                        <small>Interes a Pagar</small>
+                                        <input type="number" id="amountPorcentage1" style="text-align: right" disabled value="0" onkeypress='return inputNumeric(event)' onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
+                                        <input type="number" name="amountPorcentage" id="amountPorcentage" onkeypress='return inputNumeric(event)' value="0" class="form-control">
                                     </div>
-                                    
                                     <div class="form-group col-md-2">
                                         <small>Pago Diario</small>
                                         <input type="number" id="amountDay1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="hidden" name="amountDay" id="amountDay" value="0" class="form-control">
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <small>Interes a Pagar</small>
-                                        <input type="number" id="amountPorcentage1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="hidden" name="amountPorcentage" id="amountPorcentage" value="0" class="form-control">
+                                        <input type="number" name="amountDay" id="amountDay"onkeypress='return inputNumeric(event)' value="0" class="form-control">
+                                        <b class="text-danger" id="label-amount" style="display:none">Incorrecto..</b>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Total a Pagar</small>
                                         <input type="number" id="amountTotal1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="hidden" name="amountTotal" id="amountTotal" value="0" class="form-control">
+                                        <input type="number" name="amountTotal" id="amountTotal" value="0" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -119,7 +134,7 @@
                         <input type="hidden" name="cashier_id" value="{{$cashier->id}}">
                         <div class="row">
                             <div class="col-md-12 text-right">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="submit" id="btn_submit" class="btn btn-primary">Guardar</button>
                             </div>
                         </div>
                     @endif
@@ -137,6 +152,200 @@
 
     @section('javascript')
         <script>
+
+            $(document).ready(() => {
+                $(`#text_type`).val($(".radio-type:checked").val());
+                $('.radio-type').click(function(){
+                    $(`#text_type`).val($(".radio-type:checked").val());
+                    list();
+                });
+            });
+            function list()
+            {
+                let type = $(".radio-type:checked").val();
+                // alert(type);
+                                        // <input type="number" value="24" style="text-align: right" disabled class="form-control text">
+                                        // <input type="number" name="day" id="day" value="24" class="form-control">
+                if(type=='diario')
+                {
+                    $('#amountLoan').val(0);
+
+                    $('#day1').val(24);
+                    $('#day').val(24);
+
+                    $('#porcentage1').val(20);
+                    $('#porcentage').val(20);
+
+                    $('#amountPorcentage1').val(0);
+                    $('#amountPorcentage').val(0);
+
+                    $('#amountDay1').val(0);
+                    $('#amountDay').val(0);
+
+                    $('#amountTotal1').val(0);
+                    $('#amountTotal').val(0);
+                    
+                    $('#day1').attr('disabled',true);
+                    $('#porcentage1').attr('disabled',true);
+                    $('#amountPorcentage1').attr('disabled',true);
+                }
+                if(type=='diarioespecial')
+                {
+                    $('#day1').val(0);
+                    $('#day').val(0);
+
+                    $('#porcentage1').val(0);
+                    $('#porcentage').val(0);
+
+                    $('#amountPorcentage1').val(0);
+                    $('#amountPorcentage').val(0);
+
+                    $('#amountDay1').val(0);
+                    $('#amountDay').val(0);
+
+                    $('#amountTotal1').val(0);
+                    $('#amountTotal').val(0);
+
+                    $('#porcentage1').val(0);
+                    $('#porcentage').val(0);
+
+                    $('#amountPorcentage1').val(0);
+                    $('#amountPorcentage1').val(0);
+
+                    $('#day1').attr('disabled',false);         
+                    $('#porcentage1').attr('disabled',false);     
+                    $('#amountPorcentage1').attr('disabled',false);
+
+                    
+                }
+            }
+            function diasPagar()
+            {
+                let day = $(`#day1`).val() ? parseFloat($(`#day1`).val()) : 0;
+                $('#day').val(day);
+
+                subTotal()
+            }
+            function porcentagePagar()
+            {
+                let porcentage = $(`#porcentage1`).val() ? parseFloat($(`#porcentage1`).val()) : 0;
+                $('#porcentage').val(porcentage);
+
+                let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
+
+                porcentage = porcentage/100;
+                let amountPorcentage = amountLoan*porcentage;
+                $(`#amountPorcentage1`).val(amountPorcentage);
+                $(`#amountPorcentage`).val(amountPorcentage);
+
+                subTotal()
+            }
+            function porcentageAmount()
+            {
+                let amountPorcentage = $(`#amountPorcentage1`).val() ? parseFloat($(`#amountPorcentage1`).val()) : 0;
+                $('#amountPorcentage').val(amountPorcentage);
+
+                let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
+
+                amountPorcentage = amountPorcentage/amountLoan;
+                amountPorcentage = amountPorcentage*100;
+                
+                $(`#porcentage1`).val(amountPorcentage);
+                $(`#porcentage`).val(amountPorcentage);
+
+                subTotal();
+
+            }
+            function subTotal()
+            {
+                let type = $(".radio-type:checked").val();
+                if(type=='diario')
+                {
+                    $(`#text_type`).val('diario');
+
+                    let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
+                    let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
+
+                    let day = $(`#day`).val() ? parseFloat($(`#day`).val()) : 0;
+
+                    porcentage = porcentage/100;
+                    let amountPorcentage = amountLoan*porcentage;
+                    let amountTotal = amountLoan+amountPorcentage;
+                    let amountDay = amountTotal / day;
+
+                    // if (amountDay % 1 == 0) {
+                    //     alert ("Es un numero entero");
+                    // } else {
+                    //     alert ("Es un numero decimal");
+                    // }
+
+                    $(`#amountPorcentage1`).val(amountPorcentage);
+                    $(`#amountTotal1`).val(amountTotal);         
+
+                    $(`#amountPorcentage`).val(amountPorcentage);
+                    $(`#amountTotal`).val(amountTotal);  
+
+                    $(`#amountDay1`).val(amountDay);
+                    $(`#amountDay`).val(amountDay);  
+
+                    if (amountDay % 1 == 0) {
+                        $('#label-amount').css('display', 'none');
+                        $('#btn_submit').attr('disabled',false);
+
+                    } else {
+                        $('#label-amount').css('display', 'block');
+                        $('#btn_submit').attr('disabled',true);
+                    }
+                }
+                if(type=='diarioespecial')
+                {
+                    $(`#text_type`).val('diarioespecial');
+
+                    let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
+                    let day = $(`#day1`).val() ? parseFloat($(`#day1`).val()) : 0;
+
+                    // porcentagePagar();
+                    // porcentageAmount();
+                    let porcentage = $(`#porcentage1`).val() ? parseFloat($(`#porcentage1`).val()) : 0;
+                    $('#porcentage').val(porcentage);
+
+                    porcentage = porcentage/100;
+                    porcentage = amountLoan*porcentage;
+                    $(`#amountPorcentage1`).val(porcentage);
+                    $(`#amountPorcentage`).val(porcentage);
+
+
+                    let amountPorcentage = $(`#amountPorcentage1`).val() ? parseFloat($(`#amountPorcentage1`).val()) : 0;
+
+
+                    // porcentage = porcentage/100;
+                    // let amountPorcentage = amountLoan*porcentage;
+                    let amountTotal = amountLoan+amountPorcentage;
+                    let amountDay = amountTotal / day;
+
+                    // $(`#amountPorcentage1`).val(amountPorcentage);
+                    $(`#amountTotal1`).val(amountTotal);         
+
+                    // $(`#amountPorcentage`).val(amountPorcentage);
+                    $(`#amountTotal`).val(amountTotal);  
+
+                    $(`#amountDay1`).val(amountDay);
+                    $(`#amountDay`).val(amountDay);  
+
+                    if (amountDay % 1 == 0) {
+                        $('#label-amount').css('display', 'none');
+                        $('#btn_submit').attr('disabled',false);
+
+                    } else {
+                        $('#label-amount').css('display', 'block');
+                        $('#btn_submit').attr('disabled',true);
+                    }
+                    
+                }
+            }
+
+
+
 
             $(function()
             {
@@ -182,27 +391,7 @@
             }
 
 
-            function subTotal()
-            {
-                let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
-                let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
-
-                let day = $(`#day`).val() ? parseFloat($(`#day`).val()) : 0;
-
-                porcentage = porcentage/100;
-                let amountPorcentage = amountLoan*porcentage;
-                let amountTotal = amountLoan+amountPorcentage;
-                let amountDay = amountTotal / day;
-
-                $(`#amountPorcentage1`).val(amountPorcentage);
-                $(`#amountTotal1`).val(amountTotal);         
-
-                $(`#amountPorcentage`).val(amountPorcentage);
-                $(`#amountTotal`).val(amountTotal);  
-
-                $(`#amountDay1`).val(amountDay);
-                $(`#amountDay`).val(amountDay);  
-            }
+            
             
             function inputNumeric(event) {
                 if(event.charCode >= 48 && event.charCode <= 57){
@@ -211,16 +400,16 @@
                 return false;        
             }
 
-            $('#modalEditar').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) //captura valor del data-empresa=""
-                var id = button.data('id')
-                var desc = button.data('desc')
-                var grupo = button.data('grupo')
-                var modal = $(this)
-                modal.find('.modal-body #idempresa').val(id)
-                modal.find('.modal-body #grupo').text(grupo)
-                modal.find('.modal-body #desc').val(desc)
-            });
+            // $('#modalEditar').on('show.bs.modal', function (event) {
+            //     var button = $(event.relatedTarget) //captura valor del data-empresa=""
+            //     var id = button.data('id')
+            //     var desc = button.data('desc')
+            //     var grupo = button.data('grupo')
+            //     var modal = $(this)
+            //     modal.find('.modal-body #idempresa').val(id)
+            //     modal.find('.modal-body #grupo').text(grupo)
+            //     modal.find('.modal-body #desc').val(desc)
+            // });
         </script>
     @stop
 

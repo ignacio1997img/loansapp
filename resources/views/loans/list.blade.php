@@ -21,7 +21,14 @@
                     <td>{{ $item->code }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
                     <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
-                    <td>{{$item->typeLoan}}</td>
+                    <td>
+                        @if ($item->typeLoan == 'diario')
+                            Diario
+                        @endif
+                        @if ($item->typeLoan == 'diarioespecial')
+                            Diario Especial
+                        @endif
+                    </td>
                     <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
                     <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>
                     <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
@@ -63,7 +70,7 @@
                                 <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i>
                             </a>
                             @if (auth()->user()->hasPermission('deliverMoney_loans'))
-                                <a title="Entregar dinero al Beneficiario" class="btn btn-sm btn-success" onclick="deliverItem('{{ route('loans-money.deliver', ['loan' => $item->id]) }}',{{$item->id}}, {{$item->amountTotal}})" data-toggle="modal" data-target="#deliver-modal">
+                                <a title="Entregar dinero al Beneficiario" class="btn btn-sm btn-success" onclick="deliverItem('{{ route('loans-money.deliver', ['loan' => $item->id]) }}',{{$item->id}}, {{$item->amountLoan}})" data-toggle="modal" data-target="#deliver-modal">
                                     <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Entregar</span>
                                 </a>
                             @endif

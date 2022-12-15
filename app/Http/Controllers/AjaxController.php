@@ -45,7 +45,7 @@ class AjaxController extends Controller
             ->where('l.deleted_at', null)
             ->where('ld.late', 1)
             ->where('ld.debt', '>', 0)
-            ->select('l.id as loan', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci')
+            ->select('l.id as loan', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
             ->groupBy('loan')
             ->get();
         foreach($data as $item)
@@ -58,28 +58,29 @@ class AjaxController extends Controller
             $amountDebt =0;
             foreach($day as $iten)
             {
-                $cadena=$cadena.'     '.Carbon::parse($iten->date)->format('d/m/Y').'                               '.($iten->amount-$iten->debt).'         '.$iten->amount.($i!=$cant?'%0A':'');
+                $cadena=$cadena.'     '.Carbon::parse($iten->date)->format('d/m/Y').'                        '.number_format($iten->amount-$iten->debt,2).'             '.$iten->amount.($i!=$cant?'%0A':'');
                 $i++;
                 $amountTotal+=$iten->amount;
                 $amountDebt+=($iten->amount-$iten->debt);
             }
             Http::get('http://api.trabajostop.com/?number=591'.$item->cell_phone.'&message=
-            *COMPROBANTE DE DEUDA PENDIENTE*
-                                    *CAPRESI*
+    *COMPROBANTE DE DEUDA PENDIENTE*
+                            *CAPRESI*
+
+CODIGO: '.$item->code.'                      
+FECHA: '.date('d/m/Y').'
+BENEFICIARIO: '.$item->last_name1.' '.$item->last_name2.' '.$item->first_name.'
+CI: '.$item->ci.'
     
-            FECHA: '.date('d/m/Y').'
-            BENEFICIARIO: '.$item->last_name1.' '.$item->last_name2.' '.$item->first_name.'
-            CI: '.$item->ci.'
-    
-                        *DETALLE TOTAL A PAGAR*
-    *DIAS ATRASADOS*        |   *CUOTAS*    |   *DEUDA*
-    ________________________________________________%0A'.
+                *DETALLE TOTAL A PAGAR*
+*DIAS ATRASADOS*        |   *CUOTAS*    |   *DEUDA*
+_____________________________________________%0A'.
                     $cadena.'
-    ________________________________________________
-    TOTAL (BS)                            '.number_format($amountDebt,2).'         '.number_format($amountTotal,2).'
+________________________________________________
+TOTAL (BS)                             '.number_format($amountDebt,2).'             '.number_format($amountTotal,2).'
     
     
-    Gracias🤝😊');
+Gracias🤝😊');
         }
         return true;
     }
