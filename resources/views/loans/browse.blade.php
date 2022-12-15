@@ -446,7 +446,7 @@
             // {
             //     alert('si')
             // }
-            alert(amountTotal);
+            // alert(amountTotal);
             if(amountTotal > balance && cashier_id!=0)
             {
                 // $('#btn-submit-delivered').attr('disabled', 'disabled');
