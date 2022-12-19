@@ -375,7 +375,7 @@ class MenuItemsTableSeeder extends Seeder
             array (
                 'id' => 34,
                 'menu_id' => 1,
-                'title' => 'Deudores Retrazados',
+                'title' => 'Deudores Atrazados',
                 'url' => '',
                 'target' => '_self',
                 'icon_class' => 'fa-solid fa-print',
@@ -383,9 +383,25 @@ class MenuItemsTableSeeder extends Seeder
                 'parent_id' => 31,
                 'order' => 1,
                 'created_at' => '2022-12-17 14:46:48',
-                'updated_at' => '2022-12-17 14:54:38',
+                'updated_at' => '2022-12-19 15:38:27',
                 'route' => 'print-loanListLate',
                 'parameters' => 'null',
+            ),
+            23 => 
+            array (
+                'id' => 35,
+                'menu_id' => 1,
+                'title' => 'Usuarios',
+                'url' => '',
+                'target' => '_self',
+                'icon_class' => 'fa-solid fa-user',
+                'color' => '#000000',
+                'parent_id' => 11,
+                'order' => 3,
+                'created_at' => '2022-12-16 12:22:33',
+                'updated_at' => '2022-12-16 12:22:54',
+                'route' => 'user.index',
+                'parameters' => NULL,
             ),
         ));
         
