@@ -86,7 +86,7 @@
                             @if ($cashier_id==0 && $loan->debt != 0 )  
                                     <div class="alert alert-warning">
                                         <strong>Advertencia:</strong>
-                                        <p>No puedes crear un nuevo prestamo debido a que no tiene una caja asignada.</p>
+                                        <p>No puedes abonar dinero al prestamo.</p>
                                     </div>
                             @endif
                             
@@ -417,11 +417,11 @@
             z-index: 1000;
 
             /* Mostrar/ocultar popup */
-            @if(session('loan_id'))
+            /* @if(session('loan_id')) */
                 animation: show-animation 1s;
-            @else
+            /* @else */
             right: -500px;
-            @endif
+            /* @endif */
         }
 
         @keyframes show-animation {

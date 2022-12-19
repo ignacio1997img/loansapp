@@ -30,9 +30,11 @@
                     @endforeach
                 @endif
             </ol>
-            <a href="#" data-toggle="modal" data-target="#notificar-modal" title="Notificar a todos los deudores" class="btn btn-sm">
-                <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i> <small></small>
-            </a>
+            @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('gerente') || auth()->user()->hasRole('cajero'))
+                <a href="#" data-toggle="modal" data-target="#notificar-modal" title="Notificar a todos los deudores" class="btn btn-sm">
+                    <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i> <small></small>
+                </a>
+            @endif
             @show
         </div>
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
@@ -132,9 +134,9 @@
         })
         
 
-        alert(1);
+        // alert(1);
         $.get('{{route('loans-loanDay.notificationLate')}}', function (data) {
-                    alert(2);
+                    // alert(2);
         });
         $("#notificar-modal").modal('hide');
     }

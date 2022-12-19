@@ -160,5 +160,20 @@ class PermissionsTableSeeder extends Seeder
                 'table_name' => 'people',
             ]);
         }
+
+
+        $keys = [
+            'browse_user',
+            'add_user',
+            'edit_user',
+            'status_user',          
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'user',
+            ]);
+        }
     }
 }

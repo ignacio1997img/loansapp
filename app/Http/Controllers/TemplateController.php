@@ -37,7 +37,7 @@ class TemplateController extends Controller
         $aux = rand(10,99).''.rand(1,9).''.rand(100,999);
         codeVerification::where('loan_id', $request->loan_id)->where('type','solicitudCliente')->where('status',1)->update(['status'=>0]);
         CodeVerification::create(['type'=>'solicitudCliente', 'loan_id'=>$request->loan_id, 'cell_phone'=>$request->cell_phone, 'code'=>$aux]);
-        Http::get('http://api.trabajostop.com/?number=591'.$request->cell_phone.'&message=CAPRESI%0A%0A*G-'.$aux.'* es tu codigo de verificación.%0A%0ANo lo compartas con nadie mas');
+        Http::get('http://api.trabajostop.com/?number=591'.$request->cell_phone.'&message=CAPRESI%0A%0A*'.$aux.'* es tu codigo de verificación.%0A%0ANo lo compartas con nadie mas');
 
         return true;
     }
@@ -63,7 +63,6 @@ class TemplateController extends Controller
             }
             Http::get('http://api.trabajostop.com/?number=591'.$phone.'&message=
   *COMPROBANTE DE DEUDA PENDIENTE*
-                              *"CAPRESI"*
 
     
                 *DETALLE DEL PRESTAMO*

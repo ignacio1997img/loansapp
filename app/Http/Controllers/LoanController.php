@@ -836,46 +836,45 @@ class LoanController extends Controller
                 }
             }
             
-//             $loanDayAgent = DB::table('loan_days as ld')
-//                 ->join('loan_day_agents as la', 'la.loanDay_id', 'ld.id')
-//                 ->join('users as u', 'u.id', 'la.agent_id')
-//                 ->join('transactions as t', 't.id', 'la.transaction_id')
-//                 ->where('ld.loan_id', $loan->id)
-//                 ->where('t.id', $transaction->id)
-//                 ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent', 'ld.late')
-//                 ->get();
+            $loanDayAgent = DB::table('loan_days as ld')
+                ->join('loan_day_agents as la', 'la.loanDay_id', 'ld.id')
+                ->join('users as u', 'u.id', 'la.agent_id')
+                ->join('transactions as t', 't.id', 'la.transaction_id')
+                ->where('ld.loan_id', $loan->id)
+                ->where('t.id', $transaction->id)
+                ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent', 'ld.late')
+                ->get();
             
-//             $cadena = '';
+            $cadena = '';
             
-//             $cant = count($loanDayAgent);
-//             $i=1;
-//             foreach($loanDayAgent as $item)
-//             {
-//                 $cadena=$cadena.($item->late==1?'      SI':'      NO').'              '.Carbon::parse($item->date)->format('d/m/Y').'            '.$item->amount.($i!=$cant?'%0A':'');
-//                 $i++;
-//             }
-//             Http::get('http://api.trabajostop.com/?number=591'.$loan->people->cell_phone.'&message=
-//                 *COMPROBANTE DE PAGO*
-//                               *CAPRESI*
+            $cant = count($loanDayAgent);
+            $i=1;
+            foreach($loanDayAgent as $item)
+            {
+                $cadena=$cadena.($item->late==1?'      SI':'      NO').'              '.Carbon::parse($item->date)->format('d/m/Y').'            '.$item->amount.($i!=$cant?'%0A':'');
+                $i++;
+            }
+            Http::get('http://api.trabajostop.com/?number=591'.$loan->people->cell_phone.'&message=
+                *COMPROBANTE DE PAGO*
 
-// CODIGO: '.$loan->code.'
-// FECHA: '.date('d/m/Y').'
-// BENEFICIARIO: '.$loan->people->last_name1.' '.$loan->people->last_name2.' '.$loan->people->first_name.'
-// CI: '.$loan->people->ci.'
+CODIGO: '.$loan->code.'
+FECHA: '.date('d/m/Y').'
+BENEFICIARIO: '.$loan->people->last_name1.' '.$loan->people->last_name2.' '.$loan->people->first_name.'
+CI: '.$loan->people->ci.'
 
-//                 *DETALLE DEL PAGO*
-// *ATRASO*    |   *DIAS PAGADO*   |   *TOTAL*
-// _________________________________________%0A'.
-//     $cadena.'
-// _________________________________________
-// TOTAL (BS)                                 |    '.number_format($request->amount,2).'
+                *DETALLE DEL PAGO*
+*ATRASO*    |   *DIAS PAGADO*   |   *TOTAL*
+_________________________________________%0A'.
+    $cadena.'
+_________________________________________
+TOTAL (BS)                                 |    '.number_format($request->amount,2).'
             
-//                         *ATENDIDO POR*
-//             '.strtoupper($loanDayAgent[0]->agentType).':        '.strtoupper($loanDayAgent[0]->name).'
-//             COD TRANS:      '.$transaction->transaction.'
+                        *ATENDIDO POR*
+            '.strtoupper($loanDayAgent[0]->agentType).':        '.strtoupper($loanDayAgent[0]->name).'
+            COD TRANS:      '.$transaction->transaction.'
 
             
-// Gracias🤝😊');
+Gracias🤝😊');
 
             // return 1;
             DB::commit();

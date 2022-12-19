@@ -24,8 +24,12 @@ class User extends \TCG\Voyager\Models\User
         'name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'status',
+        'registerUser_id'
     ];
+
+
 
     // public function roles()
     // {

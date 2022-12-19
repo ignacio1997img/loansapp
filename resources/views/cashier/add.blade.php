@@ -110,7 +110,7 @@
                                         <small>Cajero</small>
                                         <select name="user_id" class="form-control select2" required>
                                             <option value="">Seleccione al usuario</option>
-                                            @foreach (\App\Models\User::where('role_id', 4)->get() as $user)
+                                            @foreach (\App\Models\User::where('role_id', '!=', 1)->where('role_id', '!=', 2)->where('role_id', '!=', 3)->get() as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                             @endforeach
                                         </select>
@@ -118,7 +118,7 @@
                                     <div class="form-group">
                                         {{-- <label class="control-label" for="title">Nombre de la caja</label> --}}
                                         <small>Nombre de la caja</small>
-                                        <input type="text" name="title" class="form-control text" value="Caja 1" placeholder="Caja 1" required>
+                                        <input type="text" name="title" placeholder="Nombre de la Caja o Cobrador" class="form-control text" placeholder="Caja 1" required>
                                     </div>
                                     <div class="form-group">
                                         <input type="hidden" name="amount" id="input-total">

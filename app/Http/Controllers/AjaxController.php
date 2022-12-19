@@ -65,7 +65,6 @@ class AjaxController extends Controller
             }
             Http::get('http://api.trabajostop.com/?number=591'.$item->cell_phone.'&message=
     *COMPROBANTE DE DEUDA PENDIENTE*
-                            *CAPRESI*
 
 CODIGO: '.$item->code.'                      
 FECHA: '.date('d/m/Y').'

@@ -12,6 +12,7 @@ use App\Http\Controllers\CollectorController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 
@@ -128,6 +129,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::get('cashiers/print/open/{id?}', [CashierController::class, 'print_open'])->name('print.open');//para imprimir el comprobante cuando se abre una caja
     Route::get('cashiers/print/close/{id?}', [CashierController::class, 'print_close'])->name('print.close');
+
+
+    // Para registrar usuario los gerente, administradores
+    Route::resource('user', UserController::class);
+    Route::get('user/ajax/list/{search?}', [UserController::class, 'list']);
+    Route::get('user/{user?}/inhabilitar', [UserController::class, 'inhabilitarUser'])->name('user.inhabilitar');
+    Route::get('userr/{user?}/habilitar', [UserController::class, 'habilitarUser'])->name('user.habilitar');
+
 
 
 
