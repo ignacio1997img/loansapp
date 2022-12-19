@@ -14,6 +14,7 @@
                     <tr>
                         <th rowspan="2" style="width:5px">N&deg;</th>
                         <th rowspan="2" style="text-align: center">CODIGO</th>
+                        <th rowspan="2" style="text-align: center">RUTA</th>
                         <th rowspan="2" style="text-align: center">CI</th>
                         <th rowspan="2" style="text-align: center">CLIENTE</th>
                         <th rowspan="2" style="text-align: center">CELULAR</th>
@@ -58,6 +59,7 @@
                         <tr style="text-align: center">
                             <td>{{ $count }}</td>
                             <td style="text-align: center">{{ $item->code}}</td>
+                            <td style="text-align: center">{{ $item->ruta}}</td>
                             <td style="text-align: center">{{ $item->ci }}</td>
                             <td style="text-align: left">{{ $item->last_name1}} {{ $item->last_name2}} {{ $item->first_name}}</td>
                             <td style="text-align: center">{{ $item->cell_phone}}</td>
@@ -80,7 +82,7 @@
                         
                     @empty
                         <tr style="text-align: center">
-                            <td colspan="13">No se encontraron registros.</td>
+                            <td colspan="14">No se encontraron registros.</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -117,34 +117,28 @@ class ReportController extends Controller
         // $user = User::where('role_id', '!=', 1)->where('role_id', '!=', 2)->where('role_id', '!=', 3)->orderBy('name', 'ASC')->get();
         $route = Route::where('status', 1)->where('deleted_at', null)->get();
 
-        // $atras = DB::table('loans as l')
-        //                                 ->join('loan_days as ld', 'ld.loan_id', 'l.id')
-        //                                 ->join('people as p', 'p.id', 'l.people_id')
-
-
-        //                                 ->where('l.deleted_at', null)
-        //                                 ->where('ld.deleted_at', null)
-
-        //                                 ->where('l.debt', '>', 0)
-
-        //                                 ->where('ld.debt', '>', 0)
-        //                                 ->where('ld.late', 1)
-        //                                 ->where('l.id', 4)
-
-        //                                 ->select(
-        //                                     DB::raw("SUM(ld.late) as diasAtrasado"), DB::raw("SUM(ld.debt) as montoAtrasado")
-        //                                 )
-        //                                 ->first();
-        //                                 return $atras;
+        
         return view('print.dailyList.report', compact('route'));
     }
 
     public function dailyListList(Request $request)
     {
-        
+        // return $request->route_id;
+        $query_filter = 'lr.route_id = '.$request->route_id;
+
+        $message = Route::where('id', $request->route_id)->select('name')->first()->name;
+        if($request->route_id  == 'todo')
+        {
+            $query_filter = 1;
+            $message = 'Todas Las Rutas';
+        }
+
+
         $data = DB::table('loan_routes as lr')
             ->join('loans as l', 'l.id', 'lr.loan_id')
             ->join('people as p', 'p.id', 'l.people_id')
+            ->join('routes as r', 'r.id', 'lr.route_id')
+
 
 
             ->where('l.deleted_at', null)
@@ -152,15 +146,16 @@ class ReportController extends Controller
 
             ->where('l.debt', '!=', 0)
             ->where('l.status', 'entregado')
+            ->whereRaw($query_filter)
 
             ->select('p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'l.code', 'l.dateDelivered', 'p.cell_phone', 'p.street', 'p.home', 'p.zone',
-                'l.day', 'l.amountTotal', 'l.amountLoan', 'l.amountPorcentage', 'l.date', 'l.id as loan_id'
+                'l.day', 'l.amountTotal', 'l.amountLoan', 'l.amountPorcentage', 'l.date', 'l.id as loan_id', 'r.name as ruta'
             )
             ->get();
         
             
         if($request->print){
-            return view('print.dailyList.print', compact('data'));
+            return view('print.dailyList.print', compact('data', 'message'));
         }else{
             return view('print.dailyList.list', compact('data'));
         }

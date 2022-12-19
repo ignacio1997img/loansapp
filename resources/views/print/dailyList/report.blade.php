@@ -34,9 +34,9 @@
                                 </div> --}}
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <select name="agent_id" class="form-control select2" required>
+                                        <select name="route_id" class="form-control select2" required>
                                             <option value=""disabled selected>--- Seleccione una opcion ---</option>
-                                            {{-- <option value="todo">Todos</option> --}}
+                                            <option value="todo">Todos</option>
                                             @foreach ($route as $item)
                                                 <option value="{{$item->id}}">{{$item->name}}</option>
                                             @endforeach                                             

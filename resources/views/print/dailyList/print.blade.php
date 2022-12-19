@@ -16,6 +16,8 @@
                 </h3>
                 <h4 style="margin-bottom: 0px; margin-top: 5px">
                     LISTA DE COBRANZA
+                    <br>
+                    {{$message}}
                     {{-- Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}} --}}
                 </h4>
                 <small style="margin-bottom: 0px; margin-top: 5px">
@@ -37,6 +39,7 @@
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>
                 <th rowspan="2" style="text-align: center">CODIGO</th>
+                <th rowspan="2" style="text-align: center">RUTA</th>
                 <th rowspan="2" style="text-align: center">CI</th>
                 <th rowspan="2" style="text-align: center">CLIENTE</th>
                 <th rowspan="2" style="text-align: center">CELULAR</th>
@@ -82,6 +85,7 @@
                 <tr style="text-align: center">
                     <td>{{ $count }}</td>
                     <td style="text-align: center">{{ $item->code}}</td>
+                    <td style="text-align: center">{{ $item->ruta}}</td>
                     <td style="text-align: center">{{ $item->ci }}</td>
                     <td style="text-align: left">{{ $item->last_name1}} {{ $item->last_name2}} {{ $item->first_name}}</td>
                     <td style="text-align: center">{{ $item->cell_phone}}</td>
