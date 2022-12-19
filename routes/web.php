@@ -140,6 +140,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('print/dailyList', [ReportController::class, 'dailyList'])->name('print.dailyList');
     Route::post('print/dailyList/list', [ReportController::class, 'dailyListList'])->name('print-dailyList.list');
 
+    Route::get('print/loanListLate', [ReportController::class, 'loanListLate'])->name('print-loanListLate');
+    Route::post('print/loanListLate/list', [ReportController::class, 'loanListLateList'])->name('print-loanListLate.list');
+
 
 
 

@@ -476,7 +476,38 @@ class LoanController extends Controller
         $loan = Loan::with(['people', 'loanDay'])
             ->where('deleted_at', null)->where('id', $id)->first();
         // return $loan;
-        return view('loans.print-calendar', compact('loan'));
+
+        // Para imprimir el calendario Nuevo
+        $id = $id;
+        $loan = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people', 'guarantor'])
+            ->where('deleted_at', null)->where('id',$id)->first();
+        // $loanDay = LoanDay::where('loan_id', $loan->id)->get();
+
+        $loanday = LoanDay::where('loan_id', $id)->where('deleted_at', null)->orderBy('number', 'ASC')->get();
+
+        $cantMes = DB::table('loan_days')
+                    ->where('loan_id', $id)
+                    ->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as meses'), DB::raw('DATE_FORMAT(date, "%m") as mes'), DB::raw('DATE_FORMAT(date, "%Y") as ano'))
+                    ->orderBy('number', 'ASC')
+                    ->groupBy('meses')
+                    ->get();
+        
+        // return $cantMes;
+        // return $loanday;
+        
+        $route = LoanRoute::with(['route'])->where('loan_id', $id)->where('status', 1)->where('deleted_at', null)->first();
+
+        // return $id;
+        $register = Auth::user();
+        // return $register->role->name;
+        $date = date('Y-m-d');
+
+
+
+
+
+
+        return view('loans.print-calendar', compact('loan', 'route', 'loanday', 'register', 'date', 'cantMes'));
     }
 
     public function destroy($id)
@@ -701,14 +732,14 @@ class LoanController extends Controller
 
         return view('loans.add-dailyMoney', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id', 'cantMes'));
 
-        if($loan->typeLoan == 'diario')
-        {
-            return view('loans.add-money', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id'));
-        }
-        else
-        {
-            return view('loans.add-dailyMoney', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id'));
-        }
+        // if($loan->typeLoan == 'diario')
+        // {
+        //     return view('loans.add-money', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id'));
+        // }
+        // else
+        // {
+        //     return view('loans.add-dailyMoney', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id'));
+        // }
     }
 // funcion para guardar el dinero diario en ncada prestamos
     public function dailyMoneyStore(Request $request)

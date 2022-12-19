@@ -132,9 +132,9 @@
         })
         
 
-
+        alert(1);
         $.get('{{route('loans-loanDay.notificationLate')}}', function (data) {
-                    // alert(2);
+                    alert(2);
         });
         $("#notificar-modal").modal('hide');
     }
