@@ -42,7 +42,7 @@ class PeopleTableSeeder extends Seeder
                 'instagram' => NULL,
                 'tiktok' => NULL,
                 'status' => 1,
-                'token' => '1',
+                'token' => NULL,
                 'created_at' => '2022-11-24 10:29:27',
                 'updated_at' => '2022-11-24 10:29:27',
                 'register_userId' => 1,

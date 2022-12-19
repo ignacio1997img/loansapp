@@ -612,7 +612,7 @@ class LoanController extends Controller
         DB::beginTransaction();
         try {
             $ok = Loan::where('id', $loan)->first();
-            Http::get('http://api.trabajostop.com/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
+            Http::get('http://whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
             
             // return $loan;
             Loan::where('id', $loan)->update([
@@ -854,7 +854,7 @@ class LoanController extends Controller
                 $cadena=$cadena.($item->late==1?'      SI':'      NO').'              '.Carbon::parse($item->date)->format('d/m/Y').'            '.$item->amount.($i!=$cant?'%0A':'');
                 $i++;
             }
-            Http::get('http://api.trabajostop.com/?number=591'.$loan->people->cell_phone.'&message=
+            Http::get('http://whatsapp.capresi.net/?number=591'.$loan->people->cell_phone.'&message=
                 *COMPROBANTE DE PAGO*
 
 CODIGO: '.$loan->code.'
