@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
             User::create([
                 'name'           => 'Gerente',
                 'email'          => 'gerente@admin.com',
-                'password'       => bcrypt('gerente'),
+                'password'       => bcrypt('*gerente.,*2022*'),
                 'remember_token' => Str::random(60),
                 'role_id'        => 2,
             ]);
