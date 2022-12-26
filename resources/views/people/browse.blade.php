@@ -280,7 +280,7 @@
             const xhr = new XMLHttpRequest();
             xhr.open("GET", url);
             xhr.send();
-            xhr.responseType = "json";
+            // xhr.responseType = "json";
             
             // window.open("http://api.trabajostop.com:3001/?number=59167285914&message=hola")
             $("#verificar-modal").modal('hide');
