@@ -252,27 +252,27 @@
 
             // alert(id);
             
-            let timerInterval
-            Swal.fire({
-                title: 'Solicitud de verificacion enviada',
-                html: '<h2><i class="fa-regular fa-envelope"></i></h2>',
-                timer: 2000,
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading()
-                    const b = Swal.getHtmlContainer().querySelector('b')
-                    timerInterval = setInterval(() => {
-                    b.textContent = Swal.getTimerLeft()
-                    }, 50)
-                },
-                willClose: () => {
-                    clearInterval(timerInterval)
-                }
-                }).then((result) => {
-                if (result.dismiss === Swal.DismissReason.timer) {
-                    console.log('I was closed by the timer')
-                }
-            })
+            // let timerInterval
+            // Swal.fire({
+            //     title: 'Solicitud de verificacion enviada',
+            //     html: '<h2><i class="fa-regular fa-envelope"></i></h2>',
+            //     timer: 2000,
+            //     timerProgressBar: true,
+            //     didOpen: () => {
+            //         Swal.showLoading()
+            //         const b = Swal.getHtmlContainer().querySelector('b')
+            //         timerInterval = setInterval(() => {
+            //         b.textContent = Swal.getTimerLeft()
+            //         }, 50)
+            //     },
+            //     willClose: () => {
+            //         clearInterval(timerInterval)
+            //     }
+            //     }).then((result) => {
+            //     if (result.dismiss === Swal.DismissReason.timer) {
+            //         console.log('I was closed by the timer')
+            //     }
+            // })
 
             // alert(id);
             url = "http://whatsapp.capresi.net/?number=591"+phone+"&message=Hola *"+name+"*.%0A%0A*CAPRESI* te da la Bienvenida%0A%0APara verificar tus datos personales has clic en el enlace de abajo.%0A👇👇%0Ahttps://capresi.net/message/"+id+"/verification";
