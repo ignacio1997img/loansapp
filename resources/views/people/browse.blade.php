@@ -275,7 +275,7 @@
             })
 
             // alert(id);
-            url = "http://whatsapp.capresi.net/?number=59167285914&message=amor";
+            url = "http://whatsapp.capresi.net/?number=591"+phone+"&message=Hola *"+name+"*.%0A%0A*CAPRESI* te da la Bienvenida%0A%0APara verificar tus datos personales has clic en el enlace de abajo.%0A👇👇%0Ahttps://capresi.net/message/"+id+"/verification";
             
             const xhr = new XMLHttpRequest();
             xhr.open("GET", url);
