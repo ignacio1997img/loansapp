@@ -83,11 +83,17 @@
 
                             <h3 id="h3" style="text-align: center"><i class="fa-solid fa-calendar-days"></i> {{$loan->code}}</h3>
                             <hr>
-                            @if ($cashier_id==0 && $loan->debt != 0 )  
+                            {{-- @if ($cashier_id==0 && $loan->debt != 0 )  
                                     <div class="alert alert-warning">
                                         <strong>Advertencia:</strong>
                                         <p>No puedes abonar dinero al prestamo.</p>
                                     </div>
+                            @endif --}}
+                            @if (!$cashier)
+                                <div class="alert alert-warning">
+                                    <strong>Advertencia:</strong>
+                                    <p>No puedes abonar dinero al prestamo.</p>
+                                </div>
                             @endif
                             
                             <div class="col-md-8">
@@ -276,16 +282,16 @@
                             </div>
 
                             <div class="col-md-4">
-                                @if (auth()->user()->hasPermission('addMoneyDaily_loans'))
+                                @if (auth()->user()->hasPermission('addMoneyDaily_loans') && $cashier)
                                 
                             
-                                    @if ($loan->debt != 0 && $cashier_id!=0)                                
+                                    @if ($loan->debt != 0 && $cashier->status=='abierta')                                
                                     
                                         <form id="form-abonar-pago" action="{{route('loans-daily-money.store')}}" method="POST">
                                         @csrf
                                             <div class="row">
                                                 <input type="hidden" name="date" value="{{$date}}">
-                                                <input type="hidden" name="cashier_id" value="{{$cashier_id}}">
+                                                <input type="hidden" name="cashier_id" value="{{$cashier->id}}">
                                                 
                                                 
                                                     <input type="hidden" name="loan_id" value="{{$loan->id}}">

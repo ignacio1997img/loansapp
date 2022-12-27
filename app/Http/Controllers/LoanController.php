@@ -50,8 +50,12 @@ class LoanController extends Controller
                 $q->where('deleted_at', NULL);
             }])
             ->where('user_id', Auth::user()->id)
-            ->where('status', '<>', 'cerrada')
+            ->where('status', 'abierta')
             ->where('deleted_at', NULL)->first();
+
+        // return $cashier;
+
+
         $balance = 0;
         if($cashier)
         {
@@ -62,7 +66,7 @@ class LoanController extends Controller
         {
             $cashier_id = 0;
         }
-        // return $balance;
+
 
         return view('loans.browse', compact('collector', 'cashier', 'cashier_id', 'balance'));
     }
@@ -184,12 +188,12 @@ class LoanController extends Controller
     {
         $cashier = Cashier::with(['movements' => function($q){
             $q->where('deleted_at', NULL);
-        }, 'vault_details.cash' => function($q){
-            $q->where('deleted_at', NULL);
         }])
         ->where('user_id', Auth::user()->id)
-        ->where('status', '<>', 'cerrada')
+        ->where('status', 'abierta')
         ->where('deleted_at', NULL)->first();
+        
+        // return $cashier;
 
         $people = People::where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
         
@@ -709,7 +713,14 @@ class LoanController extends Controller
     // para ver el prestamos y poder abonar o pagar el dinero
     public function dailyMoney($loan, $cashier_id)
     {
-        // return $cashier_id;
+        $cashier = Cashier::with(['movements' => function($q){
+            $q->where('deleted_at', NULL);
+        }])
+        ->where('user_id', Auth::user()->id)
+        ->where('status', 'abierta')
+        ->where('deleted_at', NULL)->first();
+
+        // return $cashier;
         $id = $loan;
         $loan = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people', 'guarantor'])
             ->where('deleted_at', null)->where('id',$id)->first();
@@ -735,16 +746,7 @@ class LoanController extends Controller
         $date = date('Y-m-d');
         // return $loanday;
 
-        return view('loans.add-dailyMoney', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id', 'cantMes'));
-
-        // if($loan->typeLoan == 'diario')
-        // {
-        //     return view('loans.add-money', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id'));
-        // }
-        // else
-        // {
-        //     return view('loans.add-dailyMoney', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id'));
-        // }
+        return view('loans.add-dailyMoney', compact('loan', 'route', 'loanday', 'register', 'date', 'cashier_id', 'cantMes', 'cashier'));
     }
 // funcion para guardar el dinero diario en ncada prestamos
     public function dailyMoneyStore(Request $request)
