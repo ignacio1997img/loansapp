@@ -23,6 +23,7 @@ class ReportController extends Controller
     //:::::::::::::::Daily Collection::::::::::::::
     public function dailyCollection()
     {
+        // return 1;
         $user = User::where('role_id', '!=', 1)->where('role_id', '!=', 2)->where('role_id', '!=', 3)->orderBy('name', 'ASC')->get();
         return view('print.dailyCollection.report', compact('user'));
     }
@@ -66,6 +67,7 @@ class ReportController extends Controller
     //:::::::::::::::Daily Collection::::::::::::::
     public function loanListLate()
     {
+        // return 1;
         // $user = User::where('role_id', '!=', 1)->where('role_id', '!=', 2)->where('role_id', '!=', 3)->orderBy('name', 'ASC')->get();
         return view('print.dailyDebtor.report');
     }
@@ -105,20 +107,12 @@ class ReportController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-
     
 
     //::::::::::::: Daily List ::::::::::::::::
     public function dailyList()
     {
+        // return 1;
         // $user = User::where('role_id', '!=', 1)->where('role_id', '!=', 2)->where('role_id', '!=', 3)->orderBy('name', 'ASC')->get();
         $route = Route::where('status', 1)->where('deleted_at', null)->get();
 
@@ -165,4 +159,57 @@ class ReportController extends Controller
             return view('print.dailyList.list', compact('data'));
         }
     }
+
+
+    //:::::::::::: PARA RECAUDACION DIARIA DE LOS CAJEROS Y COBRADORES EN MOTOS::::::::    
+    public function loanCollection()
+    {        
+        $route = Route::where('status', 1)->where('deleted_at', null)->get();
+        // $query_filter = "";
+        // if(auth()->user()->hashRole('admin'))
+        // {
+        //     $query_filter
+        // }
+        $user = User::where('id', Auth::user()->id)->get();
+        
+        return view('print.dailyCollectionCashier.report', compact('route', 'user'));
+    }
+
+    public function loanCollectionList(Request $request)
+    {
+
+
+        // $article = Article::whereRaw($query_filter)->get();
+        $data = DB::table('loan_day_agents as lda')
+                    ->join('loan_days as ld', 'ld.id', 'lda.loanDay_id')
+                    ->join('loans as l', 'l.id', 'ld.loan_id')
+                    ->join('people as p', 'p.id', 'l.people_id')
+                    ->join('users as u', 'u.id', 'lda.agent_id')
+                    ->where('l.deleted_at', null)
+                    ->where('ld.deleted_at', null)
+                    ->where('lda.deleted_at', null)
+                    ->whereDate('lda.created_at', date('Y-m-d', strtotime($request->date)))
+                    // ->whereDate('lda.created_at', '<=', date('Y-m-d', strtotime($request->finish)))
+                    ->where('lda.agent_id', $request->agent_id)
+                    // ->whereRaw($query_filter)
+                    ->select('p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name', 'l.id as loan_id', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id',
+                            'lda.created_at as loanDayAgent_fecha', 'lda.amount')
+                    ->orderBy('ci', 'ASC')
+                    ->get();
+        // return $data->id;        
+        if($request->print){
+            $date = $request->date;
+            return view('print.dailyCollectionCashier.print', compact('data', 'date'));
+        }else{
+            return view('print.dailyCollectionCashier.list', compact('data'));
+        }
+        
+    }
+
+
+
+
+
+
+
 }

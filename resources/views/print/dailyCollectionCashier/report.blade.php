@@ -1,7 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', 'Reporte Recaudacion Diaria')
-@if(auth()->user()->hasPermission('browse_printdailyList'))
+@if(auth()->user()->hasPermission('browse_printloanCollection'))
 
 
 @section('page_header')
@@ -13,35 +13,30 @@
                     <div class="panel-body" style="padding: 0px">
                         <div class="col-md-8" style="padding: 0px">
                             <h1 class="page-title">
-                                <i class="voyager-calendar"></i> Reporte Lista Diaria
+                                <i class="voyager-calendar"></i> Reporte Diario Recaudado
                             </h1>
                         </div>
                         <div class="col-md-4" style="margin-top: 30px">
-                            <form name="form_search" id="form-search" action="{{ route('print-dailyList.list') }}" method="post">
+                            <form name="form_search" id="form-search" action="{{ route('print-loanCollection.list') }}" method="post">
 
                                 @csrf
                                 <input type="hidden" name="print">
                                 
-                                {{-- <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="date" name="start" class="form-control">
-                                        <small>Inicio</small>
-                                    </div>
-                                    <div class="form-line">
-                                        <input type="date" name="finish" class="form-control">
-                                        <small>Fin</small>
-                                    </div>
-                                </div> --}}
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <select name="route_id" class="form-control select2" required>
+                                        <input type="date" name="date" class="form-control">
+                                        <small>Fecha</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <select name="agent_id" class="form-control select2" required>
                                             <option value=""disabled selected>--- Seleccione una opcion ---</option>
-                                            <option value="todo">Todos</option>
-                                            @foreach ($route as $item)
+                                            @foreach ($user as $item)
                                                 <option value="{{$item->id}}">{{$item->name}}</option>
                                             @endforeach                                             
                                         </select>
-                                        <small>Rutas</small>
+                                        <small>Persona</small>
                                     </div>
                                 </div>
                                 
@@ -207,6 +202,6 @@
 @else
     @section('content')
         {{-- @include('errors.403') --}}
-        <h1>Sin Permiso</h1>
+        <h1>403</h1>
     @stop
 @endif

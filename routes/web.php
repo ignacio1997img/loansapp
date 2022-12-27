@@ -156,6 +156,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('print/loanListLate', [ReportController::class, 'loanListLate'])->name('print-loanListLate');
     Route::post('print/loanListLate/list', [ReportController::class, 'loanListLateList'])->name('print-loanListLate.list');
 
+    //para poder mostrar su recaudacion de la persona CAJERO O COBRADOR EN MOTO
+    Route::get('print/loanCollection', [ReportController::class, 'loanCollection'])->name('print-loanCollection');
+    Route::post('print/loanCollection/list', [ReportController::class, 'loanCollectionList'])->name('print-loanCollection.list');
+
+
 
 
 

@@ -76,7 +76,8 @@
                             @endif
                         @endif
 
-                        @if($item->status != 'rechazado')
+
+                        @if($item->status != 'rechazado' && !auth()->user()->hasRole('cobrador'))
                         <div class="btn-group" style="margin-right: 3px">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 Mas <span class="caret"></span>
@@ -100,6 +101,7 @@
                             {{-- <a href="{{ route('loans.show', ['loan' => $item->id]) }}" title="Ver" class="btn btn-sm btn-warning view">
                                 <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
                             </a>  --}}
+
                             @if($item->status != 'rechazado')
                                 <a href="{{ route('loans-requirement-daily.create', ['loan' => $item->id]) }}" title="Requisitos" class="btn btn-sm btn-warning">
                                     <i class="fa-solid fa-file"></i><span class="hidden-xs hidden-sm"> Requisitos</span>
@@ -126,13 +128,15 @@
                                 <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
                             </a> 
                         @endif--}}
-                        @if ($item->status != 'rechazado' && $item->status != 'entregado')
-                            <button title="Rechazar" class="btn btn-sm btn-dark" onclick="rechazarItem('{{ route('loans.rechazar', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#rechazar-modal">
-                                <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Rechazar</span>
-                            </button>
-                            <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('loans.destroy', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#delete-modal">
-                                <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span>
-                            </button>
+                        @if (auth()->user()->hasPermission('delete_loans'))
+                            @if ($item->status != 'rechazado' && $item->status != 'entregado')
+                                <button title="Rechazar" class="btn btn-sm btn-dark" onclick="rechazarItem('{{ route('loans.rechazar', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#rechazar-modal">
+                                    <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Rechazar</span>
+                                </button>
+                                <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('loans.destroy', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#delete-modal">
+                                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span>
+                                </button>
+                            @endif
                         @endif
                     </td>
                     

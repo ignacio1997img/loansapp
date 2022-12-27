@@ -4,7 +4,7 @@
     <div class="page-content">
         @include('voyager::alerts')
         {{-- Vista de cajero(a) --}}
-        @if (auth()->user()->hasRole('cajeros'))
+        @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador'))
             @php
                 $cashier = \App\Models\Cashier::with(['movements' => function($q){
                     $q->where('deleted_at', NULL);
@@ -404,7 +404,7 @@
 
 @section('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
-    @if (auth()->user()->hasRole('cajeros') && $cashier)
+    @if ( (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador')) && $cashier)
         @if ($cashier->status == 'abierta')
             <script>
                 $(document).ready(function(){

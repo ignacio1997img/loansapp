@@ -73,6 +73,7 @@ class UserController extends Controller
         try {
             
             $user = User::create([
+                'ci'=>$request->ci,
                 'name' =>  $request->name,
                 'role_id' => $request->role_id,
                 'email' => $request->email,
@@ -92,17 +93,24 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        // return $request;
         DB::beginTransaction();
         try {
             
             $user->update([
+                'ci'=>$request->ci,
                 'name' =>  $request->name,
                 'role_id' => $request->role_id,
                 'email' => $request->email,
                 'avatar' => 'users/default.png',
-                'password' => $request->password??bcrypt($request->password)
-                // 'registerUser_id' => Auth::user()->id
             ]);
+            if($request->password)
+            {
+                // return $request;
+                $user->update([
+                    'password' => bcrypt($request->password)
+                ]);
+            }
             DB::commit();
             return redirect()->route('user.index')->with(['message' => 'Usuario actualizado exitosamente.', 'alert-type' => 'success']);
 

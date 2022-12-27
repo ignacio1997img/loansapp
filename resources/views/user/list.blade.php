@@ -15,7 +15,11 @@
                 @forelse ($data as $item)
                 <tr>
                     <td>{{ $item->id }}</td>
-                    <td>{{ $item->name }}</td>
+                    <td>
+                        <small>Nombre: </small>{{ $item->name }}
+                        <br>
+                        <small>CI: </small>{{$item->ci}}
+                    </td>
                     <td>{{ $item->email}}</td>
                     <td>{{ $item->role->display_name}}</td>
                     <td style="text-align: center">

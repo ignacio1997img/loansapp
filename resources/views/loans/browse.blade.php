@@ -73,13 +73,24 @@
                                 <input type="text" id="input-search" class="form-control" placeholder="Ingrese busqueda..."> <br>
                             </div>
                             <div class="col-md-12 text-right">
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" checked>En Pagos</label>
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="aprobado">Por Entregar</label>
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="verificado">Por Aprobar</label>
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pendiente">Pendientes</label>
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pagado">Pagados</label>
-                                <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="rechazado">Rechazados</label>
+                                @if (!auth()->user()->hasRole('cobrador'))
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
+                                @endif
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" checked>En Pagos</label>
+                                
+                                
+                                @if (!auth()->user()->hasRole('cobrador'))
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="aprobado">Por Entregar</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="verificado">Por Aprobar</label>
+                                @endif
+                                
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pendiente">Pendientes</label>
+                             
+
+                                @if (!auth()->user()->hasRole('cobrador'))
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pagado">Pagados</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="rechazado">Rechazados</label>
+                                @endif
                             </div>
                         </div>
                         <div class="row" id="div-results" style="min-height: 120px"></div>

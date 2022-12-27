@@ -45,10 +45,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('settings');
 
 
-        // Permission::generateFor('type_loans');
-        // Permission::generateFor('agent_types');
-
-        // boveda
+        
         $keys = [
             'browse_vaults',
             'add_vaults',
@@ -96,6 +93,24 @@ class PermissionsTableSeeder extends Seeder
         }
 
 
+
+        // para reportes en general GERENTE Y ADMINISTRADOR
+        $keys = [
+            'browse_printdailyCollection',
+            'browse_printdailyList',
+            'browse_printloanListLate',
+
+            'browse_printloanCollection' //reportes para el cajero y el cobrador en moto
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'reports_gerente',
+            ]);
+        }
+
+
         
 
         // _________________________________________________________
@@ -107,13 +122,8 @@ class PermissionsTableSeeder extends Seeder
             'browse_routes',
             'add_routes',
             'edit_routes',
-            // 'delete_routes',
             'read_routes',
             'collector_routes',
-            // 'open_routes',
-            // 'movements_routes',
-            // 'close_routes',
-            // 'print_routes',
             
         ];
 

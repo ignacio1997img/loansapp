@@ -1,7 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', 'Reporte Recaudacion Diaria')
-{{-- @if(auth()->user()->hasPermission('browse_printalmacen-inventarioAnual-detalle')) --}}
+@if(auth()->user()->hasPermission('browse_printdailyCollection'))
 
 
 @section('page_header')
@@ -204,8 +204,9 @@
         }
     </script>
 @stop
-{{-- @else
+@else
     @section('content')
-        @include('errors.403')
+        {{-- @include('errors.403') --}}
+        <h1>Sin Permiso</h1>
     @stop
-@endif --}}
+@endif

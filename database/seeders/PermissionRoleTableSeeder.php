@@ -38,11 +38,15 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "browse_loans" or 
 
                                             `key` = "successLoan_loans" or
+
+
+                                            `key` = "browse_printdailyCollection" or
+                                            `key` = "browse_printdailyList" or
+                                            `key` = "browse_printloanListLate" or
+
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
-
-
 
         //############## Administrador ####################
         $role = Role::where('name', 'administrador')->firstOrFail();
@@ -50,6 +54,12 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "people" or
                                             table_name = "user" or
                                             table_name = "cashiers" or
+
+
+                                            `key` = "browse_printdailyCollection" or
+                                            `key` = "browse_printdailyList" or
+                                            `key` = "browse_printloanListLate" or
+
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
 
@@ -66,8 +76,30 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "deliverMoney_loans" or 
                                             
                                             `key` = "addMoneyDaily_loans" or 
+
+
+                                            `key` = "browse_printloanCollection" or 
+
+                                            
+                                            `key` = "browse_clear-cache"')->get();
+        $role->permissions()->sync($permissions->pluck('id')->all());
+
+        //############## Cajero ####################
+        $role = Role::where('name', 'cobrador')->firstOrFail();
+        $permissions = Permission::whereRaw('table_name = "admin" or
+
+                                            `key` = "browse_loans" or
+                                            
+                                            `key` = "addMoneyDaily_loans" or 
+
+
+                                            `key` = "browse_printloanCollection" or 
+
+
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
     }
+
+    
 }

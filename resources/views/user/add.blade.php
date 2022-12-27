@@ -25,15 +25,23 @@
                         <div class="panel panel-bordered">
                             <div class="panel-body">
                                 <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <small>CI</small>
+                                        <input type="text" name="ci" value="{{$data? $data->ci:''}}" placeholder="CI/NIT" class="form-control text" minlength="7" maxlength="15" required>
+                                    </div>  
                                     <div class="form-group col-md-5">
                                         <small>Nombre</small>
                                         <input type="text" name="name" value="{{$data? $data->name:''}}" placeholder="Nombre del usuario" class="form-control text" minlength="10" maxlength="50" required>
-                                    </div>   
+                                    </div> 
                                     <div class="form-group col-md-4">
                                         <small>Email</small>
                                         <input type="email" name="email" value="{{$data? $data->email:''}}" placeholder="Email del usuario" class="form-control text" required>
                                     </div>   
                                     
+                                    
+                                </div>
+
+                                <div class="row">
                                     <div class="form-group col-md-3">
                                         <small>Contraseña</small>
                                         
@@ -45,9 +53,6 @@
                                             <small>Para mentner la misma contraseña deja vacio el</small>                                            
                                         @endif
                                     </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="form-group col-md-5">
                                         <small>Rol</small>
                                         <select name="role_id" id="role_id" class="form-control select2" required>
