@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [TemplateController::class, 'index']);
+Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
 
 Route::get('login', function () {
     return redirect('admin/login');
@@ -177,7 +178,7 @@ Route::get('template/loan/search/verification/{loan?}/{phone?}/{code?}', [Templa
 
 
 
-Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
+// Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
 
 Route::get('/admin/clear-cache', function() {
     Artisan::call('optimize:clear');
