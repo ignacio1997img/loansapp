@@ -141,7 +141,7 @@ class PeopleController extends Controller
     public function verification(Request $request){
         DB::beginTransaction();
         try {
-            Http::get('http://whatsapp.capresi.net/?number=591'+$request->phone+'&message=Hola *'+$request->name+'*.%0A%0A*CAPRESI* te da la Bienvenida%0A%0APara verificar tus datos personales has clic en el enlace de abajo.%0A👇👇%0Ahttps://capresi.net/message/'+$request->id+'/verification');
+            Http::get('http://whatsapp.capresi.net/?number=591'.$request->phone.'&message=Hola *'.$request->name.'*.%0A%0A*CAPRESI* te da la Bienvenida%0A%0APara verificar tus datos personales has clic en el enlace de abajo.%0A👇👇%0Ahttps://capresi.net/message/'.$request->id.'/verification');
             // Http::get('http://whatsapp.capresi.net/?number=59167285914&message=aaa');
 
           
