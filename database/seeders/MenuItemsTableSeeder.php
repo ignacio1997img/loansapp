@@ -403,6 +403,22 @@ class MenuItemsTableSeeder extends Seeder
                 'route' => 'user.index',
                 'parameters' => NULL,
             ),
+            24 => 
+            array (
+                'id' => 36,
+                'menu_id' => 1,
+                'title' => 'Recaudacion Diaria',
+                'url' => '',
+                'target' => '_self',
+                'icon_class' => 'fa-solid fa-print',
+                'color' => '#000000',
+                'parent_id' => 31,
+                'order' => 4,
+                'created_at' => '2022-12-27 13:48:24',
+                'updated_at' => '2022-12-27 13:48:38',
+                'route' => 'print-loanCollection',
+                'parameters' => NULL,
+            ),
         ));
         
         
