@@ -95,42 +95,44 @@
         </div>
     </div>
 
-
-    <div class="modal modal-success fade" data-backdrop="static" tabindex="-1" id="verificar-modal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><i class="fa-solid fa-key"></i> Verificación</h4>
-                </div>
-                <div class="modal-body">
-                        <input type="hidden" id="id">
-                        <input type="hidden" id="phone">
-                        <input type="hidden" id="name">
-                        {{-- @php
-                            $telefono = $_GET['phone'];
-                            
-                        @endphp --}}
-                </div>   
-                
-                <div class="modal-footer">
-                    {{-- <form action="#" id="verificacion_form" method="POST">
-                        {{ method_field('DELETE') }}
-                        {{ csrf_field() }}</form> --}}
-
-                            <div class="text-center" style="text-transform:uppercase">
-                                <i class="fa-brands fa-square-whatsapp" style="color: #52ce5f; font-size: 5em;"></i>
-                                <br>
-                                {{-- <i class="fa-brands fa-square-whatsapp"></i> --}}
-                                <p><b>Desea enviar verificacion?</b></p>
-                            </div>
-                        <input type="submit" class="btn btn-success pull-right delete-confirm"  onclick="miFunc()" value="Sí, Enviar">
+    <form action="{{route('people.verification')}}" id="form-create-customer" method="POST">
+        <div class="modal modal-success fade" data-backdrop="static" tabindex="-1" id="verificar-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa-solid fa-key"></i> Verificación</h4>
+                    </div>
+                    <div class="modal-body">
+                            <input type="hidden" id="id">
+                            <input type="hidden" id="phone">
+                            <input type="hidden" id="name">
+                            {{-- @php
+                                $telefono = $_GET['phone'];
+                                
+                            @endphp --}}
+                    </div>   
                     
-                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                    <div class="modal-footer">
+                        {{-- <form action="#" id="verificacion_form" method="POST">
+                            {{ method_field('DELETE') }}
+                            {{ csrf_field() }}</form> --}}
+
+                                <div class="text-center" style="text-transform:uppercase">
+                                    <i class="fa-brands fa-square-whatsapp" style="color: #52ce5f; font-size: 5em;"></i>
+                                    <br>
+                                    {{-- <i class="fa-brands fa-square-whatsapp"></i> --}}
+                                    <p><b>Desea enviar verificacion?</b></p>
+                                </div>
+                            <input type="submit" class="btn btn-success pull-right delete-confirm" value="Sí, Enviar">
+                        
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
+
 
  
 @stop
@@ -244,69 +246,29 @@
             modal.find('.modal-body #phone').val(phone)
         });
 
-        function miFunc() {
-
-            // var id = $('#id').val();
-            // var phone = $('#phone').val();
-            // var name = $('#name').val();
-
-            // alert(id);
-            
-            // let timerInterval
-            // Swal.fire({
-            //     title: 'Solicitud de verificacion enviada',
-            //     html: '<h2><i class="fa-regular fa-envelope"></i></h2>',
-            //     timer: 2000,
-            //     timerProgressBar: true,
-            //     didOpen: () => {
-            //         Swal.showLoading()
-            //         const b = Swal.getHtmlContainer().querySelector('b')
-            //         timerInterval = setInterval(() => {
-            //         b.textContent = Swal.getTimerLeft()
-            //         }, 50)
-            //     },
-            //     willClose: () => {
-            //         clearInterval(timerInterval)
-            //     }
-            //     }).then((result) => {
-            //     if (result.dismiss === Swal.DismissReason.timer) {
-            //         console.log('I was closed by the timer')
-            //     }
-            // })
-
-            // alert(id);
-            // url = "http://whatsapp.capresi.net/?number=591"+phone+"&message=Hola *"+name+"*.%0A%0A*CAPRESI* te da la Bienvenida%0A%0APara verificar tus datos personales has clic en el enlace de abajo.%0A👇👇%0Ahttps://capresi.net/message/"+id+"/verification";
-            
-            // const xhr = new XMLHttpRequest();
-            // xhr.open("GET", url);
-            // xhr.send();
-            // xhr.responseType = "json";
 
 
+        $('#form-create-customer').submit(function(e){
+                // alert(1)
+                e.preventDefault();
+                $('.btn-save-customer').attr('disabled', true);
+                $('.btn-save-customer').val('Guardando...');
+                $.post($(this).attr('action'), $(this).serialize(), function(data){
+                    if(data.customer){
+                        toastr.success('Solicitud Enviada', 'Éxito');
+                        $(this).trigger('reset');
+                    }else{
+                        toastr.error(data.error, 'Error');
+                    }
+                })
+                .always(function(){
+                    $('.btn-save-customer').attr('disabled', false);
+                    $('.btn-save-customer').text('Guardar');
+                    // $('#modal-create-customer').modal('hide');
+                    $("#verificar-modal").modal('hide');
 
-
-
-            // xhr.open('GET', 'http://whatsapp.capresi.net/?number=59167285914&message=hola');
-            // xhr.send();
-
-            const xhr = new XMLHttpRequest();
-
-            xhr.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                console.log(xhr.responseText);
-                }
-            };
-
-            xhr.open('GET', 'http://whatsapp.capresi.net/?number=59167285914&message=hola');
-            xhr.send();
-
-
-
-
-            
-            // window.open("http://api.trabajostop.com:3001/?number=59167285914&message=hola")
-            $("#verificar-modal").modal('hide');
-        }
+                });
+            });
 
        
     </script>

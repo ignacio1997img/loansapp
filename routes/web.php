@@ -14,6 +14,7 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\Loan;
+use App\Models\People;
 use Illuminate\Support\Facades\Route;
 
 // use PeopleController
@@ -51,6 +52,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::delete('people/{people?}/sponsor/{sponsor?}/delete', [PeopleController::class, 'destroySponsor'])->name('people-sponsor.delete');
     Route::get('people/{people?}/sponsor/{sponsor?}/inhabilitar', [PeopleController::class, 'inhabilitarSponsor'])->name('people-sponsor.inhabilitar');
     Route::get('people/{people?}/sponsor/{sponsor?}/habilitar', [PeopleController::class, 'habilitarSponsor'])->name('people-sponsor.habilitar');
+
+    Route::post('people/verification', [PeopleController::class, 'verification'])->name('people.verification');
 
     Route::post('people/importar', [PeopleController::class, 'import'])->name('people.import');
 

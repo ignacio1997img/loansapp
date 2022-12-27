@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PeopleImport;
+use Illuminate\Support\Facades\Http;
+
 class PeopleController extends Controller
 {
     public function __construct()
@@ -133,6 +135,21 @@ class PeopleController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('people-sponsor.index', ['id'=>$people])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+    }
+
+    public function verification(Request $request){
+        DB::beginTransaction();
+        try {
+            // Http::get('http://whatsapp.capresi.net/?number=591'+$request->phone+'&message=Hola *'+$request->name+'*.%0A%0A*CAPRESI* te da la Bienvenida%0A%0APara verificar tus datos personales has clic en el enlace de abajo.%0A👇👇%0Ahttps://capresi.net/message/'+$request->id+'/verification');
+            Http::get('http://whatsapp.capresi.net/?number=59167285914&message=aaa');
+
+          
+            DB::commit();
+            return response()->json(['customer' => 1]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
