@@ -15,7 +15,6 @@ class PeopleImport implements ToModel
     public function model(array $row)
     {
         return new People([
-            'ci'=>$row[10],
             'first_name'=>$row[0],
             'last_name1'=>$row[1],
             'last_name2'=>$row[2],
@@ -29,6 +28,11 @@ class PeopleImport implements ToModel
             'streetB'=>$row[7],
             'homeB'=>$row[8],
             'zoneB'=>$row[9],
+
+            'ci'=>$row[10],
+            // 'birth_date'=>$row[11],
+
+
         ]);
     }
 }
