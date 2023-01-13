@@ -66,6 +66,11 @@
                                                 <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->close_at))}}<br><small>{{\Carbon\Carbon::parse($item->close_at)->diffForHumans()}}.</small></td>
                                 
                                                 <td style="text-align: right">
+                                                    @if ($item->status == 'abierta')
+                                                        <a href="" title="Editar" class="btn btn-sm btn-warning">
+                                                            <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Abonar Dinero</span>
+                                                        </a>
+                                                    @endif
                                                     @if ($item->status == 'abierta' || $item->status == 'apertura pendiente')
                                                         
                                                         <a href="#" title="Imprimir" class="btn btn-success" onclick="openWindow({{$item->id}})">

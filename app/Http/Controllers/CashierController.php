@@ -119,6 +119,17 @@ class CashierController extends Controller
         }
     }
 
+    public function amount($id)
+    {
+        return $id;
+        $cashier = Cashier::findOrFail($id);
+        if($cashier->status == 'abierta'){
+            return view('vendor.voyager.cashiers.add-amount', compact('id'));
+        }else{
+            return redirect()->route('voyager.cashiers.index')->with(['message' => 'La caja seleccionada ya no se encuentra abierta.', 'alert-type' => 'warning']);
+        }
+    }
+
 
     //*** Para que los cajeros Acepte o rechase el dinero dado por Boveda o gerente
     public function change_status($id, Request $request){

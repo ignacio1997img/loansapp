@@ -123,6 +123,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
 
     Route::resource('cashiers', CashierController::class);
+    Route::get('cashiers/{cashier}/amount', [CashierController::class, 'amount'])->name('cashiers.amount');//para abrir la vista de poder agregar dinero o aboinar mas dinero a la caja
+
     Route::post('cashiers/{cashier}/change/status', [CashierController::class, 'change_status'])->name('cashiers.change.status');//*** Para que los cajeros Acepte o rechase el dinero dado por Boveda o gerente
     Route::get('cashiers/{cashier}/close/', [CashierController::class, 'close'])->name('cashiers.close');//***para cerrar la caja el cajero vista 
     Route::post('cashiers/{cashier}/close/store', [CashierController::class, 'close_store'])->name('cashiers.close.store'); //para que el cajerop cierre la caja 
