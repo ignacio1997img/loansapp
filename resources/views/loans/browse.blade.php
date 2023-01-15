@@ -448,16 +448,13 @@
         var loanC = 0;
 
         function deliverItem(url, id, amountTotal){
-            
+            // cantidad= parseFloat($("#cantidad").val()? $("#cantidad").val() : 0).toFixed(2);
+            var amountTotal = parseFloat(amountTotal).toFixed(2);
+            balance = parseFloat(balance).toFixed(2);
+            alert(balance);
+            alert(amountTotal);
             $('#deliver_form').attr('action', url);
             loanC = id;
-            // alert(parseFloat(balance).toFixed(2))
-            // alert(parseFloat(amountTotal).toFixed(2))
-            // if(parseFloat(amountTotal).toFixed(2)>parseFloat(balance).toFixed(2))
-            // {
-            //     alert('si')
-            // }
-            // alert(amountTotal);
             if(amountTotal > balance && cashier_id!=0)
             {
                 // $('#btn-submit-delivered').attr('disabled', 'disabled');

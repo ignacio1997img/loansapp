@@ -97,7 +97,7 @@ Gracias🤝😊');
         $balance = 0;
         if($cashier)
         {
-            $balance = $cashier->movements[0]->balance;
+            $balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');            
         }
         return $balance;
     }

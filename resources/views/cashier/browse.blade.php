@@ -41,7 +41,7 @@
                     <div class="panel-body">                        
                         <div class="table-responsive">
                             @if ($vault)          
-                                <table id="dataTable" class="table table-hover">
+                                <table id="dataStyle" class="table table-hover">
                                     <thead>
                                         <tr>
                                             <th style="text-align: center">Id</th>
@@ -67,20 +67,20 @@
                                 
                                                 <td style="text-align: right">
                                                     @if ($item->status == 'abierta')
-                                                        <a href="" title="Editar" class="btn btn-sm btn-warning">
+                                                        <a href="{{route('cashiers.amount', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-success">
                                                             <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Abonar Dinero</span>
                                                         </a>
                                                     @endif
                                                     @if ($item->status == 'abierta' || $item->status == 'apertura pendiente')
                                                         
-                                                        <a href="#" title="Imprimir" class="btn btn-success" onclick="openWindow({{$item->id}})">
+                                                        <a href="#" title="Imprimir" class="btn btn-dark" onclick="openWindow({{$item->id}})">
                                                             <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir apertura</span>
                                                         </a>
 
                                                     @endif
                                                     @if ($item->status == 'cerrada')
                                                         
-                                                        <a href="#" title="Imprimir" class="btn btn-danger" onclick="closeWindow({{$item->id}})">
+                                                        <a href="#" title="Imprimir" class="btn btn-dark" onclick="closeWindow({{$item->id}})">
                                                             <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir cierre</span>
                                                         </a>
 
@@ -198,7 +198,7 @@
 
         $(function()
         {
-            $('#dataTable').DataTable({
+            $('#dataStyle').DataTable({
                     language: {
                             // "order": [[ 0, "desc" ]],
                             sProcessing: "Procesando...",

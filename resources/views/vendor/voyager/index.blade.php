@@ -25,6 +25,7 @@
                             <div class="panel panel-bordered">
                                 <div class="panel-body">
                                     @php
+                                        // dd($cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL));
                                         $cashier_in = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');
                                         $cashier_balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');
                                         // dd($cashier_in);

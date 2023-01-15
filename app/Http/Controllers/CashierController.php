@@ -14,7 +14,7 @@ use App\Models\VaultDetail;
 use App\Models\VaultDetailCash;
 use App\Models\CashierMovement;
 use App\Models\CashierDetail;
-
+use Psy\CodeCleaner\ReturnTypePass;
 
 class CashierController extends Controller
 {
@@ -119,16 +119,97 @@ class CashierController extends Controller
         }
     }
 
+    //para abrir la vista de abonar dinero a una caja que este en estado ABIERTA
     public function amount($id)
     {
-        return $id;
+        // return $id;
         $cashier = Cashier::findOrFail($id);
+        // return $cashier;
         if($cashier->status == 'abierta'){
-            return view('vendor.voyager.cashiers.add-amount', compact('id'));
+            return view('cashier.add-amount', compact('id'));
         }else{
             return redirect()->route('voyager.cashiers.index')->with(['message' => 'La caja seleccionada ya no se encuentra abierta.', 'alert-type' => 'warning']);
         }
     }
+
+    //para guardar el dinero abonado a la caja ABIERTA
+    public function amount_store(Request $request)
+    {
+        // return $request;
+        DB::beginTransaction();
+        try {
+
+            $cashier = Cashier::with('user')->where('id', $request->cashier_id)->where('status', 'abierta')->first();
+            if(!$cashier){
+                return redirect()->route($request->redirect ?? 'voyager.cashiers.index')->with(['message' => 'La caja seleccionada ya no se encuentra abierta.', 'alert-type' => 'warning']);
+            }
+
+            
+            // Registrar traspaso a la caja
+            $movement = CashierMovement::create([
+                'user_id' => Auth::user()->id,
+                'cashier_id' => $request->cashier_id,
+                // 'cashier_id_from' => $request->id ?? NULL,
+                'balance' => $request->amount,
+                'amount' => $request->amount,
+                'description' => $request->description,
+                'type' => 'ingreso'
+            ]);
+
+            // CashierMovement::create([
+            //     'user_id' => Auth::user()->id,
+            //     'cashier_id' => $cashier->id,
+            //     'balance' => $request->amount,
+            //     'amount' => $request->amount,
+            //     'description' => 'Monto de apertura de caja.',
+            //     'type' => 'ingreso'
+            // ]);
+
+            $id_transfer = $movement->id;
+
+            // En caso de ser un trapaso entre cajas
+            if($request->id){
+                return 00;
+                CashierMovement::create([
+                    'user_id' => Auth::user()->id,
+                    'cashier_id' => $request->id,
+                    'cashier_id_to' => $request->cashier_id,
+                    'amount' => $request->amount,
+                    'description' => 'Traspaso a '.$cashier->title,
+                    'type' => 'egreso'
+                ]);
+            }else{
+                if($request->amount){
+                    // Registrar detalle de bóveda
+                    $detail = VaultDetail::create([
+                        'user_id' => Auth::user()->id,
+                        'vault_id' => $request->vault_id,
+                        'cashier_id' => $request->cashier_id,
+                        'description' => 'Traspaso a '.$cashier->title,
+                        'type' => 'egreso',
+                        'status' => 'aprobado'
+                    ]);
+                    // return $detail;
+                    for ($i=0; $i < count($request->cash_value); $i++) { 
+                        VaultDetailCash::create([
+                            'vaults_detail_id' => $detail->id,
+                            'cash_value' => $request->cash_value[$i],
+                            'quantity' => $request->quantity[$i],
+                        ]);
+                    }
+                }
+            }
+            // return $id_transfer;    
+
+            DB::commit();
+            return redirect()->route('cashiers.index')->with(['message' => 'Registro guardado exitosamente.', 'alert-type' => 'success', 'id_transfer' => $id_transfer]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->route('cashiers.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+    }
+
+
 
 
     //*** Para que los cajeros Acepte o rechase el dinero dado por Boveda o gerente
