@@ -1,7 +1,8 @@
 @extends('voyager::master')
 
 @section('content')
-    <div class="page-content">
+    {{-- <div class="page-content"> --}}
+    <div class="page-content browse container-fluid">
         @include('voyager::alerts')
         {{-- Vista de cajero(a) --}}
         @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador'))
@@ -399,9 +400,116 @@
                     </div>
                 </div>
             @endif
+        @else
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-bordered">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h2>Hola, {{ Auth::user()->name }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @php
+                    $data = App\Models\Loan::where('deleted_at', NULL)->get();
+                    // dd($data);
+                @endphp
+                <div class="col-md-3">
+                    <div class="panel panel-bordered" style="border-left: 5px solid #52BE80">
+                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                            <div class="col-md-9">
+                                <h5>Prestamos en pagos</h5>
+                                <h2>{{count($data->where('status', 'entregado')->where('debt', '!=', 0))}}</h2>
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <i class="icon fa-solid fa-money-bill" style="color: #52BE80"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-bordered" style="border-left: 5px solid #E67E22">
+                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                            <div class="col-md-9">
+                                <h5>Prestamos por entregar al cliente</h5>
+                                <h2>{{count($data->where('status', 'aprobado'))}}</h2>
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <i class="icon voyager-calendar" style="color: #E67E22"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-bordered" style="border-left: 5px solid #3498DB">
+                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                            <div class="col-md-9">
+                                <h5>Prestamos por aprobar</h5>
+                                <h2>{{count($data->where('status', 'verificado'))}}</h2>
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <i class="icon voyager-certificate" style="color: #3498DB"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="panel panel-bordered" style="border-left: 5px solid #E74C3C">
+                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                            <div class="col-md-9">
+                                @php
+                                    
+                                @endphp
+                                <h5>Prestamos por verificar</h5>
+                                <h2>{{count($data->where('status', 'pendiente'))}}</h2>
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <i class="icon voyager-book" style="color: #E74C3C"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel">
+                        <div class="panel-body" style="height: 250px; overflow-y: auto">
+                            <h4>Cumpleaños</h4>
+                            @php
+                                
+                            @endphp
+                            <div class="list-group">
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel">
+                        <div class="panel-body" style="height: 250px">
+                            <canvas id="bar-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel">
+                        <div class="panel-body" style="height: 250px">
+                            <canvas id="doughnut-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endif
     </div>
 @stop
+@section('css')
+    <style>
+        .icon{
+            font-size: 35px
+        }
+    </style>
+@endsection
 
 @section('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
