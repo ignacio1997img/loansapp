@@ -449,10 +449,10 @@
 
         function deliverItem(url, id, amountTotal){
             // cantidad= parseFloat($("#cantidad").val()? $("#cantidad").val() : 0).toFixed(2);
-            var amountTotal = parseFloat(amountTotal).toFixed(2);
-            balance = parseFloat(balance).toFixed(2);
-            alert(balance);
-            alert(amountTotal);
+            // var amountTotal = parseFloat(amountTotal).toFixed(2);
+            // balance = parseFloat(balance).toFixed(2);
+            // alert(balance);
+            // alert(amountTotal);
             $('#deliver_form').attr('action', url);
             loanC = id;
             if(amountTotal > balance && cashier_id!=0)
