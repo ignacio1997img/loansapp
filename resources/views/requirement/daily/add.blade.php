@@ -86,13 +86,14 @@
                                 @endif
 
                                 @if ($ok && $requirement->status==2 && $requirement->latitude!=NULL && $requirement->longitude!=NULL)
+                                @endif
                                 {{-- @if ($requirement->status==2) --}}
                                     <div class="row">
                                         <div class="col-md-12 text-left">
                                             <button class="btn btn-success" data-toggle="modal" data-target="#success-modal">Aprobar Requisitos</button>
                                         </div>
                                     </div>
-                                @endif
+                                
                                 
                                 <div class="row" id="div-results" style="min-height: 120px">
                                     <div class="col-md-12">
