@@ -3,6 +3,9 @@
         <table id="dataStyle" class="table table-bordered table-hover">
             <thead>
                 <tr>
+                    @if (auth()->user()->hasRole('admin'))
+                        <td>ID</td>
+                    @endif
                     <th>Codigo</th>
                     <th>Fecha Solicitud</th>
                     <th>Nombre Cliente</th>                    
@@ -18,6 +21,9 @@
             <tbody>
                 @forelse ($data as $item)
                 <tr>
+                    @if (auth()->user()->hasRole('admin'))
+                        <th>{{$item->id}}</th>
+                    @endif
                     <td>{{ $item->code }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
                     <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
