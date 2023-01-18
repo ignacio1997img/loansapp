@@ -74,9 +74,9 @@
                             </div>
                             <div class="col-md-12 text-right">
                                 @if (!auth()->user()->hasRole('cobrador'))
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo" checked>Todos</label>
                                 @endif
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" checked>En Pagos</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" >En Pagos</label>
                                 
                                 
                                 @if (!auth()->user()->hasRole('cobrador'))
