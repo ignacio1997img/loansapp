@@ -430,7 +430,53 @@ class CashierController extends Controller
     //Para eliminar los prestamos cuando no tiene ningun pago pero solo elimina el administrador o el cajero
     public function destroyDelete(Request $request)
     {
-        return $request;
+        // return $request;
+        DB::beginTransaction();
+        try {
+
+            $cashier = Cashier::with(['movements' => function($q){
+                $q->where('deleted_at', NULL);
+            }])
+            ->where('id', $request->cashier_id)
+            ->where('status', 'abierta')
+            ->where('deleted_at', NULL)->first();
+            if(!$cashier)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'warning']);
+            }
+            
+            $loan = Loan::where('id', $request->loan_id)->first();
+            if(!$loan)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra eliminado.', 'alert-type' => 'warning']);
+            }
+            if($loan->debt != $loan->amountTotal)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra con pagos realizados.', 'alert-type' => 'warning']);
+            }
+
+            $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first();
+            if(!$movement)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Error en la caja, contactese con los desarrolladores', 'alert-type' => 'warning']);
+            }
+            return $request;
+            $movement->increment('balance', $loan->amountLoan);
+            
+            $loan->update([
+                'deleted_at' => Carbon::now(),
+                'deleted_userId' => Auth::user()->id,
+                'deleted_agentType' => $this->agent(Auth::user()->id)->role,
+                'deleteObservation' =>$request->observations
+            ]);
+
+
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+        }
     }
 
 }

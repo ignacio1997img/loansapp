@@ -44,6 +44,7 @@ class Loan extends Model
 
         'deleted_userId',
         'deleted_agentType',
+        'deleteObservation',
 
         'delivered_userId',
         'delivered_agentType',
