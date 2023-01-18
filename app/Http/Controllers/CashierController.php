@@ -15,6 +15,7 @@ use App\Models\VaultDetailCash;
 use App\Models\CashierMovement;
 use App\Models\CashierDetail;
 use Psy\CodeCleaner\ReturnTypePass;
+use App\Models\Loan;
 
 class CashierController extends Controller
 {
@@ -122,8 +123,10 @@ class CashierController extends Controller
     public function show($id)
     {
         $cashier = Cashier::where('id', $id)->first();
-        // return $id;
-        return view('cashier.read' , compact('cashier'));
+        
+        $loan = Loan::with(['people'])->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
+        // return $loan;
+        return view('cashier.read' , compact('cashier', 'loan'));
     }
 
     //para abrir la vista de abonar dinero a una caja que este en estado ABIERTA
@@ -420,6 +423,14 @@ class CashierController extends Controller
         // $pdf = \App::make('dompdf.wrapper');
         // $pdf->loadHTML($view);
         // return $pdf->download();
+    }
+
+
+
+    //Para eliminar los prestamos cuando no tiene ningun pago pero solo elimina el administrador o el cajero
+    public function destroyDelete(Request $request)
+    {
+        return $request;
     }
 
 }

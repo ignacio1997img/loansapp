@@ -137,6 +137,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('cashiers/print/open/{id?}', [CashierController::class, 'print_open'])->name('print.open');//para imprimir el comprobante cuando se abre una caja
     Route::get('cashiers/print/close/{id?}', [CashierController::class, 'print_close'])->name('print.close');
 
+    Route::post('cashiers/loans/delete', [CashierController::class, 'destroyDelete'])->name('cashiers-loan.delete');//para pider eliminar prestamos cuando no tenga dias pagados 
+
+
 
     // Para registrar usuario los gerente, administradores
     Route::resource('user', UserController::class);
