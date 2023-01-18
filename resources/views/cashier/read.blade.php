@@ -127,7 +127,11 @@
                                             <td class="text-right">
                                                 @if (!$item->deleted_at)
                                                     {{-- <button type="button" onclick="print_recipe({{ $payment->id }})" title="Imprimir" class="btn btn-default btn-print"><i class="glyphicon glyphicon-print"></i> Imprimir</button> --}}
-                                                    <button type="button" data-toggle="modal" data-target="#delete_payment-modal" data-id="{{ $item->id }}" class="btn btn-danger btn-delete"><i class="voyager-trash"></i> Anular</button>
+                                                    @if ($item->amountTotal == $item->debt)
+                                                        <button type="button" data-toggle="modal" data-target="#delete_payment-modal" data-id="{{ $item->id }}" class="btn btn-danger btn-delete"><i class="voyager-trash"></i> Anular</button>                                                       
+                                                    @else
+                                                        <label class="label label-success">Cuenta con dias pagados</label>
+                                                    @endif
                                                 @else
                                                     <label class="label label-danger">Prestamo eliminado</label>
                                                 @endif
@@ -194,7 +198,7 @@
         $(document).ready(function () {
             $('.btn-delete').click(function(){
                 let loan_id = $(this).data('id');
-                alert(loan_id)
+                // alert(loan_id)
                 $(`#form-delete input[name="loan_id"]`).val(loan_id);
             });
         });
