@@ -93,7 +93,7 @@ class ReportController extends Controller
                 'l.day', 'l.amountTotal', 'l.amountLoan', 'l.amountPorcentage', 'l.date',
                 DB::raw("SUM(ld.late) as diasAtrasado"), DB::raw("SUM(ld.debt) as montoAtrasado")
             )
-            ->groupBy('p.id')
+            ->groupBy('l.id','p.id')
             ->get();
         // return $data->id;        
         if($request->print){
