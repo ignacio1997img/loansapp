@@ -119,6 +119,13 @@ class CashierController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $cashier = Cashier::where('id', $id)->first();
+        // return $id;
+        return view('cashier.read' , compact('cashier'));
+    }
+
     //para abrir la vista de abonar dinero a una caja que este en estado ABIERTA
     public function amount($id)
     {

@@ -66,6 +66,9 @@
                                                 <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->close_at))}}<br><small>{{\Carbon\Carbon::parse($item->close_at)->diffForHumans()}}.</small></td>
                                 
                                                 <td style="text-align: right">
+                                                    <a href="{{route('cashiers.show', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-warning">
+                                                        <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                    </a>
                                                     @if ($item->status == 'abierta')
                                                         <a href="{{route('cashiers.amount', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-success">
                                                             <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Abonar Dinero</span>
