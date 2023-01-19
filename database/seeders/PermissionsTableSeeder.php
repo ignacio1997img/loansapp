@@ -161,6 +161,7 @@ class PermissionsTableSeeder extends Seeder
             'add_people',
             'edit_people',
             'read_people',
+            'delete_people',
             'sponsor_people',            
         ];
 
