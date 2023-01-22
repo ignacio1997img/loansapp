@@ -160,6 +160,17 @@
     @section('javascript')
         <script>
 
+            $(document).ready(function(){
+                $('#agent').submit(function(e){
+                    // $('#btn_guardar').css('display', 'none');
+
+                    var uno = document.getElementById('btn_submit');
+                    uno.textContent = 'Guardando....'; 
+                    $('#btn_submit').attr('disabled', true);
+
+                });
+            })
+
             $(document).ready(() => {
                 $(`#text_type`).val($(".radio-type:checked").val());
                 $('.radio-type').click(function(){
