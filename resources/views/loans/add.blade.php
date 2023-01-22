@@ -164,8 +164,9 @@
                 $('#agent').submit(function(e){
                     // $('#btn_guardar').css('display', 'none');
 
-                    var uno = document.getElementById('btn_submit');
-                    uno.textContent = 'Guardando....'; 
+                    // var uno = document.getElementById('btn_submit');
+                    // uno.textContent = 'Guardando....'; 
+                    $('#btn_submit').text('Guardando...');
                     $('#btn_submit').attr('disabled', true);
 
                 });
