@@ -131,21 +131,22 @@
                                         <textarea name="observation" id="observation" class="form-control text" cols="30" rows="5"></textarea>
                                     </div>                                  
                                 </div>
+                                @if ($cashier)    
+                                    @if ($cashier->status == 'abierta')
+
+                                        <input type="hidden" name="cashier_id" value="{{$cashier->id}}">
+                                        <div class="row">
+                                            <div class="col-md-12 text-right">
+                                                <button type="submit" id="btn_submit" class="btn btn-primary">Guardar</button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-                @if ($cashier)    
-                    @if ($cashier->status == 'abierta')
-
-                        <input type="hidden" name="cashier_id" value="{{$cashier->id}}">
-                        <div class="row">
-                            <div class="col-md-12 text-right">
-                                <button type="submit" id="btn_submit" class="btn btn-primary">Guardar</button>
-                            </div>
-                        </div>
-                    @endif
-                @endif
+                
                 
             </form>              
         </div>
