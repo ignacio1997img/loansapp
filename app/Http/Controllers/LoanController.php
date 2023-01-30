@@ -361,19 +361,12 @@ class LoanController extends Controller
 
         DB::beginTransaction();
         try {
-            // Loan::where('id', $loan)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
-            // LoanRequirement::where('loan_id',$loan)
-            //     ->update(['status'=>'1',
-            //             'success_userId' => Auth::user()->id,
-            //             'success_agentType' => $this->agent(Auth::user()->id)->role
-            //             ]);
-
-                        Loan::where('deleted_at', null)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
-                        LoanRequirement::where('deleted_at', null)
-                            ->update(['status'=>'1',
-                                    'success_userId' => Auth::user()->id,
-                                    'success_agentType' => $this->agent(Auth::user()->id)->role
-                                    ]);
+            Loan::where('id', $loan)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
+            LoanRequirement::where('loan_id',$loan)
+                ->update(['status'=>'1',
+                        'success_userId' => Auth::user()->id,
+                        'success_agentType' => $this->agent(Auth::user()->id)->role
+                        ]);
 
             
             DB::commit();
@@ -621,10 +614,15 @@ class LoanController extends Controller
         DB::beginTransaction();
         try {
             $ok = Loan::where('id', $loan)->first();
-            Http::get('http://whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
+            // Http::get('http://whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝😊');
             
             // return $loan;
-            Loan::where('id', $loan)->update([
+            // Loan::where('id', $loan)->update([
+            //     'status' => 'aprobado',
+            //     'success_userId' => Auth::user()->id,
+            //     'success_agentType' => $this->agent(Auth::user()->id)->role
+            // ]);
+            Loan::where('deleted_at', null)->update([
                 'status' => 'aprobado',
                 'success_userId' => Auth::user()->id,
                 'success_agentType' => $this->agent(Auth::user()->id)->role
