@@ -361,12 +361,19 @@ class LoanController extends Controller
 
         DB::beginTransaction();
         try {
-            Loan::where('id', $loan)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
-            LoanRequirement::where('loan_id',$loan)
-                ->update(['status'=>'1',
-                        'success_userId' => Auth::user()->id,
-                        'success_agentType' => $this->agent(Auth::user()->id)->role
-                        ]);
+            // Loan::where('id', $loan)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
+            // LoanRequirement::where('loan_id',$loan)
+            //     ->update(['status'=>'1',
+            //             'success_userId' => Auth::user()->id,
+            //             'success_agentType' => $this->agent(Auth::user()->id)->role
+            //             ]);
+
+                        Loan::where('deleted_at', null)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
+                        LoanRequirement::where('deleted_at', null)
+                            ->update(['status'=>'1',
+                                    'success_userId' => Auth::user()->id,
+                                    'success_agentType' => $this->agent(Auth::user()->id)->role
+                                    ]);
 
             
             DB::commit();
