@@ -58,7 +58,6 @@ class LoanController extends Controller
         {
             $cashier_id = $cashier->id;
             $balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');
-            // $balance = $cashier->movements[0]->balance;
         }
         else
         {

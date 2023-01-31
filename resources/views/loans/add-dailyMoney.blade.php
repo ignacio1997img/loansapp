@@ -198,12 +198,17 @@
                                                                     }
                                                                     $number++;
                                                                 @endphp 
+
+                                                                @if ($loan->loanDay[$number-1]->late==1)
+                                                                    <img src="{{ asset('images/icon/atrazado.png') }}" width="20px">
+                                                                @endif  
                                                                 @if ($loan->loanDay[$number-1]->debt==0)
                                                                     <img src="{{ asset('images/icon/pagado.png') }}" width="80px">
                                                                 @endif           
-                                                                @if ($loan->loanDay[$number-1]->late==1)
-                                                                    <img src="{{ asset('images/icon/pagado.png') }}" width="80px">
-                                                                @endif                                                                                                                           
+                                                                    
+                                                                @if ($loan->loanDay[$number-1]->debt != $loan->loanDay[$number-1]->amount && $loan->loanDay[$number-1]->debt > 0)                                                                      
+                                                                        <strong style="font-size: 20px; color:#440505">Bs. {{$loan->loanDay[$number-1]->amount - $loan->loanDay[$number-1]->debt}}</strong>                                                                       
+                                                                 @endif                                                                                                                     
                                                             @endif
 
                                                             
@@ -317,6 +322,19 @@
                                     @endif
                                 @endif
 
+                                <div class="row">
+                                    <table width="100%" cellpadding="20">
+                                        <tr>
+                                            <td><small>Pago Diario</small></td>
+                                            <td class="text-right"><h3>{{ number_format($loan->amountTotal/$loan->day, 2, ',', '.') }} <small>Bs.</small></h3></td>
+                                        </tr>
+                                        {{-- <tr>
+                                            <td><small>Deuda</small></td>
+                                            <td class="text-right"><h3>{{ number_format($loan->debt, 2, ',', '.') }} <small>Bs.</small></h3></td>
+                                        </tr> --}}
+                                    </table>
+                                </div>
+
 
                                 <div class="row">
                                     {{-- <div class="panel-heading">
@@ -342,17 +360,13 @@
                                         </tr> --}}
                                     </table>
                                 </div>
-                                <h3 id="h4" style="text-align: center"><i class="voyager-dollar"></i> Detalle del Prestamo</h3>
+                                <h3 id="h4" style="text-align: center"><i class="voyager-dollar"></i> Detalle del Pago</h3>
                                 <hr>
                                 <div class="row">
                                     <table width="100%" cellpadding="20">
                                         <tr>
                                             <td><small>Dias Total a Pagar</small></td>
-                                            <td class="text-right"><h3>{{ number_format($loan->day, 2, ',', '.') }} <small>Bs.</small></h3></td>
-                                        </tr>
-                                        <tr>
-                                            <td><small>Interes Prestamo</small></td>
-                                            <td class="text-right"><h3>{{ number_format($loan->porcentage, 2, ',', '.') }} <small>Bs.</small></h3></td>
+                                            <td class="text-right"><h3>{{ number_format($loan->day, 2, ',', '.') }} </h3></td>
                                         </tr>
                                         <tr>                                            
                                             <td><small>Pago Diario</small></td>
@@ -360,7 +374,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <h3 id="h4" style="text-align: center"><i class="voyager-dollar"></i> Detalle del Pago</h3>
+                                <h3 id="h4" style="text-align: center"><i class="voyager-dollar"></i> Detalle del Prestamo</h3>
                                 <hr>
                                 <div class="row">
                                     <table width="100%" cellpadding="20">
