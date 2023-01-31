@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Prestamos')enttre
+@section('page_title', 'Viendo Prestamos')
 
 @if (auth()->user()->hasPermission('browse_loans'))
 
@@ -457,7 +457,7 @@
             // cantidad= parseFloat($("#cantidad").val()? $("#cantidad").val() : 0).toFixed(2);
             // var amountTotal = parseFloat(amountTotal).toFixed(2);
             // balance = parseFloat(balance).toFixed(2);
-            // alert(balance);
+            // alert(1);
             // alert(amountTotal);
             $('#deliver_form').attr('action', url);
             loanC = id;
@@ -477,7 +477,6 @@
             }
             if(amountTotal < balance && cashier_id!=0)
             {
-                // alert(1)
                 $('#btn-submit-delivered').css('display', 'block');
             }
         }
