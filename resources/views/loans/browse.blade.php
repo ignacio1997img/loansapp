@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', 'Viendo Prestamos')
+@section('page_title', 'Viendo Prestamos')enttre
 
 @if (auth()->user()->hasPermission('browse_loans'))
 
@@ -284,9 +284,15 @@
                                 
                                 <p><b>Desea entregar el dinero al beneficiario?</b></p>
                             </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    {{-- <label for="observation"></label> --}}
+                                    <small>Fecha</small>
+                                    <input type="date"  class="form-control text" name="fechass" id="fechass">
+                                </div>                                  
+                            </div>
                             <br>
                             <br>
-                        {{-- <input type="submit" class="btn btn-success pull-right delete-confirm" onclick="printContract(1)" value="Sí, entregar"> --}}
 
 
                         @if ($cashier)    
@@ -522,16 +528,7 @@
             modal.find('.modal-body #phone').val(phone)
         });
 
-        
 
-
-
-        // $('#deliver-modal').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) 
-        //     var id = button.data('name')
-        //     var modal = $(this)
-        //     modal.find('.modal-body #id').val(id)
-        // });
         function loan(id)
         {
             // alert(id);
@@ -543,6 +540,17 @@
             // window.open("https://trabajostop.com", "Recibo", `width=700, height=500`)
             window.open("{{ url('admin/loans/contract/daily') }}/"+loanC, "Recibo", `width=700, height=500`)
         }
+
+
+
+
+        $('#deliver-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) 
+            var data = button.data('fechass')
+            alert(data)
+            var modal = $(this)
+            modal.find('.modal-footer #fechass').val(data)
+        });
 
 
 

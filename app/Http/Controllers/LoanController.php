@@ -636,7 +636,8 @@ class LoanController extends Controller
     // funcion para entregar dinero al beneficiario
     public function moneyDeliver(Request $request, $loan)
     {
-        return $request;
+        // return $request;
+        // return $this->cashierOpen();
         DB::beginTransaction();
         try {
             $loan = Loan::where('id', $loan)->first();
@@ -644,22 +645,17 @@ class LoanController extends Controller
             // return $loan->amountTotal;
 
             $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
-            // return $movement;
             $movement->decrement('balance', $loan->amountLoan);
 
 
             $user = Auth::user();
             $agent = $this->agent($user->id);
-            // return $loan;
-
-            // $loan->update([]);
 
             
 
-
-
-            // $date = date("d-m-Y",strtotime(Carbon::now()."+ 1 days"));
             $date = date("d-m-Y",strtotime(date('y-m-d h:i:s')."+ 1 days"));
+            $date = Carbon::parse($request->fechass);
+            // return $date;
 
 
          
