@@ -477,7 +477,7 @@
             }
             if(amountTotal < balance && cashier_id!=0)
             {
-                alert(1)
+                // alert(1)
                 $('#btn-submit-delivered').css('display', 'block');
             }
         }
