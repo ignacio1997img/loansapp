@@ -547,7 +547,7 @@
         $('#deliver-modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget) 
             var data = button.data('fechass')
-            alert(data)
+            // alert(data)
             var modal = $(this)
             modal.find('.modal-footer #fechass').val(data)
         });
