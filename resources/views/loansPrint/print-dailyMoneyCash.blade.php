@@ -224,7 +224,14 @@
             border: solid 1px black;
         }
     </style>
+<script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
+
     <script>
+        $(function() {
+            // alert(1);
+            window.print();
+        
+        });
         document.body.addEventListener('keypress', function(e) {
             switch (e.key) {
                 case 'Enter':

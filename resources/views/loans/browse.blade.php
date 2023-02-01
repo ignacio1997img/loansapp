@@ -29,19 +29,6 @@
 
                             
                         </div>
-
-
-                        {{-- <div class="col-md-8 text-right" style="margin-top: 0px;">                            
-                            @if (auth()->user()->hasPermission('add_loans'))
-                            <h1 id="titleHead" class="page-title money">
-                                <i class="fa-solid fa-dollar-sign"></i>{{$balance}}dd
-                            </h1>
-                                <a href="{{ route('loans.create') }}" class="btn btn-success">
-                                    <i class="voyager-plus"></i> <span>Crear</span>
-                                </a>
-                                
-                            @endif
-                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -74,9 +61,9 @@
                             </div>
                             <div class="col-md-12 text-right">
                                 @if (!auth()->user()->hasRole('cobrador'))
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo" checked>Todos</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
                                 @endif
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" >En Pagos</label>
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" checked>En Pagos</label>
                                 
                                 
                                 @if (!auth()->user()->hasRole('cobrador'))
