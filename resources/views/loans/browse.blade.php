@@ -271,12 +271,12 @@
                                 
                                 <p><b>Desea entregar el dinero al beneficiario?</b></p>
                             </div>
-                            {{-- <div class="row">
+                            <div class="row">
                                 <div class="form-group col-md-12">
                                     <small>Fecha</small>
                                     <input type="date"  class="form-control text" name="fechass" id="fechass">
                                 </div>                                  
-                            </div> --}}
+                            </div>
                             <br>
                             <br>
 
@@ -535,13 +535,13 @@
 
 
 
-        // $('#deliver-modal').on('show.bs.modal', function (event) {
-        //     var button = $(event.relatedTarget) 
-        //     var data = button.data('fechass')
-        //     // alert(data)
-        //     var modal = $(this)
-        //     modal.find('.modal-footer #fechass').val(data)
-        // });
+        $('#deliver-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) 
+            var data = button.data('fechass')
+            // alert(data)
+            var modal = $(this)
+            modal.find('.modal-footer #fechass').val(data)
+        });
 
 
 

@@ -681,6 +681,8 @@ class LoanController extends Controller
 
             $date = date("d-m-Y",strtotime(date('y-m-d h:i:s')."+ 1 days"));
             $date = Carbon::parse($request->fechass);
+            $date = date("Y-m-d", strtotime($date));
+            $date = date("d-m-Y",strtotime($date."+ 1 days"));
 
          
             for($i=1;$i<=$loan->day; $i++)
