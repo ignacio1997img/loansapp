@@ -656,19 +656,23 @@ class LoanController extends Controller
                 {
                     if($item->balance >= $amountLoan)
                     {
+                        // $aux = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
+                        // return 2;
+                        $item->decrement('balance', $amountLoan);
                         $amountLoan = 0;
                     }
                     else
                     {
+                        // return $item->balance;
                         $amountLoan = $amountLoan - $item->balance;
+                        $item->decrement('balance', $item->balance);
                     }
-                    // $item->decrement()
                 }
             }
             
 
-            $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
-            $movement->decrement('balance', $loan->amountLoan);
+            // $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
+            // $movement->decrement('balance', $loan->amountLoan);
 
 
             $user = Auth::user();
@@ -808,7 +812,7 @@ class LoanController extends Controller
                     'agentType' => $this->agent($request->agent_id)->role
                 ]);
                 Loan::where('id', $request->loan_id)->decrement('debt', $debt);
-                CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->increment('balance', $debt);
+                CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first()->increment('balance', $debt);
 
             }
             // return $amount;
@@ -842,7 +846,7 @@ class LoanController extends Controller
                         'agent_id' => $request->agent_id,
                         'agentType' => $this->agent($request->agent_id)->role
                     ]);
-                    CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->increment('balance', $debt);
+                    CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first()->increment('balance', $debt);
 
                     Loan::where('id', $request->loan_id)->decrement('debt', $debt);
                     if($amount<=0)

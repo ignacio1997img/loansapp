@@ -361,7 +361,7 @@
                 $('#btn-submit-delivered').attr('disabled', true);
             });
         })
-        
+
         var countPage = 10, order = 'id', typeOrder = 'desc';
 
         var balance = 0;
@@ -376,7 +376,7 @@
                     // alert(cashier_id)   
                     $.get('{{route('loans-cashier.balance')}}/'+cashier_id, function (data) {
                         balance =data;
-                        // alert(balance)
+                        // alert(balance);
                         $('.money').html('<i class="fa-solid fa-dollar-sign"></i>'+data);
                     });
                 }, 5000 //para actualizar el balance de cada caja

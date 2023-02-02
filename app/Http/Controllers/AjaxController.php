@@ -92,12 +92,14 @@ Gracias🤝😊');
         }])
         ->where('id', $cashier_id)
         ->where('status', '=', 'abierta')
-        ->where('deleted_at', NULL)->get();
+        ->where('deleted_at', NULL)->first();
+
+        
 
         $balance = 0;
         if($cashier)
         {
-            $balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');            
+            $balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');        
         }
         return $balance;
     }
