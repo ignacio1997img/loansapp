@@ -28,16 +28,7 @@ class CashierController extends Controller
     {
         $user = Auth::user();
         $vault = Vault::where('deleted_at', null)->first();
-        // return $vault;
-        // $cashier ='';
-        // if($vault)
-        // {
-        //     $cashier = Cashier::where('deleted_at', null)->where('vault_id', $vault->id)->get();
-
-        // }
         $cashier = Cashier::where('deleted_at', null)->get();
-
-        // return $cashier;
         return view('cashier.browse', compact('cashier', 'vault'));
     }
 
@@ -132,7 +123,6 @@ class CashierController extends Controller
     //para abrir la vista de abonar dinero a una caja que este en estado ABIERTA
     public function amount($id)
     {
-        // return $id;
         $cashier = Cashier::findOrFail($id);
         // return $cashier;
         if($cashier->status == 'abierta'){

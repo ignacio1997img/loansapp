@@ -92,7 +92,7 @@ Gracias🤝😊');
         }])
         ->where('id', $cashier_id)
         ->where('status', '=', 'abierta')
-        ->where('deleted_at', NULL)->first();
+        ->where('deleted_at', NULL)->get();
 
         $balance = 0;
         if($cashier)

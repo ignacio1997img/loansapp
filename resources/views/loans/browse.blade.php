@@ -271,13 +271,12 @@
                                 
                                 <p><b>Desea entregar el dinero al beneficiario?</b></p>
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="form-group col-md-12">
-                                    {{-- <label for="observation"></label> --}}
                                     <small>Fecha</small>
                                     <input type="date"  class="form-control text" name="fechass" id="fechass">
                                 </div>                                  
-                            </div>
+                            </div> --}}
                             <br>
                             <br>
 
@@ -355,6 +354,14 @@
     {{-- <script src="{{ url('js/main.js') }}"></script> --}}
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
+
+        $(document).ready(function(){
+            $('#deliver_form').submit(function(e){
+                $('#btn-submit-delivered').text('Guardando...');
+                $('#btn-submit-delivered').attr('disabled', true);
+            });
+        })
+        
         var countPage = 10, order = 'id', typeOrder = 'desc';
 
         var balance = 0;
@@ -441,11 +448,6 @@
         var loanC = 0;
 
         function deliverItem(url, id, amountTotal){
-            // cantidad= parseFloat($("#cantidad").val()? $("#cantidad").val() : 0).toFixed(2);
-            // var amountTotal = parseFloat(amountTotal).toFixed(2);
-            // balance = parseFloat(balance).toFixed(2);
-            // alert(1);
-            // alert(amountTotal);
             $('#deliver_form').attr('action', url);
             loanC = id;
             if(amountTotal > balance && cashier_id!=0)
@@ -460,13 +462,15 @@
                     text: 'Su saldo disponible de Caja es insuficiente!',
                     // footer: '<a href="">Why do I have this issue?</a>'
                 })
-                // $("#deliver-modal").modal('hide');
             }
             if(amountTotal < balance && cashier_id!=0)
             {
+                
                 $('#btn-submit-delivered').css('display', 'block');
             }
         }
+
+        
 
 
         function miFunc() {
@@ -531,13 +535,13 @@
 
 
 
-        $('#deliver-modal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) 
-            var data = button.data('fechass')
-            // alert(data)
-            var modal = $(this)
-            modal.find('.modal-footer #fechass').val(data)
-        });
+        // $('#deliver-modal').on('show.bs.modal', function (event) {
+        //     var button = $(event.relatedTarget) 
+        //     var data = button.data('fechass')
+        //     // alert(data)
+        //     var modal = $(this)
+        //     modal.find('.modal-footer #fechass').val(data)
+        // });
 
 
 

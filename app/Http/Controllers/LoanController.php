@@ -37,7 +37,7 @@ class LoanController extends Controller
     }
     
     public function index()
-    {    
+    {   
         $collector = User::with(['role' => function($q)
             {
                 $q->where('name','cobrador');
@@ -65,6 +65,7 @@ class LoanController extends Controller
         }
 
 
+        // return $balance;
         return view('loans.browse', compact('collector', 'cashier', 'cashier_id', 'balance'));
     }
 
@@ -84,7 +85,7 @@ class LoanController extends Controller
                             ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
-                    ->where('deleted_at', NULL)->where('status', 'pendiente')->orderBy('id', 'DESC')->paginate($paginate);
+                    ->where('deleted_at', NULL)->where('status', 'pendiente')->orderBy('date', 'DESC')->paginate($paginate);
                 return view('loans.list', compact('data', 'cashier_id'));
                 break;
             case 'entregado':
@@ -98,7 +99,7 @@ class LoanController extends Controller
                                 ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
-                        ->where('deleted_at', NULL)->where('status', 'entregado')->where('debt', '!=', 0)->orderBy('id', 'DESC')->paginate($paginate);
+                        ->where('deleted_at', NULL)->where('status', 'entregado')->where('debt', '!=', 0)->orderBy('date', 'DESC')->paginate($paginate);
                     return view('loans.list', compact('data', 'cashier_id'));
                     break;
             case 'verificado':
@@ -112,7 +113,7 @@ class LoanController extends Controller
                             ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
-                    ->where('deleted_at', NULL)->where('status', 'verificado')->orderBy('id', 'DESC')->paginate($paginate);
+                    ->where('deleted_at', NULL)->where('status', 'verificado')->orderBy('date', 'DESC')->paginate($paginate);
                 return view('loans.list', compact('data', 'cashier_id'));
                 break;
             case 'aprobado':
@@ -126,7 +127,7 @@ class LoanController extends Controller
                                 ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
-                        ->where('deleted_at', NULL)->where('status', 'aprobado')->orderBy('id', 'DESC')->paginate($paginate);
+                        ->where('deleted_at', NULL)->where('status', 'aprobado')->orderBy('date', 'DESC')->paginate($paginate);
                     return view('loans.list', compact('data', 'cashier_id'));
                     break;
             case 'pagado':
@@ -140,7 +141,7 @@ class LoanController extends Controller
                             ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
-                    ->where('deleted_at', NULL)->where('debt', 0)->orderBy('id', 'DESC')->paginate($paginate);
+                    ->where('deleted_at', NULL)->where('debt', 0)->orderBy('date', 'DESC')->paginate($paginate);
                 return view('loans.list', compact('data', 'cashier_id'));
                 break;
             case 'rechazado':
@@ -154,7 +155,7 @@ class LoanController extends Controller
                                 ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
-                        ->where('deleted_at', NULL)->where('status', 'rechazado')->orderBy('id', 'DESC')->paginate($paginate);
+                        ->where('deleted_at', NULL)->where('status', 'rechazado')->orderBy('date', 'DESC')->paginate($paginate);
                     return view('loans.list', compact('data', 'cashier_id'));
                     break;
             case 'todo':
@@ -168,7 +169,7 @@ class LoanController extends Controller
                                 ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                             }
                         })
-                        ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
+                        ->where('deleted_at', NULL)->orderBy('date', 'DESC')->paginate($paginate);
                     return view('loans.list', compact('data', 'cashier_id'));
                     break;
 
@@ -641,7 +642,30 @@ class LoanController extends Controller
         try {
             $loan = Loan::where('id', $loan)->first();
             $loan->update(['cashier_id'=>$request->cashier_id,'delivered_userId'=>Auth::user()->id, 'delivered_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'entregado', 'delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
-            // return $loan->amountTotal;
+
+            $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->get();
+            $countM = $movement->count();
+            // return $countM;
+            // return $movement;
+            $amountLoan = $loan->amountLoan;
+
+            // return $amountLoan;
+            foreach($movement as $item)
+            {
+                if($item->balance > 0 && $amountLoan > 0)
+                {
+                    if($item->balance >= $amountLoan)
+                    {
+                        $amountLoan = 0;
+                    }
+                    else
+                    {
+                        $amountLoan = $amountLoan - $item->balance;
+                    }
+                    // $item->decrement()
+                }
+            }
+            
 
             $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
             $movement->decrement('balance', $loan->amountLoan);
@@ -650,12 +674,9 @@ class LoanController extends Controller
             $user = Auth::user();
             $agent = $this->agent($user->id);
 
-            
 
             $date = date("d-m-Y",strtotime(date('y-m-d h:i:s')."+ 1 days"));
             $date = Carbon::parse($request->fechass);
-            // return $date;
-
 
          
             for($i=1;$i<=$loan->day; $i++)
