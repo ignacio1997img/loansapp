@@ -86,7 +86,7 @@
 
                                     ->where('l.deleted_at', null)
 
-                                    ->select('l.id as loan', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.id as people', 'lda.transaction_id', 't.transaction', 't.created_at')
+                                    ->select('l.id as loan', 'l.code as code', 'l.amountLoan', 'amountTotal', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.ci', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'lda.transaction_id', 't.transaction', 't.created_at')
                                     ->groupBy('loan', 'transaction')
                                     ->orderBy('transaction', 'ASC')
                                     ->get();
@@ -202,10 +202,14 @@
                                         <table id="dataStyle" class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th style="text-align: center; width:12%">N&deg; Transacción</th>                                                    
-                                                    <th style="text-align: center">Fecha</th>
+                                                    <th style="text-align: center; width:5%">N&deg; Transacción</th>                                                    
+                                                    <th style="text-align: center">Código</th>
+                                                    <th style="text-align: center">Fecha Pago</th>
+                                                    <th style="text-align: center">Cliente</th>
+                                                    <th style="text-align: center">Monto Prestado</th>
+                                                    <th style="text-align: center">Monto Prestado + Interes</th>
                                                     <th style="text-align: center">Atendido Por</th>
-                                                    <th style="text-align: center">Monto</th>
+                                                    <th style="text-align: center">Monto Cobrado</th>
                                                     {{-- <th style="text-align: right">Acciones</th> --}}
                                                 </tr>
                                             </thead>
@@ -217,11 +221,19 @@
                                                 @forelse ($trans as $item)
                                                     <tr>
                                                         <td style="text-align: center">{{$item->transaction}}</td>
+                                                        <td style="text-align: center">{{$item->code}}</td>
                                                         <td style="text-align: center">
                                                             {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
                                                         </td>
+                                                        <td>
+                                                            <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
+                                                            {{$item->first_name}} {{$item->last_name1}} {{$item->last_name2}}
+                                                        </td>
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
+
                                                         <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
-                                                        <td style="text-align: right">BS. {{$item->amount}}</td>
+                                                        <td style="text-align: right"><small>Bs.</small> {{$item->amount}}</td>
                                                     </tr>
                                                     @php
                                                         $total_movements+= $item->amount;
@@ -233,7 +245,7 @@
                                                 @endforelse
                                                 @if ($total_movements != 0)
                                                     <tr>
-                                                        <td colspan="3">Total</td>
+                                                        <td colspan="7">Total</td>
                                                         <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
                                                     </tr>
                                                 @endif
