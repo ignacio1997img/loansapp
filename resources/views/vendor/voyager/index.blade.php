@@ -53,12 +53,12 @@
                     @if ($cashier->status == 'abierta')
 
                         @php
-                            $loans = \App\Models\Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+                            $loans = \App\Models\Loan::with(['people'])
                                         ->where('deleted_at', null)->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
-                            $loanTotal = 0;
-                            foreach ($loans as $item) {
-                                $loanTotal+= $item->amountLoan;
-                            }
+                            $loanTotal = $loans->SUM('amountLoan');
+                            // foreach ($loans as $item) {
+                            //     $loanTotal+= $item->amountLoan;
+                            // }
 
                             $trans = \DB::table('loans as l')
                                     ->join('loan_days as ld', 'ld.loan_id', 'l.id')
@@ -123,7 +123,7 @@
                             </div>
                         </div>
 
-                        {{-- <div class="row">
+                        <div class="row">
                             
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
@@ -172,7 +172,7 @@
                                 </div>
                             </div>
                         </div>
-                         --}}
+                        
                         <div class="row">                            
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
