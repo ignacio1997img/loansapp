@@ -4,7 +4,7 @@
     {{-- <div class="page-content"> --}}
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
-        {{-- Vista de cajero(a) --}}
+
         @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador'))
             @php
                 $cashier = \App\Models\Cashier::with(['movements' => function($q){
@@ -12,11 +12,9 @@
                 }, 'vault_details.cash' => function($q){
                     $q->where('deleted_at', NULL);
                 }])
-                // }, 'client'])
                 ->where('user_id', Auth::user()->id)
                 ->where('status', '<>', 'cerrada')
                 ->where('deleted_at', NULL)->first();
-                // dd($cashier);
             @endphp
             @if ($cashier)
             
@@ -26,21 +24,12 @@
                             <div class="panel panel-bordered">
                                 <div class="panel-body">
                                     @php
-                                        // dd($cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL));
                                         $cashier_in = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');
                                         $cashier_balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');
-                                        // dd($cashier_in);
-                                        // $cashier_out = $cashier->movements->where('type', 'egreso')->where('deleted_at', NULL)->sum('amount');
-                                        // $payments = $cashier->payments->where('deleted_at', NULL)->sum('amount');
-                                        
 
-                                        // $amount = $cashier->client->where('deleted_at', null)->sum('amount');
-                                        // $amount = \App\Models\Adition::where('deleted_at', null)->where('cashier_id', $cashier->id)->sum('cant');
-
-                                        // dd($amount);
                                         $amount =2;
                                         $movements = $cashier_in + $amount;
-                                        // $total = $movements - $payments;
+
                                         $total = $movements;
 
 
@@ -63,7 +52,7 @@
 
                     @if ($cashier->status == 'abierta')
 
-                        @php
+                        {{-- @php
                             $loans = \App\Models\Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
                                         ->where('deleted_at', null)->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
                             $loanTotal = 0;
@@ -94,9 +83,13 @@
                             foreach ($trans as $item) {
                                 $transTotal+= $item->amount;
                             }
-                                // dd($loans);
+                        @endphp --}}
+                        @php
+                            $transTotal = 0;
+                            $loanTotal =0;
+                            
                         @endphp
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
@@ -132,8 +125,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
+                        </div> --}}
+{{-- 
                         <div class="row">
                             
                             <div class="col-md-12">
@@ -147,9 +140,7 @@
                                                     <th>Fecha de Entrega</th>
                                                     <th>Nombre Cliente</th>                    
                                                     <th>Tipo de Préstamos</th>                    
-                                                    <th>Monto Prestado</th>                    
-                                                    {{-- <th>Interés a Cobrar</th>   
-                                                    <th>Total a Pagar</th>  --}}
+                                                    <th>Monto Prestado</th>       
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -162,9 +153,7 @@
                                                         <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
                                                         <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
                                                         <td>{{$item->typeLoan}}</td>
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
-                                                        {{-- <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td> --}}        
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>      
                                                     </tr>
                                                     @php
                                                         $amountLoanTotal+= $item->amountLoan;
@@ -187,14 +176,8 @@
                                 </div>
                             </div>
                         </div>
-                        @php
-
-                            
-                                // dd($trans);
-                        @endphp
-
-                        <div class="row">
-                            
+                        
+                        <div class="row">                            
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
@@ -211,7 +194,6 @@
                                                         <th style="text-align: center">Monto Prestado + Interes</th>
                                                         <th style="text-align: center">Atendido Por</th>
                                                         <th style="text-align: center">Monto Cobrado</th>
-                                                        {{-- <th style="text-align: right">Acciones</th> --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -256,7 +238,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                    
+                        </div>                     --}}
                     @else
                         <div class="row">
                             <div class="col-md-12">
