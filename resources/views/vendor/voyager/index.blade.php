@@ -134,9 +134,11 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
+                                                        <th>Código</th>
                                                         <th>Fecha de Entrega</th>
                                                         <th>Nombre Cliente</th>                    
                                                         <th>Tipo de Préstamos</th>                    
+                                                        <th>Entregado por</th>                    
                                                         <th>Monto Prestado</th>       
                                                         <th>Interes a Cobrar</th>       
                                                         <th>Monto Prestado + Interes a Cobrar</th>       
@@ -149,6 +151,7 @@
                                                     @forelse ($loans as $item)
                                                         <tr>
                                                             <td>{{ $item->id }}</td>
+                                                            <td>{{ $item->code }}</td>
                                                             <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
                                                             {{-- <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td> --}}
                                                             <td>
@@ -156,6 +159,7 @@
                                                                 {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
                                                             </td>
                                                             <td>{{$item->typeLoan}}</td>
+                                                            <td style="text-align: center"><small>{{$item->delivered_agentType}}</small> <br> {{$item->agentDelivered->name}}</td>
                                                             <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>      
                                                             <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>      
                                                             <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>      

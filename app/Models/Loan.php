@@ -74,4 +74,8 @@ class Loan extends Model
     {
         return $this->hasMany(LoanRequirement::class);
     }
+    public function agentDelivered()
+    {
+        return $this->belongsTo(User::class, 'delivered_userId');
+    }
 }
