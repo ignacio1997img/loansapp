@@ -128,54 +128,56 @@
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
-                                        <h3 id="h3">Prestamos Entregados <label class="label label-danger">Egreso</label></h3>
-                                        <table id="dataStyle" class="table table-bordered table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Fecha de Entrega</th>
-                                                    <th>Nombre Cliente</th>                    
-                                                    <th>Tipo de Préstamos</th>                    
-                                                    <th>Monto Prestado</th>       
-                                                    <th>Interes a Cobrar</th>       
-                                                    <th>Monto Prestado + Interes a Cobrar</th>       
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php
-                                                    $amountLoanTotal = 0;
-                                                @endphp
-                                                @forelse ($loans as $item)
+                                        <div class="table-responsive">
+                                            <h3 id="h3">Prestamos Entregados <label class="label label-danger">Egreso</label></h3>
+                                            <table id="dataStyle" class="table table-bordered table-bordered">
+                                                <thead>
                                                     <tr>
-                                                        <td>{{ $item->id }}</td>
-                                                        <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
-                                                        {{-- <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td> --}}
-                                                        <td>
-                                                            <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
-                                                            {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
-                                                        </td>
-                                                        <td>{{$item->typeLoan}}</td>
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>      
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>      
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>      
+                                                        <th>Id</th>
+                                                        <th>Fecha de Entrega</th>
+                                                        <th>Nombre Cliente</th>                    
+                                                        <th>Tipo de Préstamos</th>                    
+                                                        <th>Monto Prestado</th>       
+                                                        <th>Interes a Cobrar</th>       
+                                                        <th>Monto Prestado + Interes a Cobrar</th>       
                                                     </tr>
+                                                </thead>
+                                                <tbody>
                                                     @php
-                                                        $amountLoanTotal+= $item->amountLoan;
+                                                        $amountLoanTotal = 0;
                                                     @endphp
-                                                @empty
-                                                    <tr>
-                                                        <td style="text-align: center" valign="top" colspan="5" class="dataTables_empty">No hay datos disponibles en la tabla</td>
-                                                    </tr>
-                                                @endforelse
-                                                @if ($amountLoanTotal != 0)
-                                                    <tr>
-                                                        <td colspan="4">Total</td>
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$amountLoanTotal}}</td>     
-                                                    </tr>
-                                                @endif
-                                                
-                                            </tbody>
-                                        </table>
+                                                    @forelse ($loans as $item)
+                                                        <tr>
+                                                            <td>{{ $item->id }}</td>
+                                                            <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
+                                                            {{-- <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td> --}}
+                                                            <td>
+                                                                <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
+                                                                {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
+                                                            </td>
+                                                            <td>{{$item->typeLoan}}</td>
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>      
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>      
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>      
+                                                        </tr>
+                                                        @php
+                                                            $amountLoanTotal+= $item->amountLoan;
+                                                        @endphp
+                                                    @empty
+                                                        <tr>
+                                                            <td style="text-align: center" valign="top" colspan="5" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                        </tr>
+                                                    @endforelse
+                                                    @if ($amountLoanTotal != 0)
+                                                        <tr>
+                                                            <td colspan="4">Total</td>
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$amountLoanTotal}}</td>     
+                                                        </tr>
+                                                    @endif
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
