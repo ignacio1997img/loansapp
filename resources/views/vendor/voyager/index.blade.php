@@ -4,7 +4,7 @@
     {{-- <div class="page-content"> --}}
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
-
+        
         @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador'))
             @php
                 $cashier = \App\Models\Cashier::with(['movements' => function($q){
@@ -52,7 +52,7 @@
 
                     @if ($cashier->status == 'abierta')
 
-                        {{-- @php
+                        @php
                             $loans = \App\Models\Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
                                         ->where('deleted_at', null)->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
                             $loanTotal = 0;
@@ -83,13 +83,9 @@
                             foreach ($trans as $item) {
                                 $transTotal+= $item->amount;
                             }
-                        @endphp --}}
-                        @php
-                            $transTotal = 0;
-                            $loanTotal =0;
-                            
+                                // dd($loans);
                         @endphp
-                        {{-- <div class="row">
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
@@ -125,9 +121,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
-{{-- 
-                        <div class="row">
+                        </div>
+
+                        {{-- <div class="row">
                             
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
@@ -176,7 +172,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+                         --}}
                         <div class="row">                            
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
@@ -238,7 +234,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                     --}}
+                        </div>                    
                     @else
                         <div class="row">
                             <div class="col-md-12">
