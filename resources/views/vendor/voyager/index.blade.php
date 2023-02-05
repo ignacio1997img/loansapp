@@ -146,6 +146,8 @@
                                                 </thead>
                                                 <tbody>
                                                     @php
+                                                        $amountLoans = 0;
+                                                        $amountPorcentages = 0;
                                                         $amountLoanTotal = 0;
                                                     @endphp
                                                     @forelse ($loans as $item)
@@ -165,7 +167,9 @@
                                                             <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>      
                                                         </tr>
                                                         @php
-                                                            $amountLoanTotal+= $item->amountLoan;
+                                                            $amountLoans+= $item->amountLoan;
+                                                            $amountPorcentages+= $item->amountPorcentage;
+                                                            $amountLoanTotal+= $item->amountTotal;
                                                         @endphp
                                                     @empty
                                                         <tr>
@@ -174,7 +178,9 @@
                                                     @endforelse
                                                     @if ($amountLoanTotal != 0)
                                                         <tr>
-                                                            <td colspan="4">Total</td>
+                                                            <td colspan="6" style="text-align: left"><small>Total</small></td>
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$amountLoans}}</td>     
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$amountPorcentages}}</td>     
                                                             <td style="text-align: right"> <small>Bs.</small> {{$amountLoanTotal}}</td>     
                                                         </tr>
                                                     @endif
