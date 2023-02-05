@@ -137,6 +137,8 @@
                                                     <th>Nombre Cliente</th>                    
                                                     <th>Tipo de Préstamos</th>                    
                                                     <th>Monto Prestado</th>       
+                                                    <th>Interes a Cobrar</th>       
+                                                    <th>Monto Prestado + Interes a Cobrar</th>       
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -147,9 +149,15 @@
                                                     <tr>
                                                         <td>{{ $item->id }}</td>
                                                         <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
-                                                        <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
+                                                        {{-- <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td> --}}
+                                                        <td>
+                                                            <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
+                                                            {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
+                                                        </td>
                                                         <td>{{$item->typeLoan}}</td>
                                                         <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>      
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>      
+                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>      
                                                     </tr>
                                                     @php
                                                         $amountLoanTotal+= $item->amountLoan;
