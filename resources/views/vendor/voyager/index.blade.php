@@ -198,59 +198,61 @@
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
-                                        <h3 id="h3">Cobros Realizados <label class="label label-success">Ingreso</label></h3>
-                                        <table id="dataStyle" class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th style="text-align: center; width:5%">N&deg; Transacción</th>                                                    
-                                                    <th style="text-align: center">Código</th>
-                                                    <th style="text-align: center">Fecha Pago</th>
-                                                    <th style="text-align: center">Cliente</th>
-                                                    <th style="text-align: center">Monto Prestado</th>
-                                                    <th style="text-align: center">Monto Prestado + Interes</th>
-                                                    <th style="text-align: center">Atendido Por</th>
-                                                    <th style="text-align: center">Monto Cobrado</th>
-                                                    {{-- <th style="text-align: right">Acciones</th> --}}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php
-                                                    $cont = 1;
-                                                    $total_movements = 0;
-                                                @endphp
-                                                @forelse ($trans as $item)
+                                        <div class="table-responsive">
+                                            <h3 id="h3">Cobros Realizados <label class="label label-success">Ingreso</label></h3>
+                                            <table id="dataStyle" class="table table-bordered">
+                                                <thead>
                                                     <tr>
-                                                        <td style="text-align: center">{{$item->transaction}}</td>
-                                                        <td style="text-align: center">{{$item->code}}</td>
-                                                        <td style="text-align: center">
-                                                            {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
-                                                        </td>
-                                                        <td>
-                                                            <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
-                                                            {{$item->first_name}} {{$item->last_name1}} {{$item->last_name2}}
-                                                        </td>
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
-
-                                                        <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
-                                                        <td style="text-align: right"><small>Bs.</small> {{$item->amount}}</td>
+                                                        <th style="text-align: center; width:5%">N&deg; Transacción</th>                                                    
+                                                        <th style="text-align: center">Código</th>
+                                                        <th style="text-align: center">Fecha Pago</th>
+                                                        <th style="text-align: center">Cliente</th>
+                                                        <th style="text-align: center">Monto Prestado</th>
+                                                        <th style="text-align: center">Monto Prestado + Interes</th>
+                                                        <th style="text-align: center">Atendido Por</th>
+                                                        <th style="text-align: center">Monto Cobrado</th>
+                                                        {{-- <th style="text-align: right">Acciones</th> --}}
                                                     </tr>
+                                                </thead>
+                                                <tbody>
                                                     @php
-                                                        $total_movements+= $item->amount;
+                                                        $cont = 1;
+                                                        $total_movements = 0;
                                                     @endphp
-                                                 @empty
-                                                    <tr>
-                                                        <td style="text-align: center" valign="top" colspan="4" class="dataTables_empty">No hay datos disponibles en la tabla</td>
-                                                    </tr>
-                                                @endforelse
-                                                @if ($total_movements != 0)
-                                                    <tr>
-                                                        <td colspan="7">Total</td>
-                                                        <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
-                                                    </tr>
-                                                @endif
-                                            </tbody>
-                                        </table>
+                                                    @forelse ($trans as $item)
+                                                        <tr>
+                                                            <td style="text-align: center">{{$item->transaction}}</td>
+                                                            <td style="text-align: center">{{$item->code}}</td>
+                                                            <td style="text-align: center">
+                                                                {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
+                                                            </td>
+                                                            <td>
+                                                                <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
+                                                                {{$item->first_name}} {{$item->last_name1}} {{$item->last_name2}}
+                                                            </td>
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
+
+                                                            <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
+                                                            <td style="text-align: right"><small>Bs.</small> {{$item->amount}}</td>
+                                                        </tr>
+                                                        @php
+                                                            $total_movements+= $item->amount;
+                                                        @endphp
+                                                    @empty
+                                                        <tr>
+                                                            <td style="text-align: center" valign="top" colspan="4" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                        </tr>
+                                                    @endforelse
+                                                    @if ($total_movements != 0)
+                                                        <tr>
+                                                            <td colspan="7">Total</td>
+                                                            <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
