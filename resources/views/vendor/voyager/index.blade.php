@@ -531,19 +531,19 @@
                 $(document).ready(function(){
                     const data = {
                         labels: [
-                            // 'Dinero Asignado a Caja',
+                            'Dinero Asignado a Caja',
                             'Dinero Disponible en Caja',
-                            'Pagos Cobrados',
-                            'Prestamos Entregados'
+                            // 'Pagos Cobrados',
+                            // 'Prestamos Entregados'
                         ],
                         datasets: [{
                             label: 'My First Dataset',
-                            data: ["{{ $cashier_balance }}", "{{$transTotal}}", "{{$loanTotal}}"],
+                            data: ["{{ $cashier_in }}", "{{$cashier_balance}}"],
                             backgroundColor: [
-                            // 'rgb(54, 162, 257)',
-                            'rgb(54, 162, 117)',
                             'rgb(12, 55, 101)',
-                            'red'
+                            'rgb(54, 162, 117)',
+                            // 'rgb(12, 55, 101)',
+                            // 'red'
                             ],
                             hoverOffset: 4
                         }]
