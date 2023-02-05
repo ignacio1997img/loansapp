@@ -61,7 +61,7 @@
                 </div>
                 <div class="panel panel-bordered">
                     <div class="panel-body">
-                        <div class="col-md-12">
+                        <div class="table-responsive">
                             <h4>Prestamos Entregados</h4>
 
                             <table id="dataStyle" class="table table-bordered table-bordered">
