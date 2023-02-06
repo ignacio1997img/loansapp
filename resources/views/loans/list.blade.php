@@ -26,7 +26,10 @@
                     @endif
                     <td>{{ $item->code }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
-                    <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td>
+                    <td>
+                        <small>CI:</small> {{$item->people->ci?$item->people->ci:'No definido'}} <br>
+                        {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
+                    </td>
                     <td>
                         @if ($item->typeLoan == 'diario')
                             Diario
