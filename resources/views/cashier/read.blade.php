@@ -2,7 +2,7 @@
 
 @section('page_title', 'Ver Caja')
 
-
+@if (auth()->user()->hasPermission('read_cashiers'))
 @section('page_header')
     <h1 class="page-title">
         <i class="voyager-dollar"></i> Viendo Caja 
@@ -85,7 +85,11 @@
                                     @forelse ($trans as $item)
                                         <tr>
                                             <td style="text-align: center">{{$item->transaction}}</td>
-                                            <td style="text-align: center">{{$item->code}}</td>
+                                            <td style="text-align: center">{{$item->code}} <br>
+                                                @if ($item->deleted_at)
+                                                    <label class="label label-danger">Anulado</label>
+                                                @endif
+                                            </td>
                                             <td style="text-align: center">
                                                 {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
                                             </td>
@@ -114,12 +118,12 @@
                                             <td style="text-align: center" valign="top" colspan="4" class="dataTables_empty">No hay datos disponibles en la tabla</td>
                                         </tr>
                                     @endforelse
-                                    @if ($total_movements != 0)
+                                    {{-- @if ($total_movements != 0)
                                         <tr>
                                             <td colspan="7">Total</td>
                                             <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
                                         </tr>
-                                    @endif
+                                    @endif --}}
                                 </tbody>
                             </table>
                         </div>
@@ -309,3 +313,8 @@
         // }
     </script>
 @stop
+@else
+    @section('content')
+        <h1>No tienes permiso</h1>
+    @stop
+@endif

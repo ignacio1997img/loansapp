@@ -141,6 +141,7 @@ class PermissionsTableSeeder extends Seeder
         $keys = [
             'browse_cashiers',
             'add_cashiers',
+            'read_cashiers',
             // 'open_cashiers',
             // 'movements_cashiers',
             // 'close_vaults',

@@ -72,9 +72,11 @@
                                                             <i class="voyager-dollar"></i> <span class="hidden-xs hidden-sm">Abonar Dinero</span>
                                                         </a>
                                                     @endif
-                                                    <a href="{{route('cashiers.show', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-warning">
-                                                        <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                    </a>
+                                                    @if (auth()->user()->hasPermission('read_cashiers'))
+                                                        <a href="{{route('cashiers.show', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-warning">
+                                                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                        </a>
+                                                    @endif
                                                     
                                                     @if ($item->status == 'abierta' || $item->status == 'apertura pendiente')
                                                         
