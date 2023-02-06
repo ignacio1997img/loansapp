@@ -153,6 +153,14 @@
     <script src="{{ asset('js/cash_value.js') }}"></script>
     <script>
         $(document).ready(function() {
+            window.addEventListener("keypress", function(event){
+                if (event.keyCode == 13){
+                    event.preventDefault();
+                }
+            }, false);
+
+
+            
             $('.input-corte').keyup(function(){
                 getMissingAmount()
             });
