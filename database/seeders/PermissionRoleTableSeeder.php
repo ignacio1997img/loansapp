@@ -36,6 +36,7 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "user" or
 
                                             `key` = "browse_loans" or 
+                                            `key` = "delete_loans" or
 
                                             `key` = "successLoan_loans" or
 
@@ -72,6 +73,7 @@ class PermissionRoleTableSeeder extends Seeder
 
                                             `key` = "browse_loans" or
                                             `key` = "add_loans" or
+                                            `key` = "delete_loans" or
 
                                             `key` = "deliverMoney_loans" or 
                                             
