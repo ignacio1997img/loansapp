@@ -61,10 +61,74 @@
                 </div>
                 <div class="panel panel-bordered">
                     <div class="panel-body">
-                        <h4>Prestamos Entregados</h4>
                         <div class="table-responsive">
-                            
+                            <h3 id="h3">Cobros Realizados <label class="label label-success">Ingreso</label></h3>
+                            <table id="dataStyle" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center; width:5%">N&deg; Transacción</th>                                                    
+                                        <th style="text-align: center">Código</th>
+                                        <th style="text-align: center">Fecha Pago</th>
+                                        <th style="text-align: center">Cliente</th>
+                                        <th style="text-align: center">Monto Prestado</th>
+                                        <th style="text-align: center">Monto Prestado + Interes</th>
+                                        <th style="text-align: center">Atendido Por</th>
+                                        <th style="text-align: center">Monto Cobrado</th>
+                                        <th style="text-align: center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $cont = 1;
+                                        $total_movements = 0;
+                                    @endphp
+                                    @forelse ($trans as $item)
+                                        <tr>
+                                            <td style="text-align: center">{{$item->transaction}}</td>
+                                            <td style="text-align: center">{{$item->code}}</td>
+                                            <td style="text-align: center">
+                                                {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
+                                            </td>
+                                            <td>
+                                                <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
+                                                {{$item->first_name}} {{$item->last_name1}} {{$item->last_name2}}
+                                            </td>
+                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
+                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
 
+                                            <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
+                                            <td style="text-align: right"><small>Bs.</small> {{$item->amount}}</td>
+                                            <td style="text-align: right">
+                                                @if(!$item->deleted_at)
+                                                    <button title="Eliminar transacción" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('cashiers-loan.transaction.delete', ['cashier'=>$cashier->id, 'transaction' => $item->transaction_id]) }}')" data-toggle="modal" data-target="#delete-transacction-modal">
+                                                        <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm"></span>
+                                                    </button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @php
+                                            $total_movements+= $item->amount;
+                                        @endphp
+                                    @empty
+                                        <tr>
+                                            <td style="text-align: center" valign="top" colspan="4" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                        </tr>
+                                    @endforelse
+                                    @if ($total_movements != 0)
+                                        <tr>
+                                            <td colspan="7">Total</td>
+                                            <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-bordered">
+                    <div class="panel-body">
+                        <h4>Prestamos Entregados</h4>
+                        <div class="table-responsive">                            
                             <table id="dataStyle" class="table table-bordered table-bordered">
                                 <thead>
                                     <tr>
@@ -160,7 +224,31 @@
             </div>
         </div>
     </div>
+    <div class="modal modal-danger fade" data-backdrop="static" tabindex="-1" id="delete-transacction-modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar la transacción?</h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" id="delete_form" method="POST">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="id" id="id">
 
+                            <div class="text-center" style="text-transform:uppercase">
+                                <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
+                                <br>
+                                
+                                <p><b>Desea eliminar la siguiente transacción?</b></p>
+                            </div>
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <form id="form-delete" action="{{ route('cashiers-loan.delete') }}" method="POST">
         @csrf
@@ -195,6 +283,11 @@
 
 @section('javascript')
     <script>
+
+        function deleteItem(url){
+            $('#delete_form').attr('action', url);
+        }
+
         $(document).ready(function () {
             $('.btn-delete').click(function(){
                 let loan_id = $(this).data('id');

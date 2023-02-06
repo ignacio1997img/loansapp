@@ -16,6 +16,9 @@ use App\Models\CashierMovement;
 use App\Models\CashierDetail;
 use Psy\CodeCleaner\ReturnTypePass;
 use App\Models\Loan;
+use App\Models\LoanDay;
+use App\Models\LoanDayAgent;
+use App\Models\Transaction;
 
 class CashierController extends Controller
 {
@@ -116,8 +119,29 @@ class CashierController extends Controller
         $cashier = Cashier::where('id', $id)->first();
         
         $loan = Loan::with(['people'])->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
+
+        $trans = DB::table('loans as l')
+                                    ->join('loan_days as ld', 'ld.loan_id', 'l.id')
+                                    ->join('loan_day_agents as lda', 'lda.loanDay_id', 'ld.id')
+                                    ->join('transactions as t', 't.id', 'lda.transaction_id')
+                                    ->join('users as u', 'u.id', 'lda.agent_id')
+                                    ->join('people as p', 'p.id', 'l.people_id')
+                                    ->where('lda.status', 1)
+                                    // ->where('lda.deleted_at', null)
+                                    ->where('lda.cashier_id', $cashier->id)
+
+                                    ->where('ld.deleted_at', null)
+                                    ->where('ld.status', 1)
+
+                                    ->where('l.deleted_at', null)
+
+                                    ->select('l.id as loan', 'l.code as code', 'l.amountLoan', 'amountTotal', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.ci',
+                                            'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'lda.transaction_id', 't.transaction', 't.created_at', 't.deleted_at')
+                                    ->groupBy('loan', 'transaction')
+                                    ->orderBy('transaction', 'ASC')
+                                    ->get();
         // return $loan;
-        return view('cashier.read' , compact('cashier', 'loan'));
+        return view('cashier.read' , compact('cashier', 'loan', 'trans'));
     }
 
     //para abrir la vista de abonar dinero a una caja que este en estado ABIERTA
@@ -413,6 +437,58 @@ class CashierController extends Controller
         // $pdf = \App::make('dompdf.wrapper');
         // $pdf->loadHTML($view);
         // return $pdf->download();
+    }
+
+    public function destroyTransaction($cashier, $transaction)
+    {
+        try {
+            DB::beginTransaction();
+
+            $cashier = Cashier::with(['movements' => function($q){
+                    $q->where('deleted_at', NULL);
+                }])
+                ->where('id', $cashier)
+                ->where('status', 'abierta')
+                ->where('deleted_at', NULL)->first();
+            if(!$cashier)
+            {
+                return redirect()->route('cashiers.index')->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'warning']);
+            }
+            // return $cashier;
+            $loanDayAgent = LoanDayAgent::where('cashier_id', $cashier->id)->where('transaction_id', $transaction)->where('deleted_at',null)->get();
+            $amount = $loanDayAgent->SUM('amount');
+
+            $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first();   
+            // return $amount;  
+            if($amount > $movement->balance)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Error, contactese con el desarrollador del sistema.', 'alert-type' => 'warning']);
+            }      
+            $movement->decrement('balance', $amount);
+           
+
+            foreach($loanDayAgent as $item)
+            {
+                $agent = LoanDayAgent::where('id', $item->id)->first();
+                // return $agent;
+                $day = LoanDay::where('id', $agent->loanDay_id)->first();
+                // return $day;
+
+                $day->increment('debt',$agent->amount);
+                $agent->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role]);
+            }
+
+            Transaction::where('id', $transaction)->update(['deleted_at'=>Carbon::now()]);
+        //    return $transaction;
+
+            DB::commit();
+            return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Transacción eliminada exitosamente...', 'alert-type' => 'success']);
+
+        }catch (\Throwable $th) {
+            DB::rollBack();  
+            // return 0;  
+            return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
     }
 
 

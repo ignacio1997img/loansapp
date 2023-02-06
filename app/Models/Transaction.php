@@ -9,5 +9,5 @@ class Transaction extends Model
 {
     use HasFactory;
     
-    protected $fillable = ['transaction'];
+    protected $fillable = ['transaction', 'deleted_at'];
 }
