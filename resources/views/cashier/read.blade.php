@@ -196,7 +196,7 @@
                                                 @if (!$item->deleted_at)
                                                     {{-- <button type="button" onclick="print_recipe({{ $payment->id }})" title="Imprimir" class="btn btn-default btn-print"><i class="glyphicon glyphicon-print"></i> Imprimir</button> --}}
                                                     @if ($item->amountTotal == $item->debt)
-                                                        <button type="button" data-toggle="modal" data-target="#delete_payment-modal" data-id="{{ $item->id }}" class="btn btn-danger btn-delete"><i class="voyager-trash"></i> Anular</button>                                                       
+                                                        {{-- <button type="button" data-toggle="modal" data-target="#delete_payment-modal" data-id="{{ $item->id }}" class="btn btn-danger btn-delete"><i class="voyager-trash"></i> Anular</button>                                                        --}}
                                                     @else
                                                         <label class="label label-success">Cuenta con dias pagados</label>
                                                     @endif
