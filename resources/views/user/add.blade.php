@@ -27,7 +27,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <small>CI</small>
-                                        <input type="text" name="ci" value="{{$data? $data->ci:''}}" placeholder="CI/NIT" class="form-control text" minlength="7" maxlength="15" required>
+                                        <input type="text" name="ci" value="{{$data? $data->ci:''}}" placeholder="CI" class="form-control text" minlength="7" maxlength="15" required>
                                     </div>  
                                     <div class="form-group col-md-5">
                                         <small>Nombre</small>
@@ -80,7 +80,11 @@
 
     @section('css')
         <style>
-
+            .form-control, .select2-selection, .mce-tinymce {
+                border: 1px solid #7a7a7a !important;
+                /* color: #f40202; */
+                font-weight: bold
+            }
         </style>
     @endsection
 

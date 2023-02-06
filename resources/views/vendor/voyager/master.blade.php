@@ -9,10 +9,19 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 
-    <style>
+    {{-- <style>
         .form-control, .select2-selection, .mce-tinymce {
             border: 1px solid #c3c5c7 !important;
             color: #555555
+        }
+    </style>
+ --}}
+
+    <style>
+        .form-control, .select2-selection, .mce-tinymce {
+            border: 1px solid #7a7a7a !important;
+            /* color: #f40202; */
+            font-weight: bold
         }
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
