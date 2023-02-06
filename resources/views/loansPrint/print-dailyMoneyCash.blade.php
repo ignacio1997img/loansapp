@@ -66,7 +66,7 @@
         <table width="90%">
             <tr>
                 <td colspan="2" style="text-align: center">
-                    <h3 style="margin-bottom: 0px; margin-top: 50px; font-size: 35px"><small>COMPROBANTE DE PAGO</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 50px; font-size: 22px"><small>COMPROBANTE DE PAGO</small> </h3>
                 </td>
             </tr>
         </table>
@@ -74,7 +74,7 @@
         {{-- <div id="watermark">
             <img src="{{ asset('images/icon.png') }}" height="100%" width="100%" /> 
         </div> --}}
-        <table width="90%" cellpadding="5" style="font-size: 20px">
+        <table width="90%" cellpadding="5" style="font-size: 15px">
             <tr>
                 <th style="text-align: right; width: 10%">
                     CODIGO:
@@ -112,11 +112,11 @@
         <table width="90%">
             <tr>
                 <td colspan="2" style="text-align: center">
-                    <h3 style="margin-bottom: 0px; margin-top: 0px; font-size: 30px"><small>DETALLE DEL PAGO</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 0px; font-size: 20px"><small>DETALLE DEL PAGO</small> </h3>
                 </td>
             </tr>
         </table>
-        <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 20px">
+        <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
             <tr style="text-align: center">
                 <th class="border" style="width: 5%">
                     ATRASO
@@ -160,11 +160,11 @@
         <table width="90%">
             <tr>
                 <td colspan="2" style="text-align: center">
-                    <h3 style="margin-bottom: 0px; margin-top: 5px; font-size: 30px"><small>ATENDIDO POR</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 5px; font-size: 20px"><small>ATENDIDO POR</small> </h3>
                 </td>
             </tr>
         </table>
-        <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 20px">
+        <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
             <tr>
                 <td style="text-align: right; width: 40%">
                     {{strtoupper($loanDayAgent[0]->agentType)}}:
@@ -184,7 +184,7 @@
             </tr>
         </table>
         <hr>
-        <table width="90%" cellpadding="5" style="font-size: 15px">
+        <table width="90%" cellpadding="5" style="font-size: 12px">
             <tr>
                 <th style="text-align: right; width: 10%">
                     FIRMA:
