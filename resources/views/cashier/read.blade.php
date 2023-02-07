@@ -174,23 +174,23 @@
                                             </td>
                                             <td style="text-align: right">
                                                 @if ($item->deleted_at)
-                                                    <del>{{ number_format($item->amountLoan, 2, ',', '.') }}</del>
+                                                    <small>Bs.</small> <del>{{ number_format($item->amountLoan, 2, ',', '.') }}</del>
                                                 @else
-                                                    {{ number_format($item->amountLoan, 2, ',', '.') }}
+                                                    <small>Bs.</small> {{ number_format($item->amountLoan, 2, ',', '.') }}
                                                 @endif
                                             </td>
                                             <td style="text-align: right">
                                                 @if ($item->deleted_at)
-                                                    <del>{{ number_format($item->amountPorcentage, 2, ',', '.') }}</del>
+                                                    <small>Bs.</small>  <del>{{ number_format($item->amountPorcentage, 2, ',', '.') }}</del>
                                                 @else
-                                                    {{ number_format($item->amountPorcentage, 2, ',', '.') }}
+                                                    <small>Bs.</small>  {{ number_format($item->amountPorcentage, 2, ',', '.') }}
                                                 @endif
                                             </td>
                                             <td style="text-align: right">
                                                 @if ($item->deleted_at)
-                                                    <del>{{ number_format($item->amountTotal, 2, ',', '.') }}</del>
+                                                    <small>Bs.</small>  <del>{{ number_format($item->amountTotal, 2, ',', '.') }}</del>
                                                 @else
-                                                    {{ number_format($item->amountTotal, 2, ',', '.') }}
+                                                    <small>Bs.</small> {{ number_format($item->amountTotal, 2, ',', '.') }}
                                                 @endif
                                             </td>
                                             <td class="text-right">
