@@ -168,7 +168,7 @@
                                             <td>{{ $item->date}}</td>
                                             <td>{{ $item->dateDelivered}}</td>
                                             <td>
-                                                <small>CI:</small> { $item->people->ci}} <br>
+                                                <small>CI:</small> {{ $item->people->ci}} <br>
                                                 <p>{{ $item->people->first_name}} {{ $item->people->last_name1}} {{ $item->people->last_name2}}</p>
                                                 
                                             </td>
