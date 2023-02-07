@@ -25,6 +25,7 @@ use Illuminate\Support\Composer;
 use PhpParser\Node\Stmt\TryCatch;
 use App\Models\Cashier;
 use App\Models\CashierMovement;
+use PHPUnit\Framework\MockObject\Stub\ReturnReference;
 
 use function PHPSTORM_META\type;
 use function PHPUnit\Framework\returnSelf;
@@ -194,19 +195,8 @@ class LoanController extends Controller
         // return $cashier;
 
         $people = People::where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
-        
-        // $people = DB::table('people as p')
-        //             ->leftJoin('loans as l', 'l.people_id', 'p.id')
-                    
-        //             // ->where('l.debt',0)
 
-        //             ->where('p.status',1)
-        //             ->where('p.token','!=', null)
-        //             ->select('p.id', 'p.first_name', 'p.last_name1', 'p.last_name2')
-        //             ->groupBy('p.id')
-        //             ->get();
-        // return $people;
-        
+
 
         $routes = Route::where('deleted_at', null)->where('status', 1)->orderBy('name')->get();
 
@@ -637,7 +627,6 @@ class LoanController extends Controller
     public function moneyDeliver(Request $request, $loan)
     {
         // return $request;
-        // return $this->cashierOpen();
         DB::beginTransaction();
         try {
             $loan = Loan::where('id', $loan)->first();
@@ -684,6 +673,7 @@ class LoanController extends Controller
             $date = date("Y-m-d", strtotime($date));
             $date = date("d-m-Y",strtotime($date."+ 1 days"));
 
+            // return $loan;
          
             for($i=1;$i<=$loan->day; $i++)
             {
@@ -713,12 +703,20 @@ class LoanController extends Controller
 
 
             DB::commit();
-            return redirect()->route('loans.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success']);
+            return redirect()->route('loans.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id,]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
 
+    }
+
+    // Funcion  para imprimir el comprobante de pago al momento que se le entrega el prestamo al cliente o beneficiario
+    public function printLoanComprobante($loan_id)
+    {
+        $loan = Loan::with(['people', 'agentDelivered', 'loanDay'])
+        ->where('id', $loan_id)->first();
+        return view('loansPrint.print-LoanDelivered', compact('loan')) ;
     }
 
     public function printContracDaily($loan)
@@ -790,6 +788,7 @@ class LoanController extends Controller
             
             $ok = LoanDay::where('loan_id', $request->loan_id)->where('date', $request->date)->where('debt', '>', 0)->first();
             // return $request;
+            // para la fecha actual del pago si existe numero en el calendario
             if($ok)
             {
                 // return "fecha actual";

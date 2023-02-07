@@ -1,10 +1,12 @@
+{{-- impresion para cuando la persona entrega el prestamo al cliente --}}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Comprobante de pago</title>
+    <title>Comprobante de entrega de prestamo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body{
@@ -66,7 +68,7 @@
         <table width="90%">
             <tr>
                 <td colspan="2" style="text-align: center">
-                    <h3 style="margin-bottom: 0px; margin-top: 50px; font-size: 22px"><small>COMPROBANTE DE PAGO</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 50px; font-size: 22px"><small>COMPROBANTE DE ENTREGA <br> DE PRESTAMO</small> </h3>
                 </td>
             </tr>
         </table>
@@ -88,7 +90,8 @@
                     FECHA:
                 </th>
                 <td>
-                    {{ date('d/m/Y H:i:s') }}
+                    {{Carbon\Carbon::parse($loan->dateDelivered)->format('d/m/Y')}}
+                    {{-- {{ date('d/m/Y H:i:s') }} --}}
                 </td>
             </tr>
             <tr>
@@ -104,7 +107,7 @@
                     CI:
                 </th>
                 <td>
-                    {{$loan->people->ci}}
+                    {{$loan->people->ci? $loan->people->ci:'No definido'}}
                 </td>
             </tr>
         </table>
@@ -112,74 +115,78 @@
         <table width="90%">
             <tr>
                 <td colspan="2" style="text-align: center">
-                    <h3 style="margin-bottom: 0px; margin-top: 0px; font-size: 20px"><small>DETALLE DEL PAGO</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 0px; font-size: 20px"><small>DETALLE DEL PRESTAMO</small> </h3>
                 </td>
             </tr>
         </table>
+
         <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
             <tr style="text-align: center">
-                <th class="border" style="width: 5%">
-                    ATRASO
+                <th class="border" style="width: 50%">
+                    FECHA INICIO
                 </th>
-                <th class="border" style="width: 70%">
-                    DIAS PAGADO
-                </th>                
-                <th class="border" style="width: 25%">
-                    TOTAL
+
+                <th class="border" style="width: 50%">
+                    FECHA FIN
+                </th>  
+            </tr>
+                <tr>
+                    <td style="text-align: center">
+                        {{Carbon\Carbon::parse($loan->loanDay->first()->date)->format('d/m/Y')}}
+                    </td>
+                    <td style="text-align: center">
+                        {{Carbon\Carbon::parse($loan->loanDay->last()->date)->format('d/m/Y')}}
+                        {{-- <b>Bs.</b> {{number_format($loan->amountPorcentage, 2, ',', '.')}} --}}
+                    </td>    
+                </tr>            
+        </table>
+        <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
+            <tr style="text-align: center">
+                <th class="border" style="width: 33%">
+                    MONTO PRESTADO
+                </th>
+
+                <th class="border" style="width: 33%">
+                    INTERES A PAGAR
+                </th>             
+                <th class="border" style="width: 44%">
+                    TOTAL A PAGAR
                 </th>
             </tr>
             @php
                 $total=0;
             @endphp
-            @foreach ($loanDayAgent as $item)
                 <tr>
-                    <td style="text-align: left">
-                        {{$item->late?'SI':'NO'}}
-                    </td>
-                    <td style="text-align: left">
-                        {{Carbon\Carbon::parse($item->date)->format('d/m/Y')}}
-                    </td>                    
                     <td style="text-align: right">
-                        {{$item->amount}}
+                        <b>Bs.</b> {{number_format($loan->amountLoan, 2, ',', '.')}}
                     </td>
-                    @php
-                        $total+=$item->amount;
-                    @endphp
+                    <td style="text-align: right">
+                        <b>Bs.</b> {{number_format($loan->amountPorcentage, 2, ',', '.')}}
+                    </td>
+                    <td style="text-align: right">
+                        <b>Bs.</b> {{number_format($loan->amountTotal, 2, ',', '.')}}
+                        {{-- {{Carbon\Carbon::parse($item->date)->format('d/m/Y')}} --}}
+                    </td>                    
+                   
                 </tr>
-            @endforeach
-            <tr>
-                <th colspan="2" class="border" style="text-align: center; width: 75%">
-                    TOTAL (BS)
-                </th>
-                <th class="border" style="text-align: right; width: 25%">
-                    {{ number_format($total, 2) }}
-                </th>
-            </tr>
+            
         </table>
+        
         {{-- <hr> --}}
         <table width="90%">
             <tr>
                 <td colspan="2" style="text-align: center">
-                    <h3 style="margin-bottom: 0px; margin-top: 5px; font-size: 20px"><small>ATENDIDO POR</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 5px; font-size: 20px"><small>ENTREGADO POR</small> </h3>
                 </td>
             </tr>
         </table>
         <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
             <tr>
                 <td style="text-align: right; width: 40%">
-                    {{strtoupper($loanDayAgent[0]->agentType)}}:
+                    {{strtoupper($loan->agentDelivered->role->name)}}:
                 </td>
                 <td style="text-align: center; width: 60%">
-                    {{strtoupper($loanDayAgent[0]->name)}}
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align: right; width: 40%">
-                    COD TRANS:
-                </td>
-                <td style="text-align: center; width: 60%">
-                    {{$transaction->transaction}}
-                    {{-- {{str_pad($transaction_id, 15, '0', STR_PAD_LEFT);}} --}}
+                    {{strtoupper($loan->agentDelivered->name)}}
                 </td>
             </tr>
         </table>

@@ -24,8 +24,8 @@
                                 <h5 id="h4" class="panel-title">Detalle del Prestamos &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{-- <br> --}}
                                     {{-- <div class="col-md-12 text-right"> --}}
-                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario" checked>Prestamo diario</label>
-                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial">Prestamo Diario Especial </label>
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario" checked><p>Prestamo diario</p></label>
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial"><p>Prestamo Diario Especial</p> </label>
                                     {{-- </div> --}}
                                 </h5>
                             </div>
@@ -43,12 +43,6 @@
                                         </div>
                                     @endif
                                 @endif
-                                {{-- <div class="row">                                    
-                                    <div class="col-md-12 text-right">
-                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario">Prestamo diario</label>
-                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial" checked>Prestamo Diario Especial </label>
-                                    </div>
-                                </div> --}}
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Fecha</small>
@@ -94,7 +88,7 @@
                                 <input type="hidden" name="type" id="text_type">
                                 <div class="row">
                                     <div class="form-group col-md-2">
-                                        <small>Monto a Prestar</small>
+                                        <small>Monto a Prestar (Bs.)</small>
                                         <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" onkeypress='return inputNumeric(event)' onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
                                     </div>
                                     <div class="form-group col-md-2">
@@ -103,23 +97,23 @@
                                         <input type="hidden" name="day" id="day" onkeypress='return inputNumeric(event)' value="24" class="form-control">
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <small>Interes Prestamos</small>
+                                        <small>Interes Prestamos (%)</small>
                                         <input type="number" id="porcentage1" style="text-align: right" disabled value="20" onkeypress='return inputNumeric(event)' onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
                                         <input type="hidden" name="porcentage" id="porcentage" onkeypress='return inputNumeric(event)' value="20" class="form-control">
                                     </div>    
                                     <div class="form-group col-md-2">
-                                        <small>Interes a Pagar</small>
+                                        <small>Interes a Pagar (Bs.)</small>
                                         <input type="number" id="amountPorcentage1" style="text-align: right" disabled value="0" onkeypress='return inputNumeric(event)' onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
                                         <input type="hidden" name="amountPorcentage" id="amountPorcentage" onkeypress='return inputNumeric(event)' value="0" class="form-control">
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <small>Pago Diario</small>
+                                        <small>Pago Diario (Bs.)</small>
                                         <input type="number" id="amountDay1" style="text-align: right" disabled value="0" class="form-control text">
                                         <input type="hidden" name="amountDay" id="amountDay"onkeypress='return inputNumeric(event)' value="0" class="form-control">
                                         <b class="text-danger" id="label-amount" style="display:none">Incorrecto..</b>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <small>Total a Pagar</small>
+                                        <small>Total a Pagar (Bs.)</small>
                                         <input type="number" id="amountTotal1" style="text-align: right" disabled value="0" class="form-control text">
                                         <input type="hidden" name="amountTotal" id="amountTotal" value="0" class="form-control">
                                     </div>
@@ -344,12 +338,12 @@
                     let amountDay = amountTotal / day;
 
                     // $(`#amountPorcentage1`).val(amountPorcentage);
-                    $(`#amountTotal1`).val(amountTotal);         
+                    $(`#amountTotal1`).val(amountDay.toFixed(2)*day);         
 
                     // $(`#amountPorcentage`).val(amountPorcentage);
-                    $(`#amountTotal`).val(amountTotal);  
+                    $(`#amountTotal`).val(amountDay.toFixed(2)*day);  
 
-                    $(`#amountDay1`).val(amountDay);
+                    $(`#amountDay1`).val(amountDay.toFixed(2));
                     $(`#amountDay`).val(amountDay);  
 
                     if (amountDay % 1 == 0) {

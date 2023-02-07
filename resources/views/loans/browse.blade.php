@@ -354,6 +354,21 @@
     {{-- <script src="{{ url('js/main.js') }}"></script> --}}
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
+        $(document).ready(function(){
+
+            @if(session('loan_id'))
+                loan_id = "{{ session('loan_id') }}";
+
+                window.open("{{ url('admin/loans/comprobante/print') }}/"+loan_id, "Recibo", `width=700, height=700`)
+
+            @endif
+
+        });
+        // function printDailyMoney()
+        // {
+        // }
+    </script>
+    <script>
 
         $(document).ready(function(){
             $('#deliver_form').submit(function(e){

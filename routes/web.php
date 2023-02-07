@@ -76,6 +76,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::get('loans/{loan}/daily/money/{cashier_id?}', [LoanController::class, 'dailyMoney'])->name('loans-daily.money');//para abrir la ventana de abonar dinero a un prestamo
     Route::post('loans/daily/money/store', [LoanController::class, 'dailyMoneyStore'])->name('loans-daily-money.store');
+    Route::get('loans/comprobante/print/{loan_id?}', [LoanController::class, 'printLoanComprobante']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
     Route::get('loans/daily/money/print/{loan_id}/{transaction_id?}', [LoanController::class, 'printDailyMoney']);//impresionde de pago diario de cada cuota pagada mediante los cajeros de las oficinas
 
     Route::get('loans/cashier/balance/{id?}', [AjaxController::class, 'balanceCashier'])->name('loans-cashier.balance');//para mostrar el saldo de cada caja en la parte de browse

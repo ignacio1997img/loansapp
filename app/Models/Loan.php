@@ -74,6 +74,8 @@ class Loan extends Model
     {
         return $this->hasMany(LoanRequirement::class);
     }
+    
+    //para ver que persona es la que entrega el prestamo al beneficiario
     public function agentDelivered()
     {
         return $this->belongsTo(User::class, 'delivered_userId');
