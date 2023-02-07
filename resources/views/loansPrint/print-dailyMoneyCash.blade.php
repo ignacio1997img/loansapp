@@ -140,7 +140,7 @@
                         {{Carbon\Carbon::parse($item->date)->format('d/m/Y')}}
                     </td>                    
                     <td style="text-align: right">
-                        {{$item->amount}}
+                        {{number_format($item->amount, 2 , ',', '.')}}
                     </td>
                     @php
                         $total+=$item->amount;
@@ -152,7 +152,7 @@
                     TOTAL (BS)
                 </th>
                 <th class="border" style="text-align: right; width: 25%">
-                    {{ number_format($total, 2) }}
+                    {{ number_format($total, 2 , ',', '.') }}
                 </th>
             </tr>
         </table>

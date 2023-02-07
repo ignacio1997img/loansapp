@@ -24,7 +24,7 @@
                         <th style="text-align: center">FECHA DE PRESTAMO</th>
                         <th style="text-align: center">TOTAL DEL PRESTAMO</th>
 
-                        <th style="text-align: center">ID PAGO</th>
+                        <th style="text-align: center">N. TRANSACCION</th>
                         <th style="text-align: center">FECHA DE PAGO</th>
                         <th style="text-align: center">TOTAL PAGADO</th>
                     </tr>
@@ -41,10 +41,10 @@
                             <td style="text-align: right">{{ $item->name}}</td>
                             <td style="text-align: right">{{ $item->code}}</td>
                             <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
-                            <td style="text-align: right">{{ number_format($item->amountTotal,2) }}</td>
-                            <td style="text-align: right">{{ $item->loanDayAgent_id}}</td>
+                            <td style="text-align: right">{{ number_format($item->amountTotal,2, ',', '.') }}</td>
+                            <td style="text-align: right">{{ $item->transaction}}</td>
                             <td style="text-align: center">{{date('d/m/Y H:m:s', strtotime($item->loanDayAgent_fecha))}}</td>
-                            <td style="text-align: right"><small>{{ number_format($item->amount,2) }}</small></td>
+                            <td style="text-align: right"><small>{{ number_format($item->amount,2, ',', '.') }}</small></td>
                                                                                   
                             
                         </tr>

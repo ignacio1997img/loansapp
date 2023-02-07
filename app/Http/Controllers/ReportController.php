@@ -42,6 +42,8 @@ class ReportController extends Controller
                     ->join('loans as l', 'l.id', 'ld.loan_id')
                     ->join('people as p', 'p.id', 'l.people_id')
                     ->join('users as u', 'u.id', 'lda.agent_id')
+                    ->join('transactions as t', 't.id', 'lda.transaction_id')
+
                     ->where('l.deleted_at', null)
                     ->where('ld.deleted_at', null)
                     ->where('lda.deleted_at', null)
@@ -49,9 +51,11 @@ class ReportController extends Controller
                     ->whereDate('lda.created_at', '<=', date('Y-m-d', strtotime($request->finish)))
                     // ->where('lda.agent_id', $request->agent_id)
                     ->whereRaw($query_filter)
-                    ->select('p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name', 'l.id as loan_id', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id',
-                            'lda.created_at as loanDayAgent_fecha', 'lda.amount')
-                    ->orderBy('ci', 'ASC')
+                    ->select('p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name', 'l.id as loan', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id',
+                                DB::raw('SUM(lda.amount)as amount'), 't.transaction',
+                            'lda.created_at as loanDayAgent_fecha')
+                    ->groupBy('loan', 'transaction')
+                    ->orderBy('lda.created_at', 'ASC')
                     ->get();
         // return $data->id;        
         if($request->print){
@@ -185,6 +189,8 @@ class ReportController extends Controller
                     ->join('loans as l', 'l.id', 'ld.loan_id')
                     ->join('people as p', 'p.id', 'l.people_id')
                     ->join('users as u', 'u.id', 'lda.agent_id')
+                    ->join('transactions as t', 't.id', 'lda.transaction_id')
+
                     ->where('l.deleted_at', null)
                     ->where('ld.deleted_at', null)
                     ->where('lda.deleted_at', null)
@@ -192,10 +198,15 @@ class ReportController extends Controller
                     // ->whereDate('lda.created_at', '<=', date('Y-m-d', strtotime($request->finish)))
                     ->where('lda.agent_id', $request->agent_id)
                     // ->whereRaw($query_filter)
-                    ->select('p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name', 'l.id as loan_id', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id',
-                            'lda.created_at as loanDayAgent_fecha', 'lda.amount')
-                    ->orderBy('ci', 'ASC')
+                    ->select('p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name',
+                            'l.id as loan', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id', DB::raw('SUM(lda.amount)as amount'),
+                            'lda.created_at as loanDayAgent_fecha', 't.transaction')
+                    ->groupBy('loan', 'transaction')
+                    ->orderBy('lda.created_at', 'ASC')
                     ->get();
+
+
+                   
         // return $data->id;        
         if($request->print){
             $date = $request->date;

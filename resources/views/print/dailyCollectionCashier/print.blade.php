@@ -46,7 +46,7 @@
                 <th style="text-align: center">FECHA DE PRESTAMO</th>
                 <th style="text-align: center">TOTAL DEL PRESTAMO</th>
 
-                <th style="text-align: center">ID PAGO</th>
+                <th style="text-align: center">N. TRANSACCION</th>
                 <th style="text-align: center">FECHA DE PAGO</th>
                 <th style="text-align: center">TOTAL PAGADO</th>
             </tr>
@@ -60,14 +60,14 @@
                 <tr>
                     <td>{{ $count }}</td>
                     <td style="text-align: right">{{ $item->ci }}</td>
-                    <td style="text-align: right">{{ $item->last_name1}} {{ $item->last_name2}} {{ $item->first_name}}</td>
-                    <td style="text-align: right">{{ $item->name}}</td>
-                    <td style="text-align: right">{{ $item->code}}</td>
+                    <td style="text-align: left">{{ $item->last_name1}} {{ $item->last_name2}} {{ $item->first_name}}</td>
+                    <td style="text-align: left">{{ $item->name}}</td>
+                    <td style="text-align: center">{{ $item->code}}</td>
                     <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
-                    <td style="text-align: right">{{ number_format($item->amountTotal,2) }}</td>
-                    <td style="text-align: right">{{ $item->loanDayAgent_id}}</td>
+                    <td style="text-align: right">{{ number_format($item->amountTotal, 2, ',', '.') }}</td>
+                    <td style="text-align: right">{{ $item->transaction}}</td>
                     <td style="text-align: center">{{date('d/m/Y', strtotime($item->loanDayAgent_fecha))}}</td>
-                    <td style="text-align: right">{{ number_format($item->amount,2) }}</td>                              
+                    <td style="text-align: right">{{ number_format($item->amount,2, ',', '.') }}</td>                              
                                                                             
                 </tr>
                 @php
@@ -81,7 +81,7 @@
             @endforelse
             <tr>
                 <th colspan="9" style="text-align: left">Total</th>
-                <td style="text-align: right"><strong>Bs. {{ number_format($total,2) }}</strong></td>
+                <td style="text-align: right"><strong>Bs. {{ number_format($total,2, ',', '.') }}</strong></td>
             </tr>
         </tbody>       
        

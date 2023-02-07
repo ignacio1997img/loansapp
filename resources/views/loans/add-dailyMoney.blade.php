@@ -553,7 +553,7 @@
             function printDailyMoney()
             {
                 // alert(transaction_id);
-                window.open("{{ url('admin/loans/daily/money/print') }}/"+loan_id+"/"+transaction_id, "Recibo", `width=500, height=700`)
+                window.open("{{ url('admin/loans/daily/money/print') }}/"+loan_id+"/"+transaction_id, "Recibo", `width=700, height=700`)
             }
             
 
