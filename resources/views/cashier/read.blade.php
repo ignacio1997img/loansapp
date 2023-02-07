@@ -168,8 +168,9 @@
                                             <td>{{ $item->date}}</td>
                                             <td>{{ $item->dateDelivered}}</td>
                                             <td>
-                                                <p>{{ $item->people->first_name}} {{ $item->people->last_name}}</p>
-                                                <p>{{ $item->people->ci}}</p>
+                                                <small>CI:</small> { $item->people->ci}} <br>
+                                                <p>{{ $item->people->first_name}} {{ $item->people->last_name1}} {{ $item->people->last_name2}}</p>
+                                                
                                             </td>
                                             <td style="text-align: right">
                                                 @if ($item->deleted_at)
