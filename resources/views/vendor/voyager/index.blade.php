@@ -506,7 +506,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="panel">
-                        <div class="panel-body" style="height: 500px">
+                        <div class="panel-body" style="height: 250px">
                             <small><h4>Egreso & Ingreso del Día (Bs.)</h4></small>
 
                             @php

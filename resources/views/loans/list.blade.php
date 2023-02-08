@@ -24,7 +24,7 @@
                     @if (auth()->user()->hasRole('admin'))
                         <th>{{$item->id}}</th>
                     @endif
-                    <td>{{ $item->code }}</td>
+                    <td><small>{{ $item->code }}</small></td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
                     <td>
                         {{-- <small>CI:</small> {{$item->people->ci?$item->people->ci:'No definido'}} <br>
