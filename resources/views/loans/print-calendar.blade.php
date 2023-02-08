@@ -4,7 +4,8 @@
 
 @section('content')
 
-    {{--  --}}
+    <h3>NOMBRE: {{$loan->people->first_name}} {{$loan->people->last_name1}} {{$loan->people->last_name2}}</h3>
+    <h3>MONTO: {{$loan->amountTotal/$loan->day}}</h3>
     <table width="100%" border="1" cellpadding="5" style="font-size: 12px">
                                     
         @php

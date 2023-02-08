@@ -558,6 +558,15 @@
                     );
 
                     // Si retorna las opciones para generar recibo de traspaso a caja
+
+
+
+
+                    // __________________________________________________________________________________
+                    // let payments = @json($payments);
+                    
+
+                    
                    
                 });
 
@@ -566,6 +575,63 @@
         @endif
     @else
 
+    <script>
+        $(document).ready(function(){
+
+        var data = {
+                        // labels,
+                        labels: [
+                            'Dinero Asignado a Caja',
+                            'Dinero Disponible en Caja',
+                            'Pagos Cobrados',
+                            'Dinero Asignado a Caja',
+                            'Dinero Disponible en Caja',
+                            'Pagos Cobrados',
+                            'Prestamos Entregados'
+                        ],
+                        datasets: [{
+                            label: 'Pagos del día',
+                            // data: values,
+                            data: ["1", "2", "3", "4", "5", "6", "7"],
+
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 205, 86, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(39, 174, 96, 1)',
+                                'rgba(155, 89, 182, 1)',
+                                'rgba(235, 152, 78, 1)',
+                                'rgba(52, 73, 94, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 205, 86, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(39, 174, 96, 1)',
+                                'rgba(155, 89, 182, 1)',
+                                'rgba(235, 152, 78, 1)',
+                                'rgba(52, 73, 94, 1)'
+                            ],
+                        }]
+                    };
+                    var config = {
+                        type: 'bar',
+                        data,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                }
+                            }
+                        },
+                    };
+                    var myChart = new Chart(
+                        document.getElementById('bar-chart'),
+                        config
+                    );
+                });
+    </script>
     
     @endif
 
