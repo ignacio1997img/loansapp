@@ -506,7 +506,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="panel">
-                        <div class="panel-body" style="height: 250px">
+                        <div class="panel-body" style="height: 500px">
                             <canvas id="doughnut-chart"></canvas>
                         </div>
                     </div>
@@ -574,64 +574,97 @@
             </script>
         @endif
     @else
+        <script src="{{ asset('js/plugins/chart.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function(){
+        <script>
+            $(document).ready(function(){
+                    // var data = {
+                    //         labels: [
+                    //             'Dinero Asignado a Caja',
+                    //             'Dinero Disponible en Caja',
+                    //             'Pagos Cobrados',
+                    //             'Dinero Asignado a Caja',
+                    //             'Dinero Disponible en Caja',
+                    //             'Pagos Cobrados',
+                    //             'Prestamos Entregados'
+                    //         ],
+                    //         datasets: [{
+                    //             label: 'Pagos del día',
+                    //             data: ["1", "2", "3", "4", "5", "6", "7"],
 
-        var data = {
-                        // labels,
-                        labels: [
-                            'Dinero Asignado a Caja',
-                            'Dinero Disponible en Caja',
-                            'Pagos Cobrados',
-                            'Dinero Asignado a Caja',
-                            'Dinero Disponible en Caja',
-                            'Pagos Cobrados',
-                            'Prestamos Entregados'
+                    //             backgroundColor: [
+                    //                 'rgba(255, 99, 132, 1)',
+                    //                 'rgba(255, 205, 86, 1)',
+                    //                 'rgba(54, 162, 235, 1)',
+                    //                 'rgba(39, 174, 96, 1)',
+                    //                 'rgba(155, 89, 182, 1)',
+                    //                 'rgba(235, 152, 78, 1)',
+                    //                 'rgba(52, 73, 94, 1)'
+                    //             ],
+                    //             borderColor: [
+                    //                 'rgba(255, 99, 132, 1)',
+                    //                 'rgba(255, 205, 86, 1)',
+                    //                 'rgba(54, 162, 235, 1)',
+                    //                 'rgba(39, 174, 96, 1)',
+                    //                 'rgba(155, 89, 182, 1)',
+                    //                 'rgba(235, 152, 78, 1)',
+                    //                 'rgba(52, 73, 94, 1)'
+                    //             ],
+                    //         }]
+                    //     };
+                    //     var config = {
+                    //         type: 'bar',
+                    //         data,
+                    //         options: {
+                    //             responsive: true,
+                    //             plugins: {
+                    //                 legend: {
+                    //                     position: 'top',
+                    //                 }
+                    //             }
+                    //         },
+                    //     };
+                    //     var myChart = new Chart(
+                    //         document.getElementById('bar-chart'),
+                    //         config
+                    //     );
+
+
+            // ________________________________________________________________________________________
+             
+
+                var data = {
+                    labels: [
+                                'Dinero',
+                                'Dinero ',
+                                'Pagos',
+                                'Dinero',
+                                'Dinero'
+                            ],
+                    datasets: [{
+                        label: 'Productos más vendidos',
+                        data: ["1", "2", "3", "4", "5"],
+                        // data: values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(39, 174, 96, 1)',
+                            'rgba(255, 205, 86, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(235, 152, 78, 1)',
                         ],
-                        datasets: [{
-                            label: 'Pagos del día',
-                            // data: values,
-                            data: ["1", "2", "3", "4", "5", "6", "7"],
-
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(255, 205, 86, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(39, 174, 96, 1)',
-                                'rgba(155, 89, 182, 1)',
-                                'rgba(235, 152, 78, 1)',
-                                'rgba(52, 73, 94, 1)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(255, 205, 86, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(39, 174, 96, 1)',
-                                'rgba(155, 89, 182, 1)',
-                                'rgba(235, 152, 78, 1)',
-                                'rgba(52, 73, 94, 1)'
-                            ],
-                        }]
-                    };
-                    var config = {
-                        type: 'bar',
-                        data,
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                }
-                            }
-                        },
-                    };
-                    var myChart = new Chart(
-                        document.getElementById('bar-chart'),
-                        config
-                    );
-                });
-    </script>
+                        hoverOffset: 4
+                    }]
+                };
+                var config = {
+                    type: 'doughnut',
+                    data
+                };
+                var myChart = new Chart(
+                    document.getElementById('doughnut-chart'),
+                    config
+                );
+            });
+        </script>
     
     @endif
 

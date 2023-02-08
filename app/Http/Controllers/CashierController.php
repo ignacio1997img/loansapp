@@ -458,6 +458,11 @@ class CashierController extends Controller
             $loanDayAgent = LoanDayAgent::where('cashier_id', $cashier->id)->where('transaction_id', $transaction)->where('deleted_at',null)->get();
             $amount = $loanDayAgent->SUM('amount');
 
+            $auxDay = LoanDay::where('id', $loanDayAgent->first()->loanDay_id)->first()->loan_id;
+            $auxLoan = Loan::where('id', $auxDay)->first();
+            $auxLoan->increment('debt', $amount);
+
+
             $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first();   
             // return $amount;  
             if($amount > $movement->balance)
