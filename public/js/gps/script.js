@@ -46,7 +46,7 @@ const init = () => {
         const coordenadas = ubicacion.coords;
         let { latitude, longitude } = coordenadas;
 
-        const icono = "../../images/ubicacion.png";
+        const icono = "../../images/gps.png";
         if (!mapa) {
             // Primera vez, lo creamos y centramos
             mapa = new ol.Map({
