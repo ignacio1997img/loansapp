@@ -4,7 +4,7 @@
             <thead>
                 <tr>
                     @if (auth()->user()->hasRole('admin'))
-                        <td>ID</td>
+                        <th>ID</th>
                     @endif
                     <th>Codigo</th>
                     <th>Fecha Solicitud</th>
@@ -27,8 +27,28 @@
                     <td>{{ $item->code }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
                     <td>
-                        <small>CI:</small> {{$item->people->ci?$item->people->ci:'No definido'}} <br>
-                        {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
+                        {{-- <small>CI:</small> {{$item->people->ci?$item->people->ci:'No definido'}} <br>
+                        {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}} --}}
+
+
+                        <table>                                                    
+                            @php
+                                $image = asset('images/icono-anonimato.png');
+                                if($item->people->image){
+                                    $image = asset('storage/'.str_replace('.', '-cropped.', $item->people->image));
+                                }
+                            @endphp
+                            <tr>
+                                <td>
+                                    <img src="{{ $image }}" alt="{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px">
+                                </td>
+                                <td>
+                                    <small>CI:</small> {{ $item->people->ci }} <br>
+                                    <small>NOMBRE:</small> {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
+                                </td>
+                            </tr>
+                            
+                        </table>
                     </td>
                     <td>
                         @if ($item->typeLoan == 'diario')
