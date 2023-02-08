@@ -487,7 +487,7 @@
                 <div class="col-md-4">
                     <div class="panel">
                         <div class="panel-body" style="height: 250px; overflow-y: auto">
-                            <h4>Cumpleaños</h4>
+                            {{-- <h4>Cumpleaños</h4> --}}
                             @php
                                 
                             @endphp
@@ -507,6 +507,19 @@
                 <div class="col-md-4">
                     <div class="panel">
                         <div class="panel-body" style="height: 500px">
+                            <small><h4>Egreso & Ingreso del Día (Bs.)</h4></small>
+
+                            @php
+                                $date = date('Y-m-d');
+                                // dd($date);
+                                $moneyLoan = App\Models\Loan::where('deleted_at', NULL)->where('dateDelivered', $date)->get();
+                                $moneyLoan = $moneyLoan->SUM('amountLoan');
+                                $moneyRecaudado = App\Models\LoanDayAgent::where('deleted_at', NULL)->whereDate('created_at', $date)->get();
+                                $moneyRecaudado = $moneyRecaudado->SUM('amount');
+                                // dd($moneyRecaudado);
+
+                                
+                            @endphp
                             <canvas id="doughnut-chart"></canvas>
                         </div>
                     </div>
@@ -635,22 +648,16 @@
 
                 var data = {
                     labels: [
-                                'Dinero',
-                                'Dinero ',
-                                'Pagos',
-                                'Dinero',
-                                'Dinero'
+                                'Dinero Prestado',
+                                'Dinero Cobrado',
                             ],
                     datasets: [{
                         label: 'Productos más vendidos',
-                        data: ["1", "2", "3", "4", "5"],
+                        data: ["{{$moneyLoan}}", "{{$moneyRecaudado}}"],
                         // data: values,
                         backgroundColor: [
-                            'rgba(255, 99, 132, 1)',
+                            'rgba(231,76,60)',
                             'rgba(39, 174, 96, 1)',
-                            'rgba(255, 205, 86, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(235, 152, 78, 1)',
                         ],
                         hoverOffset: 4
                     }]
