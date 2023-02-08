@@ -3,32 +3,7 @@
 @section('page_title', 'Viendo Caja')
 
 @section('page_header')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-bordered">
-                    <div class="panel-body" style="padding: 0px">
-                        <div class="col-md-8" style="padding: 0px">
-                            <h1 class="page-title">
-                                <i class="fa-regular fa-money-bill-1"></i> Cajeros
-                            </h1>
-                            {{-- <div class="alert alert-info">
-                                <strong>Información:</strong>
-                                <p>Puede obtener el valor de cada parámetro en cualquier lugar de su sitio llamando <code>setting('group.key')</code></p>
-                            </div> --}}
-                        </div>
-                        <div class="col-md-4 text-right" style="margin-top: 30px">
-                            @if ( !auth()->user()->hasRole('admin') && $vault)
-                                <a href="{{ route('cashiers.create') }}" class="btn btn-success">
-                                    <i class="voyager-plus"></i> <span>Crear</span>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 @stop
 
 @section('content')
