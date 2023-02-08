@@ -9,6 +9,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CollectorController;
+use App\Http\Controllers\GpsController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
@@ -175,6 +176,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
 
 
+
+
+    Route::resource('gps', GpsController::class);
 
 
 
