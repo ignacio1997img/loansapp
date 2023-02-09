@@ -1,44 +1,118 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-	<title>geo localizacion</title>
-<script type="text/javascript">
-function loadLocation () {
-	//inicializamos la funcion y definimos  el tiempo maximo ,las funciones de error y exito.
-	navigator.geolocation.getCurrentPosition(viewMap,ViewError,{timeout:1000});
-}
+@extends('voyager::master')
 
-//Funcion de exito
-function viewMap (position) {
-	
-	var lon = position.coords.longitude;	//guardamos la longitud
-	var lat = position.coords.latitude;		//guardamos la latitud
+@section('page_title', 'hola')
 
-	var link = "http://maps.google.com/?ll="+lat+","+lon+"&z=14";
-	document.getElementById("long").innerHTML = "Longitud: "+lon;
-	document.getElementById("latitud").innerHTML = "Latitud: "+lat;
+@section('content')
+    <div class="page-content read container-fluid">
+        <div class="row">
+          
+            <div class="col-md-12">
+                
+                <div class="panel panel-bordered">
+                    <div class="row">
+                        <br>
+                        <div class="col-xs-4 col-sm-4 text-right">
+                            
+                        </div>
+                        <div class="col-xs-4 col-sm-4 text-center">
+                           
+                        </div>
+                        <div class="col-xs-4 col-sm-4">
+                            
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            
+                        </div>
+                        <div class="col-md-6 col-sm-6 text-right">
+                            
+                        </div>
+                    </div>
+                </div>
 
-	document.getElementById("link").href = link;
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="panel panel-bordered">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="table-responsive">
+                                       
+                                    </div>
+                                </div>
 
-}
+                                <div class="col-xs-6">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover" id="table-visitor">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50px">N&deg;</th>
+                                                    <th>Nombre</th>
+                                                </tr>
+                                            </thead>
+                                            <input type="text" class="form-control" id="input">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+    </div>
 
+ 
+@stop
 
-function ViewError (error) {
-	alert(error.code);
-}	
+@section('css')
+    <style>
+        @font-face {
+            font-family: 'Seven Segment';
+            src: url({{ asset('fonts/Seven-Segment.ttf') }});
+        }
+        .td-actions img{
+            filter: grayscale(100%);
+        }
+        .td-actions img:hover{
+            filter: grayscale(0%);;
+            /* width: 28px */
+        }
+        .img-avatar{
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            margin-right: 5px
+        }
+        #label-score{
+            font-family: 'Seven Segment';
+            font-size: 100px
+        }
+        #timer{
+            font-family: 'Seven Segment';
+            font-size: 60px;
+            color: #E74C3C
+        }
+    </style>
+@endsection
 
+@section('javascript')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
 
+    <script>
+        // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
+        // $(document).ready(function () {
 
-	</script>
-	
-</head>
-<body onload="loadLocation();">
-<label id="long"></label> <br/>
-<label id="latitud"></label> <br/>
-<a id="link" target="_blank">Enlace al mapa</a>
+        //     // socket.emit(`reload score`, {id: "Hola"});
 
+            
+        // });
 
-</body>
-</html>
+        // input.oninput = function() {
+        //     text = input.value;
+        //     socket.emit(`reload score`, {id: text});
+
+        // };
+      </script>
+@stop
