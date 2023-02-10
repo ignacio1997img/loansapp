@@ -88,7 +88,7 @@
 
     </table>
     <div class="row" style="font-size: 9pt">
-        <p style="text-align: right">Total Detalle de Egreso: {{NumerosEnLetras::convertir(number_format($total,2),'Bolivianos',true)}}</p>
+        {{-- <p style="text-align: right">Total Detalle de Egreso: {{NumerosEnLetras::convertir(number_format($total,2),'Bolivianos',true)}}</p> --}}
     </div>
 
     <br>
