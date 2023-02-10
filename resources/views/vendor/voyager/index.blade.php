@@ -646,30 +646,7 @@
             // ________________________________________________________________________________________
              
 
-                var data = {
-                    labels: [
-                                'Dinero Prestado',
-                                'Dinero Cobrado',
-                            ],
-                    datasets: [{
-                        label: 'Productos más vendidos',
-                        data: ["{{$moneyLoan}}", "{{$moneyRecaudado}}"],
-                        // data: values,
-                        backgroundColor: [
-                            'rgba(231,76,60)',
-                            'rgba(39, 174, 96, 1)',
-                        ],
-                        hoverOffset: 4
-                    }]
-                };
-                var config = {
-                    type: 'doughnut',
-                    data
-                };
-                var myChart = new Chart(
-                    document.getElementById('doughnut-chart'),
-                    config
-                );
+                
             });
         </script>
     

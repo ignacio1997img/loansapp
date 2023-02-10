@@ -516,22 +516,27 @@ class CashierController extends Controller
                 return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'warning']);
             }
             
-            $loan = Loan::where('id', $request->loan_id)->first();
+            // return $cashier;
+            $loan = Loan::with(['loanDay'])->where('id', $request->loan_id)->where('deleted_at', null)->first();
+
+            // return $loan;
+            $amountLoanDay = $loan->loanDay->SUM('debt');
             if(!$loan)
             {
                 return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra eliminado.', 'alert-type' => 'warning']);
             }
-            if($loan->debt != $loan->amountTotal)
+            
+            if($loan->debt != $amountLoanDay )
             {
-                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra con pagos realizados.', 'alert-type' => 'warning']);
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Ocurrio un error, comuniquese con el administradoir.', 'alert-type' => 'warning']);
             }
-
+            
             $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first();
             if(!$movement)
             {
                 return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Error en la caja, contactese con los desarrolladores', 'alert-type' => 'warning']);
             }
-            return $request;
+            return $movement;
             $movement->increment('balance', $loan->amountLoan);
             
             $loan->update([
@@ -544,9 +549,12 @@ class CashierController extends Controller
 
 
             DB::commit();
+            return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Transacción eliminada exitosamente...', 'alert-type' => 'success']);
+
         } catch (\Throwable $th) {
             DB::rollBack();
-
+            return 0;
+            return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
     }
 
