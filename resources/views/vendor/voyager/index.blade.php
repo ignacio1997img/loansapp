@@ -413,6 +413,10 @@
                 </div>
             @endif
         @else
+
+
+
+        {{-- Para la parte de gerencia y administradores --}}
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-bordered">
@@ -538,115 +542,84 @@
 
 @section('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
-    @if ( (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador')) && $cashier)
-        @if ($cashier->status == 'abierta')
-            <script>
-                $(document).ready(function(){
-                    const data = {
-                        labels: [
-                            'Dinero Asignado a Caja',
-                            'Dinero Disponible en Caja',
-                            // 'Pagos Cobrados',
-                            // 'Prestamos Entregados'
-                        ],
-                        datasets: [{
-                            label: 'My First Dataset',
-                            data: ["{{ $cashier_in }}", "{{$cashier_balance}}"],
-                            backgroundColor: [
-                            'rgb(12, 55, 101)',
-                            'rgb(54, 162, 117)',
-                            // 'rgb(12, 55, 101)',
-                            // 'red'
+    @if ( (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador')))
+        @if ($cashier)
+            @if ($cashier->status == 'abierta')
+                <script>
+                    $(document).ready(function(){
+                        const data = {
+                            labels: [
+                                'Dinero Asignado a Caja',
+                                'Dinero Disponible en Caja',
+                                // 'Pagos Cobrados',
+                                // 'Prestamos Entregados'
                             ],
-                            hoverOffset: 4
-                        }]
-                    };
-                    const config = {
-                        type: 'pie',
-                        data: data,
-                    };
-                    var myChart = new Chart(
-                        document.getElementById('myChart'),
-                        config
-                    );
+                            datasets: [{
+                                label: 'My First Dataset',
+                                data: ["{{ $cashier_in }}", "{{$cashier_balance}}"],
+                                backgroundColor: [
+                                'rgb(12, 55, 101)',
+                                'rgb(54, 162, 117)',
+                                // 'rgb(12, 55, 101)',
+                                // 'red'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        };
+                        const config = {
+                            type: 'pie',
+                            data: data,
+                        };
+                        var myChart = new Chart(
+                            document.getElementById('myChart'),
+                            config
+                        );
 
-                    // Si retorna las opciones para generar recibo de traspaso a caja
+                        // Si retorna las opciones para generar recibo de traspaso a caja
 
 
 
 
-                    // __________________________________________________________________________________
+                        // __________________________________________________________________________________
+                        
+                        
+
+                        
                     
-                    
-
-                    
-                   
-                });
-
-
-            </script>
+                    });
+                </script>
+            @endif
         @endif
     @else
         <script src="{{ asset('js/plugins/chart.min.js') }}"></script>
 
         <script>
             $(document).ready(function(){
-                    // var data = {
-                    //         labels: [
-                    //             'Dinero Asignado a Caja',
-                    //             'Dinero Disponible en Caja',
-                    //             'Pagos Cobrados',
-                    //             'Dinero Asignado a Caja',
-                    //             'Dinero Disponible en Caja',
-                    //             'Pagos Cobrados',
-                    //             'Prestamos Entregados'
-                    //         ],
-                    //         datasets: [{
-                    //             label: 'Pagos del día',
-                    //             data: ["1", "2", "3", "4", "5", "6", "7"],
 
-                    //             backgroundColor: [
-                    //                 'rgba(255, 99, 132, 1)',
-                    //                 'rgba(255, 205, 86, 1)',
-                    //                 'rgba(54, 162, 235, 1)',
-                    //                 'rgba(39, 174, 96, 1)',
-                    //                 'rgba(155, 89, 182, 1)',
-                    //                 'rgba(235, 152, 78, 1)',
-                    //                 'rgba(52, 73, 94, 1)'
-                    //             ],
-                    //             borderColor: [
-                    //                 'rgba(255, 99, 132, 1)',
-                    //                 'rgba(255, 205, 86, 1)',
-                    //                 'rgba(54, 162, 235, 1)',
-                    //                 'rgba(39, 174, 96, 1)',
-                    //                 'rgba(155, 89, 182, 1)',
-                    //                 'rgba(235, 152, 78, 1)',
-                    //                 'rgba(52, 73, 94, 1)'
-                    //             ],
-                    //         }]
-                    //     };
-                    //     var config = {
-                    //         type: 'bar',
-                    //         data,
-                    //         options: {
-                    //             responsive: true,
-                    //             plugins: {
-                    //                 legend: {
-                    //                     position: 'top',
-                    //                 }
-                    //             }
-                    //         },
-                    //     };
-                    //     var myChart = new Chart(
-                    //         document.getElementById('bar-chart'),
-                    //         config
-                    //     );
-
-
-            // ________________________________________________________________________________________
-             
-
-                
+                var data = {
+                    labels: [
+                                'Dinero Prestado',
+                                'Dinero Cobrado',
+                            ],
+                    datasets: [{
+                        label: 'Productos más vendidos',
+                        data: ["{{$moneyLoan}}", "{{$moneyRecaudado}}"],
+                        // data: values,
+                        backgroundColor: [
+                            'rgba(231,76,60)',
+                            'rgba(39, 174, 96, 1)',
+                        ],
+                        hoverOffset: 4
+                    }]
+                };
+                var config = {
+                    type: 'doughnut',
+                    data
+                };
+                var myChart = new Chart(
+                    document.getElementById('doughnut-chart'),
+                    config
+                );
             });
         </script>
     
