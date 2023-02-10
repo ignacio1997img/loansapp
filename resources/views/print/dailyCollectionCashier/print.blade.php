@@ -80,13 +80,15 @@
                 </tr>
             @endforelse
             <tr>
+                <th colspan="9" style="text-align: left">Total</th>
+                <td style="text-align: right"><strong>Bs. {{ number_format($total,2, ',', '.') }}</strong></td>
             </tr>
         </tbody>       
        
 
     </table>
     <div class="row" style="font-size: 9pt">
-        <p style="text-align: right">Total Detalle de Egreso: {{NumerosEnLetras::convertir(number_format($total,2),'Bolivianos',true)}}</p>
+
     </div>
 
     <br>
