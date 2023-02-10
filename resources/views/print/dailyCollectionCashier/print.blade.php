@@ -72,7 +72,7 @@
                 </tr>
                 @php
                     $count++;                 
-                    $total = $total + $item->amount;                    
+                    $total+= $item->amount;                    
                 @endphp
             @empty
                 <tr style="text-align: center">
@@ -80,8 +80,6 @@
                 </tr>
             @endforelse
             <tr>
-                <th colspan="9" style="text-align: left">Total</th>
-                <td style="text-align: right"><strong>Bs. {{ number_format($total,2, ',', '.') }}</strong></td>
             </tr>
         </tbody>       
        
