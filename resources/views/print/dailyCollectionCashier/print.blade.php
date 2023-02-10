@@ -52,44 +52,11 @@
             </tr>
         </thead>
         <tbody>
-            @php
-                $count = 1;
-                $total = 0;
-            @endphp
-            @forelse ($data as $item)
-                <tr>
-                    <td>{{ $count }}</td>
-                    <td style="text-align: right">{{ $item->ci }}</td>
-                    <td style="text-align: left">{{ $item->last_name1}} {{ $item->last_name2}} {{ $item->first_name}}</td>
-                    <td style="text-align: left">{{ $item->name}}</td>
-                    <td style="text-align: center">{{ $item->code}}</td>
-                    <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
-                    <td style="text-align: right">{{ number_format($item->amountTotal, 2, ',', '.') }}</td>
-                    <td style="text-align: right">{{ $item->transaction}}</td>
-                    <td style="text-align: center">{{date('d/m/Y', strtotime($item->loanDayAgent_fecha))}}</td>
-                    <td style="text-align: right">{{ number_format($item->amount,2, ',', '.') }}</td>                              
-                                                                            
-                </tr>
-                @php
-                    $count++;                 
-                    $total+= $item->amount;                    
-                @endphp
-            @empty
-                <tr style="text-align: center">
-                    <td colspan="10">No se encontraron registros.</td>
-                </tr>
-            @endforelse
-            <tr>
-                <th colspan="9" style="text-align: left">Total</th>
-                <td style="text-align: right"><strong>Bs. {{ number_format($total,2, ',', '.') }}</strong></td>
-            </tr>
+            
         </tbody>       
        
 
     </table>
-    <div class="row" style="font-size: 9pt">
-        <p style="text-align: right">Total Detalle de Egreso: {{NumerosEnLetras::convertir(number_format($total,2),'Bolivianos',true)}}</p>
-    </div>
 
     <br>
     <br><br>
