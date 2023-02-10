@@ -726,9 +726,6 @@ class LoanController extends Controller
         return view('loans.print.loanDaily', compact('loan'));
     }
 
-
-
-
     // para ver el prestamos y poder abonar o pagar el dinero
     public function dailyMoney($loan, $cashier_id)
     {
@@ -771,6 +768,10 @@ class LoanController extends Controller
     public function dailyMoneyStore(Request $request)
     {
         // return $request;
+        if(!$request->amount || $request->amount ==0)
+        {
+            return redirect()->route('loans-daily.money', ['loan' => $request->loan_id, 'cashier_id'=>$request->cashier_id])->with(['message' => 'Error en el monto ingresado.', 'alert-type' => 'error']);
+        }
         $code = Transaction::all()->max('id');
         $code = $code?$code:0;
         // return $code;

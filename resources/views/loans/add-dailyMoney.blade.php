@@ -323,15 +323,19 @@
                                 @endif
 
                                 <div class="row">
-                                    <table width="100%" cellpadding="20">
+                                    <table width="100%" cellpadding="20" class="table">
                                         <tr>
-                                            <td><small>Pago Diario</small></td>
-                                            <td class="text-right"><h3>{{ number_format($loan->amountTotal/$loan->day, 2, ',', '.') }} <small>Bs.</small></h3></td>
+                                            <td ><small>Pago Diario</small></td>
+                                            <td class="text-right"><h3 id="h4">Bs.{{ number_format($loan->amountTotal/$loan->day, 2, ',', '.') }}</h3></td>
                                         </tr>
-                                        {{-- <tr>
-                                            <td><small>Deuda</small></td>
-                                            <td class="text-right"><h3>{{ number_format($loan->debt, 2, ',', '.') }} <small>Bs.</small></h3></td>
-                                        </tr> --}}
+                                    </table>
+                                    <h3 id="h4" style="text-align: center">Atrazo</h3>
+
+                                    <table width="100%" cellpadding="20" class="table">
+                                        <tr>
+                                            <td class="text-right"><h3 id="h4">Dias. {{ $loanday->where('debt', '>', 0)->where('late', 1)->count() }}</h3></td>
+                                            <td class="text-right"><h3 id="h4">Bs. {{ number_format($loanday->where('debt', '>', 0)->where('late', 1)->sum('debt'), 2, ',', '.') }}</h3></td>
+                                        </tr>
                                     </table>
                                 </div>
 
