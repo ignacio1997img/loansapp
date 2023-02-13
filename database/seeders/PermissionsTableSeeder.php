@@ -100,7 +100,8 @@ class PermissionsTableSeeder extends Seeder
             'browse_printdailyList',
             'browse_printloanListLate',
 
-            'browse_printloanCollection' //reportes para el cajero y el cobrador en moto
+            'browse_printloanCollection', //reportes para el cajero y el cobrador en moto
+            'browse_printloanDelivered' //reportes para obtener los prestamos diarios entregados o en fecha
         ];
 
         foreach ($keys as $key) {

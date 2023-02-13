@@ -176,7 +176,7 @@ class ReportController extends Controller
         // }
         $user = User::where('id', Auth::user()->id)->get();
         
-        return view('print.dailyCollectionCashier.report', compact('route', 'user'));
+        return view('report.cashier.dailyCollectionCashier.report', compact('route', 'user'));
     }
 
     public function loanCollectionList(Request $request)

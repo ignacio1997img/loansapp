@@ -227,8 +227,9 @@
                 type: 'get',
                 
                 success: function(result){
-                $("#div-results").html(result);
-            }});
+                    $("#div-results").html(result);
+                }
+            });
 
         }
         var id=0;

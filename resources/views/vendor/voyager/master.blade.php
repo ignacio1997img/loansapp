@@ -144,6 +144,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
 <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
 
+
 <script>
     
     $(function() {

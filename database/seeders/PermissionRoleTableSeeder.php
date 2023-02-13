@@ -81,6 +81,7 @@ class PermissionRoleTableSeeder extends Seeder
 
 
                                             `key` = "browse_printloanCollection" or 
+                                            `key` = "browse_printloanDelivered" or
 
                                             
                                             `key` = "browse_clear-cache"')->get();
