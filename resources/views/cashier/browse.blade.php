@@ -66,6 +66,14 @@
                                                     @if ($item->status == 'cerrada')
                                                         <label class="label label-danger">Cerrada</label>
                                                     @endif
+
+                                                    @if ($item->status == 'cierre pendiente')
+                                                        <label class="label label-primary">Cierre Pendiente</label>
+                                                    @endif
+
+                                                    @if ($item->status == 'apertura pendiente')
+                                                        <label class="label label-warning">Apertura Pendiente</label>
+                                                    @endif
                                                     {{-- <label class="label label-success">{{$item->status}}</label> --}}
 
                                                 </td>
