@@ -66,6 +66,8 @@
                                                     @if ($item->status == 'cerrada')
                                                         <label class="label label-danger">Cerrada</label>
                                                     @endif
+                                                    {{-- <label class="label label-success">{{$item->status}}</label> --}}
+
                                                 </td>
                                                 <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>
                                                 <td style="text-align: center">@if($item->closed_at){{date('d/m/Y H:i:s', strtotime($item->close_at))}}<br><small>{{\Carbon\Carbon::parse($item->close_at)->diffForHumans()}}.@endif </small></td>
