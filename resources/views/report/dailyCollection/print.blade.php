@@ -9,7 +9,7 @@
 
     <table width="100%">
         <tr>
-            <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="100px"></td>
+            <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="CAPRESI" width="70px"></td>
             <td style="text-align: center;  width:70%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     EMPRESA "CAPRESI"<br>

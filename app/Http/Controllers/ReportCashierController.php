@@ -33,7 +33,6 @@ class ReportCashierController extends Controller
     public function loanCollectionList(Request $request)
     {
 
-
         // $article = Article::whereRaw($query_filter)->get();
         $data = DB::table('loan_day_agents as lda')
                     ->join('loan_days as ld', 'ld.id', 'lda.loanDay_id')

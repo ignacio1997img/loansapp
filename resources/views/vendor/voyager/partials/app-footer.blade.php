@@ -7,7 +7,7 @@
         @endif
         @php $version = Voyager::getVersion(); @endphp
         @if (!empty($version))
-            - {{ $version }}
+            - v1.0.0
         @endif
     </div>
 </footer>
