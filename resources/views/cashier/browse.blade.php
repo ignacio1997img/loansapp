@@ -60,7 +60,12 @@
                                                 <td style="width: 200pt; text-align: center">{{$item->user->name}}</td>
                                                 <td style="text-align: center">{{$item->title}}</td>
                                                 <td style="text-align: center">
-                                                    <label class="label label-success">{{$item->status}}</label>
+                                                    @if ($item->status == 'abierta')
+                                                        <label class="label label-success">Abierta</label>
+                                                    @endif
+                                                    @if ($item->status == 'cerrada')
+                                                        <label class="label label-danger">Cerrada</label>
+                                                    @endif
                                                 </td>
                                                 <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>
                                                 <td style="text-align: center">@if($item->closed_at){{date('d/m/Y H:i:s', strtotime($item->close_at))}}<br><small>{{\Carbon\Carbon::parse($item->close_at)->diffForHumans()}}.@endif </small></td>
