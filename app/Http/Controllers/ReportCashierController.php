@@ -54,13 +54,15 @@ class ReportCashierController extends Controller
                     ->groupBy('loan', 'transaction')
                     ->orderBy('lda.created_at', 'ASC')
                     ->get();
+        $amount = $data->SUM('amount');
+        $agent = User::where('id', $request->agent_id)->first()->name;
+        $ci = User::where('id', $request->agent_id)->first()->ci;
+        // dump($ci);
 
-
-                   
-        // return $data->id;        
+     
         if($request->print){
             $date = $request->date;
-            return view('report.cashier.dailyCollection.print', compact('data', 'date'));
+            return view('report.cashier.dailyCollection.print', compact('data', 'date', 'agent', 'amount', 'ci'));
         }else{
             return view('report.cashier.dailyCollection.list', compact('data'));
         }

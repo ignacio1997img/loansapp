@@ -10,7 +10,7 @@
     <table width="100%">
         <tr>
             <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="CAPRESI" width="70px"></td>
-            <td style="text-align: center;  width:70%">
+            <td style="text-align: center;  width:50%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     EMPRESA "CAPRESI"<br>
                 </h3>
@@ -19,35 +19,45 @@
                     {{-- Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}} --}}
                 </h4>
                 <small style="margin-bottom: 0px; margin-top: 5px">
-                        {{ date('d', strtotime($date)) }} de {{ $months[intval(date('m', strtotime($date)))] }} de {{ date('Y', strtotime($date)) }}
-                    </small>
+                        {{ date('d', strtotime($date)) }} de {{ strtoupper($months[intval(date('m', strtotime($date)))] )}} de {{ date('Y', strtotime($date)) }}
+                </small>
+                <br>
+                <small>
+                    COBRADO POR: {{strtoupper($agent)}}
+                </small>
+                <br>
+                <small>
+                    <b>TOTAL COBRADO Bs.</b> {{ number_format($amount,2, ',', '.') }}
+                </small>
             </td>
             <td style="text-align: right; width:30%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
-                   
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <div id="qr_code">
+                        {!! QrCode::size(80)->generate('Total Cobrado: Bs'.number_format($amount,2, ',', '.').', Cobrado Por: '.$agent.', Recaudado en Fecha '.date('d', strtotime($date)).' de '.strtoupper($months[intval(date('m', strtotime($date)))] ).' de '.date('Y', strtotime($date))); !!}
+                    </div>
+                    <small style="font-size: 8px; font-weight: 100">Impreso por: {{ Auth::user()->name }} {{ date('d/M/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
     </table>
-    <br><br>
-    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+    <br>
+    <table style="width: 100%; font-size: 9px" border="1" cellspacing="0" cellpadding="5">
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>   
+                <th rowspan="2" style="text-align: center">CI</th>
                 <th rowspan="2" style="text-align: center">CLIENTE</th>
-                <th rowspan="4" style="text-align: center">ATENDIDO POR</th>
                 <th colspan="3" style="text-align: center">DETALLE DEL PRESTAMOS</th>
                 <th colspan="3" style="text-align: center">DETALLE DE PAGO</th>
             </tr>
             <tr>
-                <th style="text-align: center">CODIGO PRESTAMO</th>
-                <th style="text-align: center">FECHA DE PRESTAMO</th>
-                <th style="text-align: center">TOTAL DEL PRESTAMO</th>
+                <th style="text-align: center; width:5px">CODIGO PRESTAMO</th>
+                <th style="text-align: center; width:5px">FECHA DE PRESTAMO</th>
+                <th style="text-align: center; width:5px">TOTAL DEL PRESTAMO</th>
 
-                <th style="text-align: center">N. TRANSACCION</th>
-                <th style="text-align: center">FECHA DE PAGO</th>
-                <th style="text-align: center">TOTAL PAGADO</th>
+                <th style="text-align: center; width:5px">N. TRANS.</th>
+                <th style="text-align: center; width:5px">FECHA DE PAGO</th>
+                <th style="text-align: center; width:5px">TOTAL PAGADO</th>
             </tr>
         </thead>
         <tbody>
@@ -56,19 +66,18 @@
                 $total = 0;
             @endphp
             @forelse ($data as $item)
-                <tr>
+                <tr style="height: 25px">
                     <td>{{ $count }}</td>
-                    <td>
-                        <b>CI:</b> {{ $item->ci}} <br>
-                        <p>{{ $item->first_name}} {{ $item->last_name1}} {{ $item->last_name2}}</p>
+                    <td><b>CI:</b> {{ $item->ci}}</td>
+                    <td>                        
+                        <b>{{strtoupper($item->first_name)}} {{ strtoupper($item->last_name1)}} {{ strtoupper($item->last_name2)}}</b>
                     </td>
-                    <td style="text-align: left">{{ $item->name}}</td>
                     <td style="text-align: center"><b>{{ $item->code}}</b></td>
                     <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
                     <td style="text-align: right">{{ number_format($item->amountTotal, 2, ',', '.') }}</td>
                     <td style="text-align: right">{{ $item->transaction}}</td>
                     <td style="text-align: center">{{date('d/m/Y', strtotime($item->loanDayAgent_fecha))}}</td>
-                    <td style="text-align: right"><b>Bs.</b> {{ number_format($item->amount,2, ',', '.') }}</td>                              
+                    <td style="text-align: right">{{ number_format($item->amount,2, ',', '.') }}</td>                              
                                                                             
                 </tr>
                 @php
@@ -95,7 +104,7 @@
     <br>
     <br><br>
     <br>
-    <table width="100%">
+    <table width="100%" style="font-size: 13px">
         <tr>
             <td style="text-align: center">
                 ______________________
@@ -118,5 +127,8 @@
             </td>
         </tr>
     </table>
+    <script>
+
+    </script>
 
 @endsection
