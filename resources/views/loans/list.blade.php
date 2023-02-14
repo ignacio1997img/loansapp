@@ -14,7 +14,7 @@
                     <th>Interés a Cobrar</th>   
                     <th>Total a Pagar</th>
                     <th>Deuda Pendiente</th>                    
-                    <th style="text-align: center">Estado</th>
+                    {{-- <th style="text-align: center">Estado</th> --}}
                     <th class="text-right">Acciones</th>
                 </tr>
             </thead>
@@ -64,8 +64,7 @@
                         @else
                             <label class="label label-danger"><small>Bs.</small> {{$item->debt}}</label>
                         @endif
-                    </td>
-                    <td style="text-align: right">
+                        <br>
                         @if ($item->status == 'pendiente')
                             <label class="label label-danger">PENDIENTE</label>                            
                         @endif
@@ -80,15 +79,25 @@
                         @endif
                         @if ($item->status == 'rechazado')
                             <label class="label label-danger">RECHAZADO</label>                            
-                        @endif
-                        {{-- @if ($item->debt == 0)
-                            <label class="label label-success">PAGADO</label>
-                        @endif --}}
-                        {{-- @if ($item->status == 1)
-                            <label class="label label-primary">{{$item->delivered=='Si'?'ENTREGADO':'APROBADO'}}</label>                            
-                        @endif --}}
-                        
+                        @endif       
                     </td>
+                    {{-- <td style="text-align: right">
+                        @if ($item->status == 'pendiente')
+                            <label class="label label-danger">PENDIENTE</label>                            
+                        @endif
+                        @if ($item->status == 'verificado')
+                            <label class="label label-warning">VERIFICADO</label>                            
+                        @endif
+                        @if ($item->status == 'aprobado')
+                            <label class="label label-primary">APROBADO</label>                            
+                        @endif
+                        @if ($item->status == 'entregado')
+                            <label class="label label-success">ACTIVO</label>                            
+                        @endif
+                        @if ($item->status == 'rechazado')
+                            <label class="label label-danger">RECHAZADO</label>                            
+                        @endif                        
+                    </td> --}}
                     <td class="no-sort no-click bread-actions text-right">
                         @if ($item->status == 'aprobado')
                             <a href="#" data-toggle="modal" data-target="#notificar-modal" data-name="{{ $item->people->first_name }} {{ $item->people->last_name1 }} {{ $item->people->last_name2 }}" data-phone="{{$item->people->cell_phone}}" title="Notificar al beneficiario" class="btn btn-sm">
