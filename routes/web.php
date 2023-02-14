@@ -84,7 +84,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::get('loans/cashier/balance/{id?}', [AjaxController::class, 'balanceCashier'])->name('loans-cashier.balance');//para mostrar el saldo de cada caja en la parte de browse
     
-   
+    // PARA CAMBIOS DE RUTAS DE LOS PRESTAMOS DIARIOS Y ESPECIALES
+    Route::get('loans/{loan}/routeOld', [RouteController::class, 'loanRouteOld'])->name('loan-routeOld.index');
+    // Route::post('loans/routeOld', [RouteController::class, 'loanRouteOld'])->name('loan-routeOld.index');
 
     Route::resource('agents', AgentController::class);
     Route::get('agents', [AgentController::class, 'index'])->name('voyager.agents.index');

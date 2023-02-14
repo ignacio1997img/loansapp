@@ -106,19 +106,16 @@
                         @endif
 
 
-                        @if($item->status != 'rechazado' && !auth()->user()->hasRole('cobrador'))
+                        @if($item->status != 'rechazado')
                         <div class="btn-group" style="margin-right: 3px">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                 Mas <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" style="left: -90px !important">
-                                {{-- @if ($item->status == 1)
-                                    <li><a onclick="agentItem('{{ route('loans-agent.update', ['loan' => $item->id]) }}')" class="btn-rotation" data-toggle="modal" data-target="#agent-modal" title="Cambiar Cobrador" >Cambiar Cobradores</a></li>
-                                @endif --}}
                                 @if ($item->status == 'entregado' && $item->delivered == 'Si')
                                     <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" >Transacciones</a></li> 
                                 @endif
-                                @if ($item->status != 'pendiente' && $item->status != 'verificado')
+                                @if ($item->status != 'pendiente' && $item->status != 'verificado' && !auth()->user()->hasRole('cobrador'))
                                     <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" >Imprimir Calendario</a></li> 
                                 
                                     <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" >Imprimir Contrato</a></li>
@@ -127,9 +124,11 @@
                         </div>
                         @endif
 
-                            {{-- <a href="{{ route('loans.show', ['loan' => $item->id]) }}" title="Ver" class="btn btn-sm btn-warning view">
-                                <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                            </a>  --}}
+                            @if(!auth()->user()->hasRole('cobrador') && !auth()->user()->hasRole('cajeros'))
+                                <a href="#" title="Rutas del Prestamo" class="btn btn-sm btn-dark">
+                                    <i class="fa-solid fa-route"></i> <span class="hidden-xs hidden-sm">Rutas</span>
+                                </a>
+                            @endif
 
                             @if($item->status != 'rechazado')
                                 <a href="{{ route('loans-requirement-daily.create', ['loan' => $item->id]) }}" title="Requisitos" class="btn btn-sm btn-warning">

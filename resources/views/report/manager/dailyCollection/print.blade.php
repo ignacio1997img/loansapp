@@ -40,7 +40,7 @@
             </td>
         </tr>
     </table>
-    <table style="width: 100%; font-size: 8px" border="1" cellspacing="0" cellpadding="4">
+    <table style="width: 100%; font-size: 10px" border="1" cellspacing="0" cellpadding="4">
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>   
@@ -50,7 +50,7 @@
                 <th colspan="3" style="text-align: center">DETALLE DEL PRESTAMOS</th>
                 <th colspan="3" style="text-align: center">DETALLE DE PAGO</th>
             </tr>
-            <tr>
+            <tr>    
                 <th style="text-align: center; width:5px">CODIGO PRESTAMO</th>
                 <th style="text-align: center; width:5px">FECHA DE PRESTAMO</th>
                 <th style="text-align: center; width:5px">TOTAL DEL PRESTAMO</th>

@@ -23,8 +23,6 @@ class RouteController extends Controller
         return view('routes.browse');
     }
 
-
-
     public function list($search = null){
         $user = Auth::user();
 
@@ -55,16 +53,6 @@ class RouteController extends Controller
 
         $paginate = request('paginate') ?? 10;
 
-        // $data = User::with(['routeCollector' => function($q) use($route)
-        //             {
-        //                 $q->where('route_id', $route)->where('deleted_at', null);
-        //             }])
-        //             ->where(function($query) use ($search){
-        //                 $query->OrWhereRaw($search ? "id = '$search'" : 1)
-        //                 ->OrWhereRaw($search ? "name like '%$search%'" : 1);
-        //                 })
-        //             ->orderBy('id', 'DESC')->paginate($paginate);
-
         $data = RouteCollector::with(['collector' => function($q) use($search)
                     {
                         $q->where(function($query) use ($search){
@@ -78,6 +66,7 @@ class RouteController extends Controller
                     // dd($data->links());
         return view('routes.collector.list', compact('data'));
     }
+
     public function storeCollector(Request $request, $route)
     {
         // $id= $route;
@@ -155,5 +144,12 @@ class RouteController extends Controller
             DB::rollBack();
             return redirect()->route('routes.collector.index', ['route'=>$id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
+    }
+
+
+    // ···························     PARA CAMBIOS DE RUTAS DE LOS PRESTAMOS DIARIO Y ESPECIALES  ·······························
+    public function loanRouteOld($id)
+    {
+        return $id;
     }
 }

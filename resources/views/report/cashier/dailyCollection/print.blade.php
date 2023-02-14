@@ -40,7 +40,7 @@
             </td>
         </tr>
     </table>
-    <table style="width: 100%; font-size: 8px" border="1" cellspacing="0" cellpadding="5">
+    <table style="width: 100%; font-size: 8px" border="1" cellspacing="0" cellpadding="4">
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>   
