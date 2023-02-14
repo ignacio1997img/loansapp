@@ -17,7 +17,8 @@ class LoanRoute extends Model
         'register_agentType',
         'deleted_at',
         'deleted_userId',
-        'deleted_agentType'
+        'deleted_agentType',
+        'deleteObservation'
     ];
 
     public function route()

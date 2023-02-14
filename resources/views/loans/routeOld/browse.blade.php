@@ -10,24 +10,17 @@
             <div class="col-md-12">
                 <div class="panel panel-bordered">
                     <div class="panel-body" style="padding: 0px">
-                        <div class="col-md-4" style="padding: 0px">
+                        <div class="col-md-8" style="padding: 0px">
                             <h1 id="titleHead" class="page-title">
-                                <i class="fa-solid fa-hand-holding-dollar"></i> Prestamos
+                                <i class="fa-solid fa-route"></i> {{$route->where('status', 1)->first()->route->name}} <label class="label label-dark">{{$loan->code}}</label>
                             </h1>
-
-                            
                         </div>
-                        <div class="col-md-8 text-right" style="padding: 0px">
-                            <h1 id="titleHead" class="page-title money">
-                                <i class="fa-solid fa-dollar-sign"></i> {{$balance}}
-                            </h1>
-                            @if (auth()->user()->hasPermission('add_loans'))
-                                <a href="{{ route('loans.create') }}" class="btn btn-success">
-                                    <i class="voyager-plus"></i> <span>Prestamo Diario</span>
+                        <div class="col-md-4 text-right" style="margin-top: 30px">
+                            {{-- @if ( !auth()->user()->hasRole('admin') && $vault) --}}
+                                <a href="{{ route('cashiers.create') }}" class="btn btn-success">
+                                    <i class="voyager-plus"></i> <span>Crear</span>
                                 </a>
-                            @endif
-
-                            
+                            {{-- @endif --}}
                         </div>
                     </div>
                 </div>
@@ -38,59 +31,84 @@
 
 @section('content')
     <div class="page-content browse container-fluid">
+        @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-bordered">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <div class="dataTables_length" id="dataTable_length">
-                                    <label>Mostrar <select id="select-paginate" class="form-control input-sm">
-                                        <option value="10">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select> registros</label>
-                                </div>
-                            </div>
-                            {{-- <div class="col-sm-2">
-                                <input type="text" id="input-search" class="form-control">
-                            </div> --}}
-                            <div class="col-sm-4" style="margin-bottom: 0px">
-                                <input type="text" id="input-search" class="form-control" placeholder="Ingrese busqueda..."> <br>
-                            </div>
-                            <div class="col-md-12 text-right">
-                                @if (!auth()->user()->hasRole('cobrador'))
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="todo">Todos</label>
-                                @endif
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="entregado" checked>En Pagos</label>
+                    <div class="panel-body">                        
+                        <div class="table-responsive">     
+                                <table id="dataStyle" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center">N.</th>
+                                            <th style="text-align: center">Rutas</th>
+                                            <th style="text-align: center">Descripción</th>
+                                            <th style="text-align: center">Estado</th>
+                                            <th style="text-align: right">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($cashier as $item)
+                                            <tr>
+                                                <td>{{$item->id}}</td>
+                                                <td style="width: 200pt; text-align: center">{{strtoupper($item->user->name)}}</td>
+                                                <td style="text-align: center">{{strtoupper($item->title)}}</td>
+                                                <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>
+                                                <td style="text-align: center">@if($item->closed_at){{date('d/m/Y H:i:s', strtotime($item->close_at))}}<br><small>{{\Carbon\Carbon::parse($item->close_at)->diffForHumans()}}.@endif </small></td>
                                 
-                                
-                                @if (!auth()->user()->hasRole('cobrador'))
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="aprobado">Por Entregar</label>
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="verificado">Por Aprobar</label>
-                                @endif
-                                
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pendiente">Pendientes</label>
-                             
+                                                <td style="text-align: right">
 
-                                @if (!auth()->user()->hasRole('cobrador'))
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pagado">Pagados</label>
-                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="rechazado">Rechazados</label>
-                                @endif
-                            </div>
+                                                    @if ($item->status == 'abierta')
+                                                        <a href="{{route('cashiers.amount', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-success">
+                                                            <i class="voyager-dollar"></i> <span class="hidden-xs hidden-sm">Abonar Dinero</span>
+                                                        </a>
+                                                    @endif
+                                                    @if (auth()->user()->hasPermission('read_cashiers'))
+                                                        <a href="{{route('cashiers.show', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-warning">
+                                                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                                        </a>
+                                                    @endif
+                                                    
+                                                    @if ($item->status == 'abierta' || $item->status == 'apertura pendiente')
+                                                        
+                                                        <a href="#" title="Imprimir" class="btn btn-dark" onclick="openWindow({{$item->id}})">
+                                                            <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir apertura</span>
+                                                        </a>
+
+                                                    @endif
+                                                    @if ($item->status == 'cerrada')
+                                                        
+                                                        <a href="#" title="Imprimir" class="btn btn-dark" onclick="closeWindow({{$item->id}})">
+                                                            <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir cierre</span>
+                                                        </a>
+
+                                                    @endif
+
+                                                    @if ($item->status == "cierre pendiente")
+                                                        <a href="{{route('cashiers.confirm_close',['cashier' => $item->id])}}" title="Ver" class="btn btn-sm btn-primary pull-right">
+                                                            <i class="voyager-lock"></i> <span class="hidden-xs hidden-sm">Confirmar Cierre de Caja</span>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="7" style="text-align: center">Sin Datos</td>
+                                            </tr>
+                                        @endforelse                                   
+                                    </tbody>
+                                </table>
                         </div>
-                        <div class="row" id="div-results" style="min-height: 120px"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 
 
-
- 
 @stop
+
 
 @section('css')
     <style>

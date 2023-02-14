@@ -30,6 +30,7 @@ class CreateLoanRoutesTable extends Migration
             $table->softDeletes();
             $table->foreignId('deleted_userId')->nullable()->constrained('users');
             $table->string('deleted_agentType')->nullable();
+            $table->text('deleteObservation')->nullable();
         });
     }
 

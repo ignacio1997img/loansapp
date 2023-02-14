@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Loan;
+use App\Models\LoanRoute;
+use App\Models\LoanRouteOld;
 use Illuminate\Http\Request;
 use App\Models\Route;
 use Illuminate\Support\Facades\DB;
@@ -150,6 +153,13 @@ class RouteController extends Controller
     // ···························     PARA CAMBIOS DE RUTAS DE LOS PRESTAMOS DIARIO Y ESPECIALES  ·······························
     public function loanRouteOld($id)
     {
-        return $id;
+        // $routeOld = LoanRouteOld::where('loan_id', $id)->get();
+        $route = LoanRoute::with(['route'])->where('loan_id', $id)->get();
+        // return $route;
+
+        $loan = Loan::where('id', $id)->first();
+        // return $routeOld;
+      
+        return view('loans.routeOld.browse', compact('loan', 'route'));
     }
 }
