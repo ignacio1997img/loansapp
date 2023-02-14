@@ -25,7 +25,7 @@ class ReportController extends Controller
     {
         // return 1;
         $user = User::where('role_id', '!=', 1)->where('role_id', '!=', 2)->where('role_id', '!=', 3)->orderBy('name', 'ASC')->get();
-        return view('print.dailyCollection.report', compact('user'));
+        return view('report.dailyCollection.report', compact('user'));
     }
 
     public function dailyCollectionList(Request $request)
@@ -57,13 +57,15 @@ class ReportController extends Controller
                     ->groupBy('loan', 'transaction')
                     ->orderBy('lda.created_at', 'ASC')
                     ->get();
-        // return $data->id;        
+        // return $data->id;    
+        $amountTotal = $data->SUM('amount');
+        // dump($amountTotal);
         if($request->print){
             $start = $request->start;
             $finish = $request->finish;
-            return view('print.dailyCollection.print', compact('data', 'start', 'finish'));
+            return view('report.dailyCollection.print', compact('data', 'start', 'finish', 'amountTotal'));
         }else{
-            return view('print.dailyCollection.list', compact('data'));
+            return view('report.dailyCollection.list', compact('data'));
         }
     }
 

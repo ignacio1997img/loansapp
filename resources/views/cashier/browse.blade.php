@@ -57,8 +57,8 @@
                                         @forelse ($cashier as $item)
                                             <tr>
                                                 <td>{{$item->id}}</td>
-                                                <td style="width: 200pt; text-align: center">{{$item->user->name}}</td>
-                                                <td style="text-align: center">{{$item->title}}</td>
+                                                <td style="width: 200pt; text-align: center">{{strtoupper($item->user->name)}}</td>
+                                                <td style="text-align: center">{{strtoupper($item->title)}}</td>
                                                 <td style="text-align: center">
                                                     @if ($item->status == 'abierta')
                                                         <label class="label label-success">Abierta</label>

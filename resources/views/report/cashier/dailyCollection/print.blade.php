@@ -26,7 +26,7 @@
                     COBRADO POR: {{strtoupper($agent)}}
                 </small>
                 <br>
-                <small>
+                <small style="font-size: 12px">
                     <b>TOTAL COBRADO Bs.</b> {{ number_format($amount,2, ',', '.') }}
                 </small>
             </td>
@@ -40,8 +40,7 @@
             </td>
         </tr>
     </table>
-    <br>
-    <table style="width: 100%; font-size: 9px" border="1" cellspacing="0" cellpadding="5">
+    <table style="width: 100%; font-size: 8px" border="1" cellspacing="0" cellpadding="5">
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>   
@@ -57,7 +56,7 @@
 
                 <th style="text-align: center; width:5px">N. TRANS.</th>
                 <th style="text-align: center; width:5px">FECHA DE PAGO</th>
-                <th style="text-align: center; width:5px">TOTAL PAGADO</th>
+                <th style="text-align: center; width:70px">TOTAL PAGADO</th>
             </tr>
         </thead>
         <tbody>
@@ -66,7 +65,7 @@
                 $total = 0;
             @endphp
             @forelse ($data as $item)
-                <tr style="height: 25px">
+                <tr>
                     <td>{{ $count }}</td>
                     <td><b>CI:</b> {{ $item->ci}}</td>
                     <td>                        
@@ -86,25 +85,21 @@
                 @endphp
             @empty
                 <tr style="text-align: center">
-                    <td colspan="10">No se encontraron registros.</td>
+                    <td colspan="9">No se encontraron registros.</td>
                 </tr>
             @endforelse
             <tr>
-                <th colspan="8" style="text-align: left">Total</th>
+                <th colspan="8" style="text-align: right">Total</th>
                 <td style="text-align: right"><strong>Bs. {{ number_format($total,2, ',', '.') }}</strong></td>
             </tr>
         </tbody>       
        
 
     </table>
-    <div class="row" style="font-size: 9pt">
-        {{-- <p style="text-align: right">Total Detalle de Egreso: {{NumerosEnLetras::convertir(number_format($total,2),'Bolivianos',true)}}</p> --}}
-    </div>
 
     <br>
-    <br><br>
     <br>
-    <table width="100%" style="font-size: 13px">
+    <table width="100%" style="font-size: 9px">
         <tr>
             <td style="text-align: center">
                 ______________________
@@ -132,3 +127,11 @@
     </script>
 
 @endsection
+@section('css')
+    <style>
+        table, th, td {
+            border-collapse: collapse;
+        }
+          
+    </style>
+@stop

@@ -40,11 +40,11 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <img src="{{ $image }}" alt="{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px">
+                                    <img src="{{ $image }}" alt="{{strtoupper($item->people->first_name)}} {{strtoupper($item->people->last_name1)}} {{strtoupper($item->people->last_name2)}}" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px">
                                 </td>
                                 <td>
                                     <small>CI:</small> {{ $item->people->ci }} <br>
-                                    <small>NOMBRE:</small> {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
+                                    <small>NOMBRE:</small> {{strtoupper($item->people->first_name)}} {{strtoupper($item->people->last_name1)}} {{strtoupper($item->people->last_name2)}}
                                 </td>
                             </tr>
                             

@@ -31,7 +31,7 @@
                             <tr>
                                 <td><img src="{{ $image }}" alt="{{ $item->first_name }} " style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px"></td>
                                 <td>
-                                    {{ $item->first_name }} {{ $item->last_name1 }} {{ $item->last_name2 }}
+                                    {{ strtoupper($item->first_name) }} {{ strtoupper($item->last_name1) }} {{ strtoupper($item->last_name2) }}
                                 </td>
                             </tr>
                         </table>

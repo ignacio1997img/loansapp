@@ -10,7 +10,7 @@
     <table width="100%">
         <tr>
             <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="CAPRESI" width="70px"></td>
-            <td style="text-align: center;  width:70%">
+            <td style="text-align: center;  width:50%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
                     EMPRESA "CAPRESI"<br>
                 </h3>
@@ -28,14 +28,19 @@
             </td>
             <td style="text-align: right; width:30%">
                 <h3 style="margin-bottom: 0px; margin-top: 5px">
-                   
-                    <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                    <div id="qr_code">
+                        @if ($start != $finish)
+                            {!! QrCode::size(80)->generate('Total Cobrado: Bs'.number_format($amountTotal,2, ',', '.').', Recaudado en Fecha '.date('d', strtotime($start)).' de '.strtoupper($months[intval(date('m', strtotime($start)))] ).' de '.date('Y', strtotime($start)).' al '.date('d', strtotime($finish)).' de '.strtoupper($months[intval(date('m', strtotime($finish)))] ).' de '.date('Y', strtotime($finish))); !!}
+                        @else
+                            {!! QrCode::size(80)->generate('Total Cobrado: Bs'.number_format($amountTotal,2, ',', '.').', Recaudado en Fecha '.date('d', strtotime($start)).' de '.strtoupper($months[intval(date('m', strtotime($start)))] ).' de '.date('Y', strtotime($start))); !!}
+                        @endif
+                    </div>
+                    <small style="font-size: 8px; font-weight: 100">Impreso por: {{ Auth::user()->name }} {{ date('d/M/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
     </table>
-    <br><br>
-    <table style="width: 100%; font-size: 12px" border="1" cellspacing="0" cellpadding="5">
+    <table style="width: 100%; font-size: 9px" border="1" cellspacing="0" cellpadding="3">
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>
@@ -92,3 +97,11 @@
     </table>
 
 @endsection
+@section('css')
+    <style>
+        table, th, td {
+            border-collapse: collapse;
+        }
+          
+    </style>
+@stop
