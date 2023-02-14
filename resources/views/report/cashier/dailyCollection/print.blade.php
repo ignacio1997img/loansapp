@@ -18,15 +18,15 @@
                     REPORTE DETALLADO DE RECAUDACION DIARIA
                     {{-- Stock Disponible {{date('d/m/Y', strtotime($start))}} Hasta {{date('d/m/Y', strtotime($finish))}} --}}
                 </h4>
-                <small style="margin-bottom: 0px; margin-top: 5px">
-                        {{ date('d', strtotime($date)) }} de {{ strtoupper($months[intval(date('m', strtotime($date)))] )}} de {{ date('Y', strtotime($date)) }}
+                <small style="margin-bottom: 0px; margin-top: 5px; font-size: 10px">
+                        {{ date('d', strtotime($date)) }} DE {{ strtoupper($months[intval(date('m', strtotime($date)))] )}} DE {{ date('Y', strtotime($date)) }}
                 </small>
                 <br>
-                <small>
+                <small style="font-size: 10px">
                     COBRADO POR: {{strtoupper($agent)}}
                 </small>
                 <br>
-                <small style="font-size: 12px">
+                <small style="font-size: 10px">
                     <b>TOTAL COBRADO Bs.</b> {{ number_format($amount,2, ',', '.') }}
                 </small>
             </td>

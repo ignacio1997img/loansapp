@@ -24,7 +24,7 @@
                         <th style="text-align: center">FECHA DE PRESTAMO</th>
                         <th style="text-align: center">TOTAL DEL PRESTAMO</th>
 
-                        <th style="text-align: center">ID PAGO</th>
+                        <th style="text-align: center">N. TRANS.</th>
                         <th style="text-align: center">FECHA DE PAGO</th>
                         <th style="text-align: center">TOTAL PAGADO</th>
                     </tr>
@@ -32,25 +32,27 @@
                 <tbody>
                     @php
                         $count = 1;
+                        $total = 0;
+
                     @endphp
                     @forelse ($data as $item)
-                        <tr style="text-align: center">
+                        <tr>
                             <td>{{ $count }}</td>
                             <td>{{ $item->ci }}</td>
-                            <td style="text-align: right">{{ $item->last_name1}} {{ $item->last_name2}} {{ $item->first_name}}</td>
-                            <td style="text-align: right">{{ $item->name}}</td>
-                            <td style="text-align: right">{{ $item->code}}</td>
+                            <td>{{ strtoupper($item->first_name)}} {{ strtoupper($item->last_name1)}} {{ strtoupper($item->last_name2)}}</td>
+                            <td>{{ strtoupper($item->name)}}</td>
+                            <td style="text-align: center"><small>{{ $item->code}}</small></td>
                             <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
-                            <td style="text-align: right">{{ number_format($item->amountTotal,2) }}</td>
-                            <td style="text-align: right">{{ $item->loanDayAgent_id}}</td>
+                            <td style="text-align: right">{{ number_format($item->amountTotal,2, ',','.') }}</td>
+                            <td style="text-align: right">{{ $item->transaction}}</td>
                             <td style="text-align: center">{{date('d/m/Y', strtotime($item->loanDayAgent_fecha))}}</td>
-                            <td style="text-align: right">{{ number_format($item->amount,2) }}</td>
+                            <td style="text-align: right">{{ number_format($item->amount,2, ',','.') }}</td>
                                                                                   
                             
                         </tr>
                         @php
                             $count++;
-                            
+                            $total+= $item->amount;          
                         @endphp
                         
                     @empty
@@ -58,6 +60,10 @@
                             <td colspan="10">No se encontraron registros.</td>
                         </tr>
                     @endforelse
+                    <tr>
+                        <td colspan="9" style="text-align: right">Total</td>
+                        <td style="text-align: right"><small>Bs.</small> {{ number_format($total,2, ',', '.') }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

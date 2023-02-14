@@ -17,6 +17,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Models\Loan;
 use App\Models\People;
+use App\Http\Controllers\ReportManagerController;
 use Illuminate\Support\Facades\Route;
 
 // use PeopleController
@@ -155,9 +156,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
 
     //____________________________________________________________________________REPORTE________________________________________________________________________
-    //::::::::::::::::::::dailyCollection:::::::::::
-    Route::get('print/dailyCollection', [ReportController::class, 'dailyCollection'])->name('print.dailyCollection');
-    Route::post('print/dailyCollection/list', [ReportController::class, 'dailyCollectionList'])->name('print-dailyCollection.list');
+    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                   FROM MANAGER ADMINISTRATOR                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    //para poder mostrar su recaudacion de la persona CAJERO O COBRADOR EN MOTO
+    Route::get('print/dailyCollection', [ReportManagerController::class, 'dailyCollection'])->name('print.dailyCollection');
+    Route::post('print/dailyCollection/list', [ReportManagerController::class, 'dailyCollectionList'])->name('print-dailyCollection.list');
 
 
     Route::get('print/dailyList', [ReportController::class, 'dailyList'])->name('print.dailyList');

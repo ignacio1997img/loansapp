@@ -156,11 +156,6 @@
 @stop
 
 @section('javascript')
-
-    {{-- <script src="{{ url('js/main.js') }}"></script> --}}
-    {{-- <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.3.min.js"></script> --}}
     <script>
 
         $(document).ready(function() {
@@ -194,19 +189,10 @@
             $('#form-search').removeAttr('target');
             $('#form-search input[name="print"]').val('');
         }
-        function report_excel()
-        {
-            // $('#form-search').attr('target', '_blank');
-            $('#form-search input[name="print"]').val(2);
-            window.form_search.submit();
-             $('#form-search').removeAttr('target');
-            $('#form-search input[name="print"]').val('');
-        }
     </script>
 @stop
 @else
     @section('content')
-        {{-- @include('errors.403') --}}
         <h1>Sin Permiso</h1>
     @stop
 @endif
