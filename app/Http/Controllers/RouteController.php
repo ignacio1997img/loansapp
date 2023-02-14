@@ -153,13 +153,45 @@ class RouteController extends Controller
     // ···························     PARA CAMBIOS DE RUTAS DE LOS PRESTAMOS DIARIO Y ESPECIALES  ·······························
     public function loanRouteOld($id)
     {
-        // $routeOld = LoanRouteOld::where('loan_id', $id)->get();
-        $route = LoanRoute::with(['route'])->where('loan_id', $id)->get();
-        // return $route;
+        $route = LoanRoute::with(['route'])->where('loan_id', $id)->orderBy('id', 'DESC')->get();
 
         $loan = Loan::where('id', $id)->first();
-        // return $routeOld;
+
+        $data = Route::where('deleted_at', null)->get();
       
-        return view('loans.routeOld.browse', compact('loan', 'route'));
+        return view('loans.routeOld.browse', compact('loan', 'route', 'data'));
+    }
+
+    public function updateRouteLoan(Request $request, $loan)
+    {
+        // return $request;
+        // return $loan;
+        DB::beginTransaction();
+        try {
+            $user = Auth::user();
+            $agent = $this->agent($user->id);
+
+            LoanRoute::where('loan_id', $loan)->where('deleted_at', null)
+                ->update(['status'=>0, 'deleted_at'=>Carbon::now(), 'deleteObservation'=>$request->deleteObservation, 'deleted_userId'=> Auth::user()->id, 'deleted_agentType'=>$agent->role]);
+            
+
+            LoanRoute::create([
+                    'loan_id' => $loan,
+    
+                    'route_id' => $request->route_id,
+    
+                    'observation' => $request->observation,
+    
+                    'register_userId' => $agent->id,
+                    'register_agentType' => $agent->role
+                ]);
+            DB::commit();
+            return redirect()->route('loans.index')->with(['message' => 'Ruta Cambiada exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 0;
+            return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+
+        }
     }
 }

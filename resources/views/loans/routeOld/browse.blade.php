@@ -16,11 +16,9 @@
                             </h1>
                         </div>
                         <div class="col-md-4 text-right" style="margin-top: 30px">
-                            {{-- @if ( !auth()->user()->hasRole('admin') && $vault) --}}
-                                <a href="{{ route('cashiers.create') }}" class="btn btn-success">
+                                <a href="#" data-toggle="modal" data-target="#collector-modal" class="btn btn-success">
                                     <i class="voyager-plus"></i> <span>Crear</span>
                                 </a>
-                            {{-- @endif --}}
                         </div>
                     </div>
                 </div>
@@ -40,56 +38,26 @@
                                 <table id="dataStyle" class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th style="text-align: center">N.</th>
                                             <th style="text-align: center">Rutas</th>
-                                            <th style="text-align: center">Descripción</th>
+                                            <th style="text-align: center">Observacion Inicio</th>
+                                            <th style="text-align: center">Observacion por el cambio</th>
                                             <th style="text-align: center">Estado</th>
-                                            <th style="text-align: right">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($cashier as $item)
+                                        @forelse ($route as $item)
                                             <tr>
-                                                <td>{{$item->id}}</td>
-                                                <td style="width: 200pt; text-align: center">{{strtoupper($item->user->name)}}</td>
-                                                <td style="text-align: center">{{strtoupper($item->title)}}</td>
-                                                <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>
-                                                <td style="text-align: center">@if($item->closed_at){{date('d/m/Y H:i:s', strtotime($item->close_at))}}<br><small>{{\Carbon\Carbon::parse($item->close_at)->diffForHumans()}}.@endif </small></td>
-                                
-                                                <td style="text-align: right">
-
-                                                    @if ($item->status == 'abierta')
-                                                        <a href="{{route('cashiers.amount', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-success">
-                                                            <i class="voyager-dollar"></i> <span class="hidden-xs hidden-sm">Abonar Dinero</span>
-                                                        </a>
-                                                    @endif
-                                                    @if (auth()->user()->hasPermission('read_cashiers'))
-                                                        <a href="{{route('cashiers.show', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-warning">
-                                                            <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
-                                                        </a>
-                                                    @endif
-                                                    
-                                                    @if ($item->status == 'abierta' || $item->status == 'apertura pendiente')
-                                                        
-                                                        <a href="#" title="Imprimir" class="btn btn-dark" onclick="openWindow({{$item->id}})">
-                                                            <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir apertura</span>
-                                                        </a>
-
-                                                    @endif
-                                                    @if ($item->status == 'cerrada')
-                                                        
-                                                        <a href="#" title="Imprimir" class="btn btn-dark" onclick="closeWindow({{$item->id}})">
-                                                            <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir cierre</span>
-                                                        </a>
-
-                                                    @endif
-
-                                                    @if ($item->status == "cierre pendiente")
-                                                        <a href="{{route('cashiers.confirm_close',['cashier' => $item->id])}}" title="Ver" class="btn btn-sm btn-primary pull-right">
-                                                            <i class="voyager-lock"></i> <span class="hidden-xs hidden-sm">Confirmar Cierre de Caja</span>
-                                                        </a>
+                                                <td style="width: 200pt; text-align: center">{{strtoupper($item->route->name)}}</td>
+                                                <td style="text-align: center">{{strtoupper($item->observation)}}</td>
+                                                <td style="text-align: center">{{strtoupper($item->deleteObservation)}}</td>
+                                                <td style="text-align: center">
+                                                    @if ($item->status == 1)
+                                                        <label class="label label-success">Activo</label>
+                                                    @else 
+                                                        <label class="label label-danger">Inactivo</label>
                                                     @endif
                                                 </td>
+                                                
                                             </tr>
                                         @empty
                                             <tr>
@@ -104,7 +72,53 @@
             </div>
         </div>
     </div>
+
+
+
+     {{-- vault create modal --}}
+     <form action="{{ route('loan-route.store', ['loan'=>$loan->id]) }}" method="post">
+        @csrf
+        <div class="modal modal-success fade" data-backdrop="static" tabindex="-1" id="collector-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa-solid fa-route"></i> Cambio de Rutas
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <small>Rutas</small>
+                            <select name="route_id" id="route_id" class="form-control select2" required>
+                                <option value="" disabled selected>-- Selecciona un tipo --</option>
+                                @foreach ($data as $item)
+                                    <option value="{{$item->id}}">{{$item->name}} </option>                                                
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            {{-- <label for="description">Descripción</label> --}}
+                            <small>Observación por la nueva ruta</small>
+                            <textarea name="observation" class="form-control text" rows="3" required></textarea>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            {{-- <label for="description">Descripción</label> --}}
+                            <small>Observación Por el Cambio de Ruta</small>
+                            <textarea name="deleteObservation" class="form-control text" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default cancel" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success ok">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
     
+
+
+   
 
 
 @stop
