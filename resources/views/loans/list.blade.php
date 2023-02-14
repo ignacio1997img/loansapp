@@ -27,10 +27,6 @@
                     <td><small>{{ $item->code }}</small></td>
                     <td>{{ date("d-m-Y", strtotime($item->date)) }}</td>
                     <td>
-                        {{-- <small>CI:</small> {{$item->people->ci?$item->people->ci:'No definido'}} <br>
-                        {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}} --}}
-
-
                         <table>                                                    
                             @php
                                 $image = asset('images/icono-anonimato.png');

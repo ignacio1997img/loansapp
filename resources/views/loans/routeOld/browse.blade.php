@@ -12,13 +12,19 @@
                     <div class="panel-body" style="padding: 0px">
                         <div class="col-md-8" style="padding: 0px">
                             <h1 id="titleHead" class="page-title">
-                                <i class="fa-solid fa-route"></i> {{$route->where('status', 1)->first()->route->name}} <label class="label label-dark">{{$loan->code}}</label>
+                                <i class="fa-solid fa-route"></i> Rutas <label class="label label-dark">{{$loan->code}}</label>
                             </h1>
+
+                            <a href="{{ route('loans.index') }}" class="btn btn-warning">
+                                <i class="fa-solid fa-rotate-left"></i> <span>Volver</span>
+                            </a>
                         </div>
                         <div class="col-md-4 text-right" style="margin-top: 30px">
+                            @if ($loan->status != 'rechazado' && $loan->debt != 0)
                                 <a href="#" data-toggle="modal" data-target="#collector-modal" class="btn btn-success">
                                     <i class="voyager-plus"></i> <span>Crear</span>
                                 </a>
+                            @endif                            
                         </div>
                     </div>
                 </div>
