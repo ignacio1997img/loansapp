@@ -76,13 +76,6 @@ class PermissionsTableSeeder extends Seeder
 
             'addMoneyDaily_loans',//para agregar o pagar el prestamo diario
 
-            // 'addMoneyDaily_loans',
-
-            // 'open_vaults',
-            // 'movements_vaults',
-            // 'close_vaults',
-            // 'print_vaults',
-            
         ];
 
         foreach ($keys as $key) {

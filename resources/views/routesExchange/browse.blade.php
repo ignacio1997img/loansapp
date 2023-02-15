@@ -1,7 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', 'Transferencia de Mensaje')
-{{-- @if(auth()->user()->hasPermission('browse_exchange')) --}}
+@if(auth()->user()->hasPermission('browse_exchange'))
 
 @section('page_header')
 
@@ -144,8 +144,8 @@
         }
     </script>
 @stop
-{{-- @else
+@else
     @section('content')
         @include('errors.403')
     @stop
-@endif --}}
+@endif
