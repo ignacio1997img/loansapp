@@ -12,6 +12,25 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.css">
         <link rel="stylesheet" href="{{ voyager_asset('css/rtl.css') }}">
     @endif
+
+
+    <!-- Favicon -->
+    <?php $admin_favicon = Voyager::setting('admin.icon_image', ''); ?>
+    {{-- @if($admin_favicon == '') --}}
+        <link rel="shortcut icon" href="{{ asset('images/icon.png') }}" type="image/png">
+    {{-- @else
+        <link rel="shortcut icon" href="{{ Voyager::image($admin_favicon) }}" type="image/png">
+    @endif --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    {{-- SEO --}}
+    <meta property="og:title"         content="{{ Voyager::setting('admin.title') }}" />
+    <meta property="og:description"   content="{{ Voyager::setting('admin.description') }}" />
+    <meta property="og:image"         content="{{ $admin_favicon == '' ? asset('images/icon.png') : Voyager::image($admin_favicon) }}" />
+
+
+
+
     <style>
         body {
             background-image:url('{{ Voyager::image( Voyager::setting("admin.bg_image"), voyager_asset("images/bg.jpg") ) }}');
