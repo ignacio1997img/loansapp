@@ -59,6 +59,7 @@
 @endsection
 
 @section('post_js')
+    <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
 
     <script>
         var btn = document.querySelector('button[type="submit"]');
