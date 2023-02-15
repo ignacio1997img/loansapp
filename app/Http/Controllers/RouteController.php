@@ -164,8 +164,6 @@ class RouteController extends Controller
 
     public function updateRouteLoan(Request $request, $loan)
     {
-        // return $request;
-        // return $loan;
         DB::beginTransaction();
         try {
             $user = Auth::user();
@@ -193,5 +191,70 @@ class RouteController extends Controller
             return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
 
         }
+    }
+
+
+
+    // PARA LA VISTA DE CAMBIOS DE RUTAS EN GENERAL 
+
+    public function indexExchange()
+    {
+        $data = Route::where('deleted_at', null)->get();
+        return view('routesExchange.browse', compact('data'));
+    }
+
+    public function listLoan(Request $request)
+    {
+        // dump($request);
+        $route = Route::where('deleted_at', null)->where('id', '!=', $request->route_id)->get();
+
+        $route_id = $request->route_id;
+        $data = Loan::with(['loanDay', 'loanRoute', 'people'])
+            ->whereHas('loanRoute', function($query)use($route_id){
+                $query->where('deleted_at', NULL)->where('status', 1)->where('route_id', $route_id);
+            })
+            ->where('deleted_at', NULL)->where('status', 'entregado')->where('debt', '!=', 0)->orderBy('date', 'DESC')->get();
+        // dump($data);
+        
+        return view('routesExchange.result', compact('data', 'route'));
+    }
+
+    public function storeExchangeLoan(Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $user = Auth::user();
+            $agent = $this->agent($user->id);
+            $loan = json_decode($request->loanss);
+
+            // return $request;
+            // return $loan[0];
+            for($i=0; $i< count($loan); $i++)
+            {
+                LoanRoute::where('loan_id', $loan[$i])->where('deleted_at', null)
+                ->update(['status'=>0, 'deleted_at'=>Carbon::now(), 'deleted_userId'=> Auth::user()->id, 'deleted_agentType'=>$agent->role]);
+
+                LoanRoute::create([
+                    'loan_id' => $loan[$i],
+
+                    'route_id' => $request->route_id,
+
+
+                    'register_userId' => $agent->id,
+                    'register_agentType' => $agent->role
+                ]);
+
+            }
+
+            DB::commit();
+            return redirect()->route('routes-loan-exchange.index')->with(['message' => 'Rutas Cambiada exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 0;
+            return redirect()->route('routes-loan-exchange.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+
+        }
+        
     }
 }

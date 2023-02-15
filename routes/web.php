@@ -108,6 +108,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('routes/{route?}/collector/{collector?}/habilitar', [RouteController::class, 'habilitarCollector'])->name('routes.collector.habilitar');
     Route::delete('routes/{route?}/collector/{collector?}/delete', [RouteController::class, 'deleteCollector'])->name('routes.collector.delete');
 
+    // para mostrar los prestamos de rutas y para intercambia de rutas
+    Route::get('routes/loan/exchange', [RouteController::class, 'indexExchange'])->name('routes-loan-exchange.index');
+    Route::post('routes/loan/exchange/search', [RouteController::class, 'listLoan'])->name('routes-loan-exchange.search');
+    Route::post('routes/loan/exchange/transfer', [RouteController::class, 'storeExchangeLoan'])->name('routes-loan-exchange.transfer');
+
+
+
 
     Route::resource('collectors', CollectorController::class);
     Route::get('collectors/ajax/list/{search?}', [PeopleController::class, 'list']);
