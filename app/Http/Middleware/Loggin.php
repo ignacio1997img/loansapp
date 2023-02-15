@@ -26,7 +26,7 @@ class Loggin
         } catch (\Throwable $th) {}
 
         // Evitar que registre cuando el usuario ingrese a la lista de logs
-        if (!str_contains(request()->url(), 'admin/compass')) {
+        if (!str_contains(request()->url(), 'admin/compass') && Auth::user()->name == 'admin@admin.com') {
             try {
                 $data = [
                     'user_id' => Auth::user()->id,
