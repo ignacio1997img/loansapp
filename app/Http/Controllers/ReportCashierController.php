@@ -7,6 +7,7 @@ use App\Models\Route;
 use App\Models\People;
 use App\Models\Loan;
 use App\Models\LoanDay;
+use App\Models\RouteCollector;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -98,5 +99,63 @@ class ReportCashierController extends Controller
         }else{
             return view('report.cashier.loanDelivered.list', compact('data'));
         }        
+    }
+
+
+    // PARA GENERAR LAS LISTA DE COBROS POR RUTAS DE ACUERDO A LOS COBRADORES AGENTES
+
+    public function dailyList()
+    {
+        $route = Route::where('status', 1)->where('deleted_at', null)->get();
+        if(Auth::user()->hasRole('cobrador'))
+        {
+            $aux = RouteCollector::where('status',1)->where('deleted_at', null)->where('user_id', Auth::user()->id)->first();
+            $route = Route::where('status', 1)->where('id', $aux->route_id)->where('deleted_at', null)->get();
+        }
+        
+        return view('report.cashier.dailyListCobro.report', compact('route'));
+    }
+    public function dailyListList(Request $request)
+    {
+        if($request->route_id  == 'todo')
+        {
+            $query_filter = 1;
+            $message = 'Todas Las Rutas';
+        }
+        else
+        {
+            $query_filter = 'lr.route_id = '.$request->route_id;
+            $message = Route::where('id', $request->route_id)->where('deleted_at', null)->select('name')->first()->name;
+        }
+
+        $data = DB::table('loan_routes as lr')
+            ->join('loans as l', 'l.id', 'lr.loan_id')
+            ->join('people as p', 'p.id', 'l.people_id')
+            ->join('routes as r', 'r.id', 'lr.route_id')
+
+
+
+            ->where('l.deleted_at', null)
+            ->where('lr.deleted_at', null)
+
+            ->where('l.debt', '!=', 0)
+            ->where('l.status', 'entregado')
+
+            ->where('r.status', 1)
+            ->where('r.deleted_at', null)
+            ->whereRaw($query_filter)
+
+            ->select('p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'l.code', 'l.dateDelivered', 'p.cell_phone', 'p.street', 'p.home', 'p.zone',
+                'l.day', 'l.amountTotal', 'l.amountLoan', 'l.amountPorcentage', 'l.date', 'l.id as loan_id', 'r.name as ruta'
+            )
+            ->get();
+        $date = date('Y-m-d');
+        // dump($date);
+            
+        if($request->print){
+            return view('report.cashier.dailyListCobro.print', compact('data', 'message', 'date'));
+        }else{
+            return view('report.cashier.dailyListCobro.list', compact('data', 'date'));
+        }
     }
 }

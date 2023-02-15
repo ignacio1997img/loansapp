@@ -21,22 +21,11 @@
 
                                 @csrf
                                 <input type="hidden" name="print">
-                                
-                                {{-- <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="date" name="start" class="form-control">
-                                        <small>Inicio</small>
-                                    </div>
-                                    <div class="form-line">
-                                        <input type="date" name="finish" class="form-control">
-                                        <small>Fin</small>
-                                    </div>
-                                </div> --}}
                                 <div class="form-group">
                                     <div class="form-line">
                                         <select name="route_id" class="form-control select2" required>
                                             <option value=""disabled selected>--- Seleccione una opcion ---</option>
-                                            <option value="todo">Todos</option>
+                                            {{-- <option value="todo">Todos</option>  PARA DESARROLLO--}}
                                             @foreach ($route as $item)
                                                 <option value="{{$item->id}}">{{$item->name}}</option>
                                             @endforeach                                             

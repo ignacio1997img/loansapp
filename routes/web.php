@@ -166,8 +166,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('print/dailyCollection/list', [ReportManagerController::class, 'dailyCollectionList'])->name('print-dailyCollection.list');
 
 
-    Route::get('print/dailyList', [ReportController::class, 'dailyList'])->name('print.dailyList');
-    Route::post('print/dailyList/list', [ReportController::class, 'dailyListList'])->name('print-dailyList.list');
+    
 
     Route::get('print/loanListLate', [ReportController::class, 'loanListLate'])->name('print-loanListLate');
     Route::post('print/loanListLate/list', [ReportController::class, 'loanListLateList'])->name('print-loanListLate.list');
@@ -181,6 +180,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::get('print/loanDelivered', [ReportCashierController::class, 'loanDelivered'])->name('print-loanDelivered');
     Route::post('print/loandelivered/list', [ReportCashierController::class, 'loanDeliveredList'])->name('print-loanDelivered.list');
+
+    // para generar la lista de cobro diario por rutas
+    Route::get('print/dailyList', [ReportCashierController::class, 'dailyList'])->name('print.dailyList');
+    Route::post('print/dailyList/list', [ReportCashierController::class, 'dailyListList'])->name('print-dailyList.list');
 
 
 

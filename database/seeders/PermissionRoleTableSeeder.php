@@ -42,7 +42,7 @@ class PermissionRoleTableSeeder extends Seeder
 
 
                                             `key` = "browse_printdailyCollection" or
-                                            `key` = "browse_printdailyList" or
+                                            
                                             `key` = "browse_printloanListLate" or
 
                                             
@@ -58,7 +58,7 @@ class PermissionRoleTableSeeder extends Seeder
 
 
                                             `key` = "browse_printdailyCollection" or
-                                            `key` = "browse_printdailyList" or
+                                            
                                             `key` = "browse_printloanListLate" or
 
                                             `key` = "browse_clear-cache"')->get();
@@ -82,6 +82,7 @@ class PermissionRoleTableSeeder extends Seeder
 
                                             `key` = "browse_printloanCollection" or 
                                             `key` = "browse_printloanDelivered" or
+                                            
 
                                             
                                             `key` = "browse_clear-cache"')->get();
@@ -97,6 +98,7 @@ class PermissionRoleTableSeeder extends Seeder
 
 
                                             `key` = "browse_printloanCollection" or 
+                                            `key` = "browse_printdailyList" or
 
 
                                             
