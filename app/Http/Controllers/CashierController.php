@@ -439,8 +439,9 @@ class CashierController extends Controller
         // return $pdf->download();
     }
 
-    public function destroyTransaction($cashier, $transaction)
+    public function destroyTransaction(Request $request, $cashier, $transaction)
     {
+        // return $request;
         try {
             DB::beginTransaction();
 
@@ -480,7 +481,7 @@ class CashierController extends Controller
                 // return $day;
 
                 $day->increment('debt',$agent->amount);
-                $agent->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role]);
+                $agent->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role, 'deleteObservation'=> $request->observations]);
             }
 
             Transaction::where('id', $transaction)->update(['deleted_at'=>Carbon::now()]);

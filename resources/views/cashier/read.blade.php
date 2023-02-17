@@ -238,17 +238,16 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar la transacción?</h4>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-body">
                     <form action="#" id="delete_form" method="POST">
                         {{ csrf_field() }}
-                        <input type="hidden" name="id" id="id">
-
-                            <div class="text-center" style="text-transform:uppercase">
-                                <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
-                                <br>
-                                
-                                <p><b>Desea eliminar la siguiente transacción?</b></p>
-                            </div>
+                    <div class="form-group">
+                        <label for="observation">Motivo</label>
+                        <textarea name="observations" class="form-control" rows="5" placeholder="Describa el motivo de la anulación del pago" required></textarea>
+                    </div>
+                    <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar anulación</label>
+                </div>
+                <div class="modal-footer">
                         <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
                     </form>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>

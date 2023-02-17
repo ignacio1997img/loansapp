@@ -19,6 +19,7 @@ class LoanDayAgent extends Model
         'deleted_userId',
         'deleted_agentType',
         'deleted_at',
+        'deleteObservation',
         'deletedKey'
     ];
 

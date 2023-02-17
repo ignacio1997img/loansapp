@@ -17,7 +17,7 @@ class UpdateBreadSeeder extends Seeder
             DataTypesTableSeeder::class,
             DataRowsTableSeeder::class,
             MenuItemsTableSeeder::class,
-            SettingsTableSeeder::class,
+            // SettingsTableSeeder::class,
         ]);
     }
 }
