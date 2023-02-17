@@ -488,31 +488,38 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="panel">
-                        <div class="panel-body" style="height: 250px; overflow-y: auto">
-                            {{-- <h4>Cumpleaños</h4> --}}
-                            @php
-                                
-                            @endphp
-                            <div class="list-group">
-                               
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel">
-                        <div class="panel-body" style="height: 250px">
-                            <canvas id="bar-chart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel">
-                        <div class="panel-body" style="height: 250px">
-                            <small><h4>Egreso & Ingreso del Día (Bs.)</h4></small>
 
+
+                <div class="col-md-4">
+                    <div class="panel">
+                        <div class="panel-body" style="height: 250px">
+                            <small><h4>Cobros del Día (Bs.)</h4></small>
+                            @php
+                                $date = date('Y-m-d');
+                                $bart_cobro = App\Models\LoanDayAgent::with(['agent'])->where('deleted_at', NULL)->whereDate('created_at', $date)->select( DB::raw('SUM(amount)as amount'), 'agent_id')->groupBy('agent_id')->get();
+                                // dd($moneyRecaudado)
+
+                            @endphp
+
+                            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel">
+                        <div class="panel-body" style="height: 300px">
+                            {{-- <div id="chartContainer" style="height: 300x; width: 100%;"></div> --}}
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel">
+                        <div class="panel-body" style="height: 300px">
+                            <small><h4>Egreso & Ingreso del Día (Bs.)</h4></small>
                             @php
                                 $date = date('Y-m-d');
                                 // dd($date);
@@ -592,6 +599,7 @@
         @endif
     @else
         <script src="{{ asset('js/plugins/chart.min.js') }}"></script>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
         <script>
             $(document).ready(function(){
@@ -621,7 +629,11 @@
                     config
                 );
             });
+
+
+
         </script>
+
     
     @endif
 
