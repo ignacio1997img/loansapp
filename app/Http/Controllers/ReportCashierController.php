@@ -107,12 +107,14 @@ class ReportCashierController extends Controller
     public function dailyList()
     {
         $route = Route::where('status', 1)->where('deleted_at', null)->get();
+        // return $route;
         if(Auth::user()->hasRole('cobrador'))
         {
             $aux = RouteCollector::where('status',1)->where('deleted_at', null)->where('user_id', Auth::user()->id)->first();
-            $route = Route::where('status', 1)->where('id', $aux->route_id)->where('deleted_at', null)->get();
+            
+            $route = Route::where('status', 1)->where('id', $aux?$aux->route_id:0)->where('deleted_at', null)->get();
         }
-        
+        // return 1;
         return view('report.cashier.dailyListCobro.report', compact('route'));
     }
     public function dailyListList(Request $request)
