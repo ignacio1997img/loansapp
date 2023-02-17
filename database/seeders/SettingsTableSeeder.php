@@ -129,6 +129,17 @@ class SettingsTableSeeder extends Seeder
                 'order' => 1,
                 'group' => 'Admin',
             ),
+            10 => 
+            array (
+                'id' => 12,
+                'key' => 'configuracion.development',
+                'display_name' => 'Sistema en Desarrollo',
+                'value' => '0',
+                'details' => NULL,
+                'type' => 'checkbox',
+                'order' => 7,
+                'group' => 'Configuración',
+            ),
         ));
         
         

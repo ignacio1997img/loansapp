@@ -19,11 +19,11 @@ class Loggin
      */
     public function handle(Request $request, Closure $next)
     {
-        // try {
-        //     if(env('APP_DEV') && Auth::user()->role_id != 1){
-        //         return redirect('/admin/notice');
-        //     }
-        // } catch (\Throwable $th) {}
+        try {
+            if(setting('configuracion.development') && !auth()->user()->hasRole('admin')){
+                return redirect('development');
+            }
+        } catch (\Throwable $th) {}
 
         // Evitar que registre cuando el usuario ingrese a la lista de logs
         if (!str_contains(request()->url(), 'admin/compass')) {
