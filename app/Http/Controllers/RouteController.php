@@ -209,7 +209,7 @@ class RouteController extends Controller
         $route = Route::where('deleted_at', null)->where('id', '!=', $request->route_id)->get();
 
         $route_id = $request->route_id;
-        $data = Loan::with(['loanDay', 'loanRoute', 'people'])
+        $data = Loan::with(['loanRoute', 'people'])
             ->whereHas('loanRoute', function($query)use($route_id){
                 $query->where('deleted_at', NULL)->where('status', 1)->where('route_id', $route_id);
             })
