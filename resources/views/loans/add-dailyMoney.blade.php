@@ -303,8 +303,8 @@
                                               
                                                 <div class="form-group col-md-6">
                                                     <small>Cuota</small>
-                                                    <input type="text" name="amount" id="amount" onkeypress='return inputNumeric(event)' onchange="subTotal()" onkeyup="subTotal()" style="text-align: right" class="form-control text" required>                                    
-                                                    <b class="text-danger" id="label-amount" style="display:none">El monto ingresado es mayor a la deuda pendiente..</b>
+                                                    <input type="number" name="amount" id="amount" min="0" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right" class="form-control text" required>                                    
+                                                    <b class="text-danger" id="label-amount" style="display:none">El monto incorrecto..</b>
                                                 </div>   
                                                 <div class="form-group col-md-6">
                                                     <small>Registrado Por</small>
@@ -313,6 +313,8 @@
                                                     </select>
                                                 </div>                                
                                             </div>
+                                            <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar Pago..!</label>
+
                                             <div class="row">
                                                 <div class="col-md-12 text-right">
                                                     <button type="submit" id="btn-sumit" style="display:block" disabled class="btn btn-success"><i class="fa-solid fa-money-bill"></i> Pagar</button>
@@ -463,10 +465,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
         <script>
             function inputNumeric(event) {
-                if(event.charCode >= 48 && event.charCode <= 57){
-                    return true;
-                }
-                return false;        
+                // var amount = document.getElementById(amount).value;
+                // alert(event.charCode);
+                // if(event.charCode >= 48 && event.charCode <= 57){
+                //     return true;
+                // }
+                // return false;        
             }
         </script>
         <script>
@@ -511,8 +515,22 @@
             function subTotal()
             {
                 let amount = $(`#amount`).val() ? parseFloat($(`#amount`).val()) : 0;
+
+
                 let debt = {{$loan->debt}}
-                if(amount > debt)
+                // if(amount > debt)
+                // {
+                //     $('#btn-sumit').attr('disabled', 'disabled');
+                //     $('#label-amount').css('display', 'block');
+                // }
+                // else
+                // {
+                //     $('#btn-sumit').removeAttr('disabled');
+                //     $('#label-amount').css('display', 'none');
+
+                // }
+
+                if(amount <= 0 || amount > debt)
                 {
                     $('#btn-sumit').attr('disabled', 'disabled');
                     $('#label-amount').css('display', 'block');
@@ -521,23 +539,11 @@
                 {
                     $('#btn-sumit').removeAttr('disabled');
                     $('#label-amount').css('display', 'none');
-
                 }
-                // alert(debt)
 
-                // porcentage = porcentage/100;
-                // let amountPorcentage = amountLoan*porcentage;
-                // let amountTotal = amountLoan+amountPorcentage;
-                // let amountDay = amountTotal / day;
 
-                // $(`#amountPorcentage1`).val(amountPorcentage);
-                // $(`#amountTotal1`).val(amountTotal);         
-
-                // $(`#amountPorcentage`).val(amountPorcentage);
-                // $(`#amountTotal`).val(amountTotal);  
-
-                // $(`#amountDay1`).val(amountDay);
-                // $(`#amountDay`).val(amountDay);  
+                
+            
             }
 
             let loan_id=0;
@@ -561,6 +567,49 @@
             }
             
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            function filterFloat(evt,input){
+                // Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
+                var key = window.Event ? evt.which : evt.keyCode;    
+                var chark = String.fromCharCode(key);
+                var tempValue = input.value+chark;
+                if(key >= 48 && key <= 57){
+                    if(filter(tempValue)=== false){
+                        return false;
+                    }else{       
+                        return true;
+                    }
+                }
+                // else{
+                //     if(key == 8 || key == 13 || key == 46 || key == 0) {            
+                //         return true;              
+                //     }else{
+                //         return false;
+                //     }
+                // }
+            }
+            function filter(__val__){
+                var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+                if(preg.test(__val__) === true){
+                    return true;
+                }else{
+                return false;
+                }
+                
+            }
             
 
 

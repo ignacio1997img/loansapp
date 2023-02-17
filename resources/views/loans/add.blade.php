@@ -93,22 +93,22 @@
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Dias Total A Pagar</small>
-                                        <input type="number" id="day1" value="24" style="text-align: right" disabled onkeypress='return inputNumeric(event)' onchange="diasPagar()" onkeyup="diasPagar()" class="form-control text">
-                                        <input type="hidden" name="day" id="day" onkeypress='return inputNumeric(event)' value="24" class="form-control">
+                                        <input type="number" min="1" id="day1" value="24" style="text-align: right" disabled onkeypress='return inputNumeric(event)' onchange="diasPagar()" onkeyup="diasPagar()" class="form-control text" required>
+                                        <input type="hidden" min="1" name="day" id="day" onkeypress='return inputNumeric(event)' value="24" class="form-control" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos (%)</small>
-                                        <input type="number" id="porcentage1" style="text-align: right" disabled value="20" onkeypress='return inputNumeric(event)' onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
-                                        <input type="hidden" name="porcentage" id="porcentage" onkeypress='return inputNumeric(event)' value="20" class="form-control">
+                                        <input type="number" id="porcentage1" min="1" step="any" style="text-align: right" disabled value="20" onkeypress='return inputNumeric(event)' onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        <input type="hidden" name="porcentage" id="porcentage" onkeypress='return inputNumeric(event)' value="20" class="form-control" required>
                                     </div>    
                                     <div class="form-group col-md-2">
                                         <small>Interes a Pagar (Bs.)</small>
-                                        <input type="number" id="amountPorcentage1" style="text-align: right" disabled value="0" onkeypress='return inputNumeric(event)' onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text">
-                                        <input type="hidden" name="amountPorcentage" id="amountPorcentage" onkeypress='return inputNumeric(event)' value="0" class="form-control">
+                                        <input type="number" id="amountPorcentage1" min="1" step="any" style="text-align: right" disabled value="0" onkeypress='return inputNumeric(event)' onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        <input type="hidden" name="amountPorcentage" id="amountPorcentage" onkeypress='return inputNumeric(event)' value="0" class="form-control" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Pago Diario (Bs.)</small>
-                                        <input type="number" id="amountDay1" style="text-align: right" disabled value="0" class="form-control text">
+                                        <input type="text" id="amountDay1" style="text-align: right" disabled value="0" class="form-control text">
                                         <input type="hidden" name="amountDay" id="amountDay"onkeypress='return inputNumeric(event)' value="0" class="form-control">
                                         <b class="text-danger" id="label-amount" style="display:none">Incorrecto..</b>
                                     </div>
@@ -177,9 +177,7 @@
             function list()
             {
                 let type = $(".radio-type:checked").val();
-                // alert(type);
-                                        // <input type="number" value="24" style="text-align: right" disabled class="form-control text">
-                                        // <input type="number" name="day" id="day" value="24" class="form-control">
+              
                 if(type=='diario')
                 {
                     $('#amountLoan').val(0);
@@ -205,14 +203,10 @@
                 }
                 if(type=='diarioespecial')
                 {
-                    $('#day1').val(0);
+                    $('#day1').val('');
                     $('#day').val(0);
 
-                    $('#porcentage1').val(0);
-                    $('#porcentage').val(0);
 
-                    $('#amountPorcentage1').val(0);
-                    $('#amountPorcentage').val(0);
 
                     $('#amountDay1').val(0);
                     $('#amountDay').val(0);
@@ -220,11 +214,11 @@
                     $('#amountTotal1').val(0);
                     $('#amountTotal').val(0);
 
-                    $('#porcentage1').val(0);
+                    $('#porcentage1').val('');
                     $('#porcentage').val(0);
 
-                    $('#amountPorcentage1').val(0);
-                    $('#amountPorcentage1').val(0);
+                    $('#amountPorcentage1').val('');
+                    $('#amountPorcentage').val(0);
 
                     $('#day1').attr('disabled',false);         
                     $('#porcentage1').attr('disabled',false);     
@@ -249,23 +243,23 @@
 
                 porcentage = porcentage/100;
                 let amountPorcentage = amountLoan*porcentage;
-                $(`#amountPorcentage1`).val(amountPorcentage);
-                $(`#amountPorcentage`).val(amountPorcentage);
+                $(`#amountPorcentage1`).val(amountPorcentage.toFixed(2));
+                $(`#amountPorcentage`).val(amountPorcentage.toFixed(2));
 
                 subTotal()
             }
             function porcentageAmount()
             {
                 let amountPorcentage = $(`#amountPorcentage1`).val() ? parseFloat($(`#amountPorcentage1`).val()) : 0;
-                $('#amountPorcentage').val(amountPorcentage);
+                $('#amountPorcentage').val(amountPorcentage.toFixed(2));
 
                 let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
 
                 amountPorcentage = amountPorcentage/amountLoan;
                 amountPorcentage = amountPorcentage*100;
                 
-                $(`#porcentage1`).val(amountPorcentage);
-                $(`#porcentage`).val(amountPorcentage);
+                $(`#porcentage1`).val(amountPorcentage.toFixed(2));
+                $(`#porcentage`).val(amountPorcentage.toFixed(2));
 
                 subTotal();
 
@@ -287,11 +281,7 @@
                     let amountTotal = amountLoan+amountPorcentage;
                     let amountDay = amountTotal / day;
 
-                    // if (amountDay % 1 == 0) {
-                    //     alert ("Es un numero entero");
-                    // } else {
-                    //     alert ("Es un numero decimal");
-                    // }
+                
 
                     $(`#amountPorcentage1`).val(amountPorcentage);
                     $(`#amountTotal1`).val(amountTotal);         
@@ -318,42 +308,47 @@
                     let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
                     let day = $(`#day1`).val() ? parseFloat($(`#day1`).val()) : 0;
 
-                    // porcentagePagar();
-                    // porcentageAmount();
+
                     let porcentage = $(`#porcentage1`).val() ? parseFloat($(`#porcentage1`).val()) : 0;
-                    $('#porcentage').val(porcentage);
+                    $('#porcentage').val(porcentage.toFixed(2));
 
                     porcentage = porcentage/100;
                     porcentage = amountLoan*porcentage;
-                    $(`#amountPorcentage1`).val(porcentage);
-                    $(`#amountPorcentage`).val(porcentage);
+
+                    $(`#amountPorcentage1`).val(porcentage.toFixed(2));
+                    $(`#amountPorcentage`).val(porcentage.toFixed(2));
 
 
                     let amountPorcentage = $(`#amountPorcentage1`).val() ? parseFloat($(`#amountPorcentage1`).val()) : 0;
 
 
-                    // porcentage = porcentage/100;
-                    // let amountPorcentage = amountLoan*porcentage;
-                    let amountTotal = amountLoan+amountPorcentage;
+                    let amountTotal = (amountLoan+amountPorcentage).toFixed(2);
+
+                    $(`#amountTotal1`).val(amountTotal);         
+                    $(`#amountTotal`).val(amountTotal);  
+
                     let amountDay = amountTotal / day;
 
-                    // $(`#amountPorcentage1`).val(amountPorcentage);
-                    $(`#amountTotal1`).val(amountDay.toFixed(2)*day);         
+                    amountDay = Math.trunc(amountDay);
+                    
+                    let amountDayTotal =amountDay * day;
 
-                    // $(`#amountPorcentage`).val(amountPorcentage);
-                    $(`#amountTotal`).val(amountDay.toFixed(2)*day);  
+                    let aux = amountTotal-amountDayTotal;
+                    aux = amountDay+aux;
 
-                    $(`#amountDay1`).val(amountDay.toFixed(2));
+
+
+                    $(`#amountDay1`).val((aux?aux.toFixed(2):0)+' - '+(amountDay!='Infinity'?amountDay.toFixed(2):0));
                     $(`#amountDay`).val(amountDay);  
 
-                    if (amountDay % 1 == 0) {
-                        $('#label-amount').css('display', 'none');
-                        $('#btn_submit').attr('disabled',false);
+                    // if (amountDay % 1 == 0) {
+                    //     $('#label-amount').css('display', 'none');
+                    //     $('#btn_submit').attr('disabled',false);
 
-                    } else {
-                        $('#label-amount').css('display', 'block');
-                        $('#btn_submit').attr('disabled',true);
-                    }
+                    // } else {
+                    //     $('#label-amount').css('display', 'block');
+                    //     $('#btn_submit').attr('disabled',true);
+                    // }
                     
                 }
             }

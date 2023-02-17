@@ -26,6 +26,7 @@ use PhpParser\Node\Stmt\TryCatch;
 use App\Models\Cashier;
 use App\Models\CashierMovement;
 use PHPUnit\Framework\MockObject\Stub\ReturnReference;
+use ReturnTypeWillChange;
 
 use function PHPSTORM_META\type;
 use function PHPUnit\Framework\returnSelf;
@@ -626,10 +627,11 @@ class LoanController extends Controller
     // funcion para entregar dinero al beneficiario
     public function moneyDeliver(Request $request, $loan)
     {
-        // return $request;
+        // return $loan;
         DB::beginTransaction();
         try {
             $loan = Loan::where('id', $loan)->first();
+            // return $loan;
             $loan->update(['cashier_id'=>$request->cashier_id,'delivered_userId'=>Auth::user()->id, 'delivered_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'entregado', 'delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
 
             $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->get();
@@ -637,7 +639,6 @@ class LoanController extends Controller
 
             $amountLoan = $loan->amountLoan;
 
-            // return $amountLoan;
             foreach($movement as $item)
             {
                 if($item->balance > 0 && $amountLoan > 0)
@@ -653,12 +654,9 @@ class LoanController extends Controller
                         $item->decrement('balance', $item->balance);
                     }
                 }
-            }
-            
-
+            }       
             // $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
             // $movement->decrement('balance', $loan->amountLoan);
-
 
             $user = Auth::user();
             $agent = $this->agent($user->id);
@@ -671,30 +669,94 @@ class LoanController extends Controller
 
             // return $loan;
          
-            for($i=1;$i<=$loan->day; $i++)
+            if($loan->typeLoan == 'diario')
             {
-                $fecha = Carbon::parse($date);
-                $fecha = $fecha->format("l");
-                // return $fecha;
-                if($fecha == 'Sunday' )
+                return 2;
+                for($i=1;$i<=$loan->day; $i++)
                 {
+                    $fecha = Carbon::parse($date);
+                    $fecha = $fecha->format("l");
+                    // return $fecha;
+                    if($fecha == 'Sunday' )
+                    {
+                        $date = date("Y-m-d", strtotime($date));
+                        $date = date("d-m-Y",strtotime($date."+ 1 days"));
+                    }
                     $date = date("Y-m-d", strtotime($date));
+                    LoanDay::create([
+                        'loan_id' => $loan->id,
+                        'number' => $i,
+                        'debt' => $loan->amountTotal/$loan->day,
+                        'amount' => $loan->amountTotal/$loan->day,
+
+                        'register_userId' => $agent->id,
+                        'register_agentType' => $agent->role,
+
+                        'date' => $date
+                    ]);
                     $date = date("d-m-Y",strtotime($date."+ 1 days"));
+
                 }
-                $date = date("Y-m-d", strtotime($date));
-                LoanDay::create([
-                    'loan_id' => $loan->id,
-                    'number' => $i,
-                    'debt' => $loan->amountTotal/$loan->day,
-                    'amount' => $loan->amountTotal/$loan->day,
+            }
+            else
+            {
+                $loanDay = $loan->day;
+                $amount = $loan->amountTotal;
+                $amountDay = $amount/$loanDay;
 
-                    'register_userId' => $agent->id,
-                    'register_agentType' => $agent->role,
+                $aux = intval($amountDay);
 
-                    'date' => $date
-                ]);
-                $date = date("d-m-Y",strtotime($date."+ 1 days"));
+                $dayT = $aux*($loanDay);
+                // return $aux;
 
+
+                $firstAux = $amount - $dayT;
+                // return $first;
+                $first = $aux + $firstAux;
+                // return $first;
+                // return $dayT+$firstAux;
+
+                if($amount != ($dayT+$firstAux))
+                {
+                    DB::rollBack();
+                    return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error en la distribucion.', 'alert-type' => 'error']);
+                }
+
+
+                for($i=1;$i<=$loanDay; $i++)
+                {
+                    $fecha = Carbon::parse($date);
+                    $fecha = $fecha->format("l");
+                    // return $fecha;
+                    if($fecha == 'Sunday' )
+                    {
+                        $date = date("Y-m-d", strtotime($date));
+                        $date = date("d-m-Y",strtotime($date."+ 1 days"));
+                    }
+                    $date = date("Y-m-d", strtotime($date));
+                    if($i==1)
+                    {
+                        $debA = $first;
+                    }
+                    else
+                    {
+                        $debA = $aux;
+                    }
+
+                    LoanDay::create([
+                        'loan_id' => $loan->id,
+                        'number' => $i,
+                        'debt' => $debA,
+                        'amount' => $debA,
+
+                        'register_userId' => $agent->id,
+                        'register_agentType' => $agent->role,
+
+                        'date' => $date
+                    ]);
+                    $date = date("d-m-Y",strtotime($date."+ 1 days"));
+
+                }
             }
 
 
@@ -702,6 +764,7 @@ class LoanController extends Controller
             return redirect()->route('loans.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id,]);
         } catch (\Throwable $th) {
             DB::rollBack();
+            return 0;
             return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
 
@@ -764,6 +827,9 @@ class LoanController extends Controller
     public function dailyMoneyStore(Request $request)
     {
         // return $request;
+        // return
+        $request->merge(['amount'=>floatval($request->amount)]);
+        // return $request;
         if(!$request->amount || $request->amount ==0)
         {
             return redirect()->route('loans-daily.money', ['loan' => $request->loan_id, 'cashier_id'=>$request->cashier_id])->with(['message' => 'Error en el monto ingresado.', 'alert-type' => 'error']);
@@ -782,6 +848,7 @@ class LoanController extends Controller
             $transaction = Transaction::create(['transaction'=>$code+1]);
             $loan->update(['transaction_id'=>$transaction->transaction]);
             $amount = $request->amount;
+            // return $amount;
             
             $ok = LoanDay::where('loan_id', $request->loan_id)->where('date', $request->date)->where('debt', '>', 0)->first();
             // return $request;
