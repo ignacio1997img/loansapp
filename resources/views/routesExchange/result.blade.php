@@ -8,7 +8,7 @@
     <div class="panel panel-bordered">
         <div class="panel-body">
             <div class="table-responsive">
-                <table style="width:100%"  class="table dataTable table-bordered table-striped table-sm">
+                <table id="dataStyle" style="width:100%"  class="table dataTable table-bordered table-striped table-sm">
                     <thead>
                         <tr>
                             <th colspan="2" >Codigo</th>
@@ -142,7 +142,7 @@
 <script>
     $(function(){
         // alert(2)
-            $('.dataTable').DataTable({
+            $('#dataStyle').DataTable({
                     language: {
                             // "order": [[ 0, "desc" ]],
                             sProcessing: "Procesando...",
