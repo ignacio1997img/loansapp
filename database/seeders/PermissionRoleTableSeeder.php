@@ -56,6 +56,9 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "user" or
                                             table_name = "cashiers" or
 
+                                            table_name = "routes" or
+
+
 
                                             `key` = "browse_printdailyCollection" or
                                             

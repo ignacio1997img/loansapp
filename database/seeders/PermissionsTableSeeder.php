@@ -119,6 +119,7 @@ class PermissionsTableSeeder extends Seeder
             'read_routes',
             'collector_routes',
             
+            'browse_routesloanexchange'
         ];
 
         foreach ($keys as $key) {
