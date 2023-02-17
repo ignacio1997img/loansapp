@@ -671,7 +671,7 @@ class LoanController extends Controller
          
             if($loan->typeLoan == 'diario')
             {
-                return 2;
+                // return 2;
                 for($i=1;$i<=$loan->day; $i++)
                 {
                     $fecha = Carbon::parse($date);
