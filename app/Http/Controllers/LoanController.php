@@ -634,8 +634,7 @@ class LoanController extends Controller
 
             $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->get();
             $countM = $movement->count();
-            // return $countM;
-            // return $movement;
+
             $amountLoan = $loan->amountLoan;
 
             // return $amountLoan;
@@ -645,14 +644,11 @@ class LoanController extends Controller
                 {
                     if($item->balance >= $amountLoan)
                     {
-                        // $aux = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
-                        // return 2;
                         $item->decrement('balance', $amountLoan);
                         $amountLoan = 0;
                     }
                     else
                     {
-                        // return $item->balance;
                         $amountLoan = $amountLoan - $item->balance;
                         $item->decrement('balance', $item->balance);
                     }

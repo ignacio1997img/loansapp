@@ -505,6 +505,23 @@ class CashierController extends Controller
         DB::beginTransaction();
         try {
 
+            $loan = Loan::with(['loanDay'])
+                ->where('id', $request->loan_id)
+                ->where('deleted_at', null)->first();
+            if(!$loan)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra eliminado.', 'alert-type' => 'warning']);
+            }
+
+            $amountDay = $loan->loanDay->SUM('debt');
+
+            // return $amountDay;
+
+            if($loan->debt != $amountDay)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Ocurrio un error, comuniquese con el administradoir.', 'alert-type' => 'warning']);
+            }
+
             $cashier = Cashier::with(['movements' => function($q){
                 $q->where('deleted_at', NULL);
             }])
@@ -515,41 +532,73 @@ class CashierController extends Controller
             {
                 return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'warning']);
             }
-            
-            // return $cashier;
-            $loan = Loan::with(['loanDay'])->where('id', $request->loan_id)->where('deleted_at', null)->first();
 
-            // return $loan;
-            $amountLoanDay = $loan->loanDay->SUM('debt');
-            if(!$loan)
+            //movimientos de caja
+            $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->get();
+          
+            // agrego el monto que se le presto a lña caja
+            $movement->first()->increment('balance', $loan->amountLoan);
+
+            $salida = $loan->amountTotal - $amountDay;
+
+            $movementBalance = $movement->SUM('balance');//para obtener el m onto total de todo los movimeintos de la caja
+            if($salida > $movementBalance)
             {
-                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra eliminado.', 'alert-type' => 'warning']);
+                DB::rollBack();
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Upss.. Ocurrio un error, comuniquese con el administradoir.', 'alert-type' => 'warning']);
             }
-            
-            if($loan->debt != $amountLoanDay )
+            // return $movementBalance;
+            // return $request;
+
+            foreach($movement as $item)
             {
-                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Ocurrio un error, comuniquese con el administradoir.', 'alert-type' => 'warning']);
+                if($item->balance > 0 && $salida > 0)
+                {
+                    if($item->balance >= $salida)
+                    {
+                        $item->decrement('balance', $salida);
+                        $salida = 0;
+                    }
+                    else
+                    {
+                        $salida = $salida - $item->balance;
+                        $item->decrement('balance', $item->balance);
+                    }
+                }
             }
-            
-            $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first();
-            if(!$movement)
+            $loanDay = LoanDay::where('loan_id', $loan->id)->get();
+            foreach($loanDay as $item)
             {
-                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Error en la caja, contactese con los desarrolladores', 'alert-type' => 'warning']);
+                $aux = LoanDayAgent::where('loanDay_id', $item->id)->where('deleted_at', null)->first();
+                if($aux)
+                {
+                    Transaction::where('id', $aux->transaction_id)->update(['deleted_at'=>Carbon::now()]);
+                    $aux->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role,'deletedKey'=>$loan->id]);
+                }
+                
             }
-            return $movement;
-            $movement->increment('balance', $loan->amountLoan);
-            
+            // return 1;
+
+            LoanDay::where('loan_id', $loan->id)->update([
+                'deleted_at' => Carbon::now(),
+                'deleted_userId' => Auth::user()->id,
+                'deleted_agentType' => $this->agent(Auth::user()->id)->role,
+                'deletedKey'=>$loan->id
+            ]);
+            // return 1;
             $loan->update([
                 'deleted_at' => Carbon::now(),
                 'deleted_userId' => Auth::user()->id,
                 'deleted_agentType' => $this->agent(Auth::user()->id)->role,
-                'deleteObservation' =>$request->observations
+                'deleteObservation' => $request->observations,
+                'deletedKey'=>$loan->id
             ]);
 
+            
 
 
             DB::commit();
-            return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Transacción eliminada exitosamente...', 'alert-type' => 'success']);
+            return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Prestamo Eliminado correctamente', 'alert-type' => 'success']);
 
         } catch (\Throwable $th) {
             DB::rollBack();

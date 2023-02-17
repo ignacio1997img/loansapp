@@ -26,7 +26,8 @@ class LoanDay extends Model
 
         'deleted_at',
         'deleted_userId',
-        'deleted_agentType'
+        'deleted_agentType',
+        'deletedKey'
     ];
 
     public function loan()
