@@ -41,9 +41,9 @@ Route::get('login', function () {
     return redirect('admin/login');
 })->name('login');
 
-Route::get('/', function () {
-    return redirect('admin');
-});
+// Route::get('/', function () {
+//     return redirect('admin');
+// });
 
 //Ruta para poner el sistema en mantenimiento
 Route::get('/development', [DevelopmentController::class , 'development'])->name('development');
