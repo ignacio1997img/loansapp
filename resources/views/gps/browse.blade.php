@@ -101,18 +101,18 @@
     
 
     <script>
-        // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
-        // $(document).ready(function () {
+        const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
+        $(document).ready(function () {
 
-        //     // socket.emit(`reload score`, {id: "Hola"});
+            // socket.emit(`reload score`, {id: "Hola"});
 
             
-        // });
+        });
 
-        // input.oninput = function() {
-        //     text = input.value;
-        //     socket.emit(`reload score`, {id: text});
+        input.oninput = function() {
+            text = input.value;
+            socket.emit(`reload score`, {id: text});
 
-        // };
+        };
       </script>
 @stop
