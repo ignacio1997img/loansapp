@@ -81,23 +81,6 @@
                             <label class="label label-danger">RECHAZADO</label>                            
                         @endif       
                     </td>
-                    {{-- <td style="text-align: right">
-                        @if ($item->status == 'pendiente')
-                            <label class="label label-danger">PENDIENTE</label>                            
-                        @endif
-                        @if ($item->status == 'verificado')
-                            <label class="label label-warning">VERIFICADO</label>                            
-                        @endif
-                        @if ($item->status == 'aprobado')
-                            <label class="label label-primary">APROBADO</label>                            
-                        @endif
-                        @if ($item->status == 'entregado')
-                            <label class="label label-success">ACTIVO</label>                            
-                        @endif
-                        @if ($item->status == 'rechazado')
-                            <label class="label label-danger">RECHAZADO</label>                            
-                        @endif                        
-                    </td> --}}
                     <td class="no-sort no-click bread-actions text-right">
                         @if ($item->status == 'aprobado')
                             <a href="#" data-toggle="modal" data-target="#notificar-modal" data-name="{{ $item->people->first_name }} {{ $item->people->last_name1 }} {{ $item->people->last_name2 }}" data-phone="{{$item->people->cell_phone}}" title="Notificar al beneficiario" class="btn btn-sm">
@@ -118,12 +101,13 @@
                             </button>
                             <ul class="dropdown-menu" role="menu" style="left: -90px !important">
                                 @if ($item->status == 'entregado' && $item->delivered == 'Si')
-                                    <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" >Transacciones</a></li> 
+                                    <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" ><i class="fa-solid fa-money-bill-transfer"></i> Transacciones</a></li> 
                                 @endif
                                 @if ($item->status != 'pendiente' && $item->status != 'verificado' && !auth()->user()->hasRole('cobrador'))
-                                    <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" >Imprimir Calendario</a></li> 
+                                    <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li> 
                                 
-                                    <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" >Imprimir Contrato</a></li>
+                                    <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
+                                    <li><a onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li>
                                 @endif                      
                             </ul>
                         </div>

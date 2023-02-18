@@ -354,6 +354,7 @@
     {{-- <script src="{{ url('js/main.js') }}"></script> --}}
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> --}}
     <script>
+        //para inpresion cuando es entregado elñ prestamo para que imprima
         $(document).ready(function(){
 
             @if(session('loan_id'))
@@ -364,9 +365,11 @@
             @endif
 
         });
-        // function printDailyMoney()
-        // {
-        // }
+        function comprobanteDelivered(loan_id)
+        {
+            window.open("{{ url('admin/loans/comprobante/print') }}/"+loan_id, "Recibo", `width=700, height=700`)
+        }
+
     </script>
     <script>
 
