@@ -95,8 +95,13 @@
                                     <p>No puedes abonar dinero al prestamo.</p>
                                 </div>
                             @endif
+
+                            
                             
                             <div class="col-md-8">
+                                {{-- <div class="hide-print" style="text-align: right; padding: 10px 0px">
+                                    <button class="btn-print" onclick="window.print()"> Imprimir <i class="fa fa-print"></i></button>
+                                </div> --}}
                                 <table width="100%" border="1" cellpadding="5" style="font-size: 12px">
                                     
                                     @php
