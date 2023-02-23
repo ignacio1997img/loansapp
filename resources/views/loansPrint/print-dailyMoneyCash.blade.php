@@ -88,7 +88,9 @@
                     FECHA:
                 </th>
                 <td>
-                    {{ date('d/m/Y H:i:s') }}
+                    {{Carbon\Carbon::parse($transaction->created_at)->format('d/m/Y H:i:s')}}
+
+                    {{-- {{ date('d/m/Y H:i:s') }} --}}
                 </td>
             </tr>
             <tr>

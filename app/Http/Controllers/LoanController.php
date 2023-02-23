@@ -985,8 +985,11 @@ class LoanController extends Controller
             ->where('t.id', $transaction_id)
             ->select('ld.id as loanDay', 'ld.date', 'la.amount', 'u.name', 'la.agentType', 'la.id as loanAgent', 'ld.late')
             ->get();
+
+        // return  $loanDayAgent;
         
         $transaction = Transaction::find($transaction_id);
+        // return $transaction;
 
         
         return view('loansPrint.print-dailyMoneyCash', compact('loan', 'transaction', 'loanDayAgent'));
