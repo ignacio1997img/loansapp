@@ -640,7 +640,8 @@
             w.focus(); // necessary for IE >= 10
             w.print();
             // w.close();
-            return true;}
+            return true;
+        }
     </script>
 @stop
 
