@@ -96,12 +96,12 @@
                                 </div>
                             @endif
 
+                            <div class="col-md-12">
+                                <button type="button" onclick="javascript:imprim1(imp1);">Imprimir</button>
+                            </div>
                             
-                            
-                            <div class="col-md-8">
-                                {{-- <div class="hide-print" style="text-align: right; padding: 10px 0px">
-                                    <button class="btn-print" onclick="window.print()"> Imprimir <i class="fa fa-print"></i></button>
-                                </div> --}}
+                            <div class="col-md-8" id="imp1">
+                                
                                 <table width="100%" border="1" cellpadding="5" style="font-size: 12px">
                                     
                                     @php
@@ -619,6 +619,29 @@
 
 
         </script>
-    @stop
+
+<script language="Javascript">
+	function imprSelec(nombre) {
+	  var ficha = document.getElementById(nombre);
+	  var ventimp = window.open(' ', 'popimpr');
+	  ventimp.document.write( ficha.innerHTML );
+	  ventimp.document.close();
+	  ventimp.print( );
+	  ventimp.close();
+	}
+	</script>
+
+<script>
+    function imprim1(imp1){
+    var printContents = document.getElementById('imp1').innerHTML;
+            w = window.open();
+            w.document.write(printContents);
+            w.document.close(); // necessary for IE >= 10
+            w.focus(); // necessary for IE >= 10
+            w.print();
+            // w.close();
+            return true;}
+    </script>
+@stop
 
 {{-- @endif --}}
