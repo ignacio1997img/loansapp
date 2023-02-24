@@ -23,6 +23,11 @@ class Loggin
             if(setting('configuracion.development') && !auth()->user()->hasRole('admin')){
                 return redirect('development');
             }
+
+            if(Auth::user()->status == 0){
+                Auth::logout();
+                // return redirect('development');
+            }
         } catch (\Throwable $th) {}
 
         // Evitar que registre cuando el usuario ingrese a la lista de logs
