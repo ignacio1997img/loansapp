@@ -110,8 +110,8 @@
                                         <small>Cajero</small>
                                         <select name="user_id" class="form-control select2" required>
                                             <option value="">Seleccione al usuario</option>
-                                            @foreach (\App\Models\User::where('role_id', '!=', 1)->where('role_id', '!=', 2)->where('role_id', '!=', 3)->get() as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @foreach (\App\Models\User::where('role_id', '!=', 1)->get() as $user)
+                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

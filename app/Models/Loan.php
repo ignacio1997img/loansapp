@@ -49,8 +49,16 @@ class Loan extends Model
 
         'delivered_userId',
         'delivered_agentType',
-        'cashierRegister_id'
+        'cashierRegister_id',
+
+        'destroyDate',
+        'destroyObservation',
+        'destroy_userId',
+        'destroy_agentType'
+
     ];
+
+
 
     public function people()
     {
@@ -80,5 +88,11 @@ class Loan extends Model
     public function agentDelivered()
     {
         return $this->belongsTo(User::class, 'delivered_userId');
+    }
+
+
+    public function destroyUser_ALL()
+    {
+        return $this->belongsTo(User::class, 'destroy_userId');
     }
 }

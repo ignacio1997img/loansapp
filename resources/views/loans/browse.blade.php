@@ -186,6 +186,45 @@
         </div>
     </div>
 
+    {{-- modal para destruir un prestamo  con caja cerrada --}}
+    <form action="#" id="destroy_form" method="POST">
+        {{ method_field('DELETE') }}
+        {{ csrf_field() }}
+        <div class="modal modal-danger fade" data-backdrop="static" tabindex="-1" id="destroy-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="voyager-trash"></i> Desea eliminar el siguiente registro?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning">
+                            <strong>Aviso: </strong>
+                            <p> Usted esta eliminando un prestamo que ha sido entregado con una caja que en estos momento se encuentra cerrada, por lo tanto para poder eliminarla debera contar usted con caja abierta para realizar la eliminacion de prestamo. </p>
+                        </div> 
+                        <input type="hidden" name="id" id="id">
+
+                        <div class="text-center" style="text-transform:uppercase">
+                            <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
+                            {{-- <br>                                     --}}
+                            <p><b>Desea eliminar el siguiente registro?</b></p>
+                        </div>
+                        <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar eliminacion..!</label>
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-danger pull-right delete-confirm" value="Sí, eliminar">
+                        
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+    {{-- para rechazar --}}
     <div class="modal modal-primary fade" data-backdrop="static" tabindex="-1" id="rechazar-modal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -450,6 +489,11 @@
 
         function deleteItem(url){
             $('#delete_form').attr('action', url);
+        }
+
+        //Para la destruccion de un prestamos pero con caja cerrada 
+        function destroyItem(url){
+            $('#destroy_form').attr('action', url);
         }
         
         function rechazarItem(url){

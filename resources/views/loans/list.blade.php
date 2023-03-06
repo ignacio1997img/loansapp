@@ -95,22 +95,22 @@
 
 
                         @if($item->status != 'rechazado')
-                        <div class="btn-group" style="margin-right: 3px">
-                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                                Mas <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" style="left: -90px !important">
-                                @if ($item->status == 'entregado' && $item->delivered == 'Si')
-                                    <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" ><i class="fa-solid fa-money-bill-transfer"></i> Transacciones</a></li> 
-                                @endif
-                                @if ($item->status != 'pendiente' && $item->status != 'verificado' && !auth()->user()->hasRole('cobrador'))
-                                    <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li> 
-                                
-                                    <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
-                                    <li><a onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li>
-                                @endif                      
-                            </ul>
-                        </div>
+                            <div class="btn-group" style="margin-right: 3px">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    Mas <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" style="left: -90px !important">
+                                    @if ($item->status == 'entregado' && $item->delivered == 'Si')
+                                        <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" ><i class="fa-solid fa-money-bill-transfer"></i> Transacciones</a></li> 
+                                    @endif
+                                    @if ($item->status != 'pendiente' && $item->status != 'verificado' && !auth()->user()->hasRole('cobrador'))
+                                        <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li> 
+                                    
+                                        <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
+                                        <li><a onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li>
+                                    @endif                      
+                                </ul>
+                            </div>
                         @endif
 
                             @if(!auth()->user()->hasRole('cobrador') && !auth()->user()->hasRole('cajeros'))
@@ -145,6 +145,18 @@
                                 <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
                             </a> 
                         @endif--}}
+                        @if (auth()->user()->hasRole('gerente')||auth()->user()->hasRole('administrador')||auth()->user()->hasRole('admin'))                            
+                            @if ($item->status == 'entregado')
+                                @php
+                                    $destroy = \App\Models\Cashier::where('id', $item->cashier_id)->first();
+                                @endphp
+                                @if($destroy->status == 'cerrada')
+                                    <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="destroyItem('{{ route('loans-cashierclose.destroy', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#destroy-modal">
+                                        <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                    </button>
+                                @endif
+                            @endif
+                        @endif
                         @if (auth()->user()->hasPermission('delete_loans'))
                             @if ($item->status != 'rechazado' && $item->status != 'entregado')
                                 <button title="Rechazar" class="btn btn-sm btn-dark" onclick="rechazarItem('{{ route('loans.rechazar', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#rechazar-modal">

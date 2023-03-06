@@ -4,8 +4,21 @@
     {{-- <div class="page-content"> --}}
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-bordered">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h2 id="h2">Hola, {{ Auth::user()->name }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         
-        @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador'))
+        {{-- @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador')) --}}
             @php
                 $cashier = \App\Models\Cashier::with(['movements' => function($q){
                     $q->where('deleted_at', NULL);
@@ -19,36 +32,17 @@
             @if ($cashier)
             
                 @if ($cashier->status == 'abierta' || $cashier->status == 'apertura pendiente')
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-bordered">
-                                <div class="panel-body">
-                                    @php
-                                        $cashier_in = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');
-                                        $cashier_balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');
+           
+                    @php
+                        $cashier_in = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('amount');
+                        $cashier_balance = $cashier->movements->where('type', 'ingreso')->where('deleted_at', NULL)->sum('balance');
 
-                                        $amount =2;
-                                        $movements = $cashier_in + $amount;
+                        $amount =2;
+                        $movements = $cashier_in + $amount;
 
-                                        $total = $movements;
-
-
-                                    @endphp
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h2 id="h2"><i class="fa-solid fa-wallet"></i> {{ $cashier->title }}</h2>
-                                        </div>
-                                        @if ($cashier->status == 'abierta')
-                                            <div class="col-md-6 text-right">
-                                                {{-- <button type="button" data-toggle="modal" data-target="#transfer-modal" class="btn btn-success">Transferir <i class="voyager-forward"></i></button> --}}
-                                                <a href="{{ route('cashiers.close', ['cashier' => $cashier->id]) }}" class="btn btn-danger">Cerrar <i class="voyager-lock"></i></a>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        $total = $movements;
+                    @endphp
+  
 
                     @if ($cashier->status == 'abierta')
 
@@ -56,9 +50,6 @@
                             $loans = \App\Models\Loan::with(['people'])
                                         ->where('deleted_at', null)->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
                             $loanTotal = $loans->SUM('amountLoan');
-                            // foreach ($loans as $item) {
-                            //     $loanTotal+= $item->amountLoan;
-                            // }
 
                             $trans = \DB::table('loans as l')
                                     ->join('loan_days as ld', 'ld.loan_id', 'l.id')
@@ -83,12 +74,21 @@
                             foreach ($trans as $item) {
                                 $transTotal+= $item->amount;
                             }
-                                // dd($loans);
                         @endphp
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h2 id="h2"><i class="fa-solid fa-wallet"></i> {{ $cashier->title }}</h2>
+                                            </div>
+                                            @if ($cashier->status == 'abierta')
+                                                <div class="col-md-6 text-right">
+                                                    <a href="{{ route('cashiers.close', ['cashier' => $cashier->id]) }}" class="btn btn-danger">Cerrar <i class="voyager-lock"></i></a>
+                                                </div>
+                                            @endif
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-6" style="margin-top: 50px">
                                                 <table width="100%" cellpadding="20">
@@ -123,8 +123,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            
+                        <div class="row">                            
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
@@ -173,7 +172,7 @@
                                                         @endphp
                                                     @empty
                                                         <tr>
-                                                            <td style="text-align: center" valign="top" colspan="5" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                            <td style="text-align: center" valign="top" colspan="9" class="dataTables_empty">No hay datos disponibles en la tabla</td>
                                                         </tr>
                                                     @endforelse
                                                     @if ($amountLoanTotal != 0)
@@ -191,9 +190,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="row">                            
+                          
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
@@ -239,7 +236,7 @@
                                                         @endphp
                                                     @empty
                                                         <tr>
-                                                            <td style="text-align: center" valign="top" colspan="4" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                            <td style="text-align: center" valign="top" colspan="8" class="dataTables_empty">No hay datos disponibles en la tabla</td>
                                                         </tr>
                                                     @endforelse
                                                     @if ($total_movements != 0)
@@ -260,6 +257,11 @@
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h2 id="h2"><i class="fa-solid fa-wallet"></i> {{ $cashier->title }}</h2>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-6" style="margin-top: 50px">
                                                 <table class="table table-hover" id="dataStyle">
@@ -412,23 +414,11 @@
                     </div>
                 </div>
             @endif
-        @else
 
-
-
+        @if(!auth()->user()->hasRole('cajeros') || !auth()->user()->hasRole('cobrador'))
         {{-- Para la parte de gerencia y administradores --}}
             <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-bordered">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h2>Hola, {{ Auth::user()->name }}</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 @php
                     $data = App\Models\Loan::where('deleted_at', NULL)->get();
                     // dd($data);
@@ -549,7 +539,7 @@
 
 @section('javascript')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
-    @if ( (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador')))
+
         @if ($cashier)
             @if ($cashier->status == 'abierta')
                 <script>
@@ -597,7 +587,8 @@
                 </script>
             @endif
         @endif
-    @else
+
+    @if ( !(auth()->user()->hasRole('cajeros') || !auth()->user()->hasRole('cobrador')))
         <script src="{{ asset('js/plugins/chart.min.js') }}"></script>
         <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 

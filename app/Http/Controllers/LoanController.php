@@ -826,8 +826,6 @@ class LoanController extends Controller
 // funcion para guardar el dinero diario en ncada prestamos
     public function dailyMoneyStore(Request $request)
     {
-        // return $request;
-        // return
         $request->merge(['amount'=>floatval($request->amount)]);
         // return $request;
         if(!$request->amount || $request->amount ==0)
@@ -993,6 +991,47 @@ class LoanController extends Controller
 
         
         return view('loansPrint.print-dailyMoneyCash', compact('loan', 'transaction', 'loanDayAgent'));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Para la aeliminacion de prestamos completo con caja cerrada pero siempre y cuando el gerente o administrador tenga una caja abonada o abierta y
+    // y con dinero disponible 
+    public function destroyLoan(Request $request, $loan)
+    {
+        // return $loan;
+        DB::beginTransaction();
+        try {
+            $cashier = Cashier::where('user_id', Auth::user()->id)
+            ->where('status', 'abierta')
+            ->where('deleted_at', NULL)->first();
+            if(!$cashier)
+            {
+                return redirect()->route('loans.index')->with(['message' => 'No tiene Caja abierta ', 'alert-type' => 'error']);
+            }
+            $loan = Loan::where('id', $loan)->where('deleted_at', null)->first();
+
+
+            $loan->update(['destroyDate'=>Carbon::now(), 'destroyObservation'=>$request->observation, 'destroy_userId'=>Auth::user()->id, 'destroy_agentType'=>$this->agent($request->agent_id)->role])
+
+            // return $cashier;
+
+            DB::commit();
+            return redirect()->route('loans.index')->with(['message' => 'Eliminado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
     }
 
 
