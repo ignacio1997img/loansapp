@@ -65,10 +65,10 @@ class CreateLoansTable extends Migration
             $table->string('deletedKey')->nullable();
 
             //para la destrucion de de un prestamo con caja cerrada pero que mantenga el historia
-            $table->dateTime('destroyDate')->nullable();
-            $table->text('destroyObservation')->nullable();
-            $table->foreignId('destroy_userId')->nullable()->constrained('users');
-            $table->string('destroy_agentType')->nullable();
+            // $table->dateTime('destroyDate')->nullable();
+            // $table->text('destroyObservation')->nullable();
+            // $table->foreignId('destroy_userId')->nullable()->constrained('users');
+            // $table->string('destroy_agentType')->nullable();
             //fin
 
 

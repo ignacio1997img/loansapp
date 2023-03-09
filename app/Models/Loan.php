@@ -51,10 +51,10 @@ class Loan extends Model
         'delivered_agentType',
         'cashierRegister_id',
 
-        'destroyDate',
-        'destroyObservation',
-        'destroy_userId',
-        'destroy_agentType'
+        // 'destroyDate',
+        // 'destroyObservation',
+        // 'destroy_userId',
+        // 'destroy_agentType'
 
     ];
 

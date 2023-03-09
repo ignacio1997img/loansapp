@@ -25,6 +25,7 @@ use Illuminate\Support\Composer;
 use PhpParser\Node\Stmt\TryCatch;
 use App\Models\Cashier;
 use App\Models\CashierMovement;
+use PhpParser\Node\Stmt\Return_;
 use PHPUnit\Framework\MockObject\Stub\ReturnReference;
 use ReturnTypeWillChange;
 
@@ -1009,6 +1010,7 @@ class LoanController extends Controller
     // y con dinero disponible 
     public function destroyLoan(Request $request, $loan)
     {
+        // return $request;
         // return $loan;
         DB::beginTransaction();
         try {
@@ -1017,12 +1019,79 @@ class LoanController extends Controller
             ->where('deleted_at', NULL)->first();
             if(!$cashier)
             {
-                return redirect()->route('loans.index')->with(['message' => 'No tiene Caja abierta ', 'alert-type' => 'error']);
+                return redirect()->route('loans.index')->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'error']);
             }
-            $loan = Loan::where('id', $loan)->where('deleted_at', null)->first();
+            // $loan = Loan::where('id', $loan)->where('deleted_at', null)->first();
 
 
-            $loan->update(['destroyDate'=>Carbon::now(), 'destroyObservation'=>$request->observation, 'destroy_userId'=>Auth::user()->id, 'destroy_agentType'=>$this->agent($request->agent_id)->role])
+            $loan = Loan::with(['loanDay'])
+                ->where('id', $loan)
+                ->where('deleted_at', null)->first();
+            // return $cashier;
+            // return $loan;
+            if(!$loan)
+            {
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra eliminado.', 'alert-type' => 'warning']);
+            }
+
+            //lo que debe en total del prestamo
+            $amountDay = $loan->loanDay->SUM('debt');
+
+            // return $amountDay;
+
+
+            //movimientos de caja
+            $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->get();
+            // return $movement;
+          
+            // agrego el monto que se le presto a lña caja
+            $movement->first()->increment('balance', $loan->amountLoan);
+            // return $movement;
+
+            $salida = $loan->amountTotal - $amountDay;
+            // return $salida;
+
+            $movementBalance = $movement->SUM('balance');//para obtener el m onto total de todo los movimeintos de la caja
+            if($salida > $movementBalance)
+            {
+                DB::rollBack();
+                return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Upss.. Ocurrio un error, comuniquese con el administradoir.', 'alert-type' => 'warning']);
+            }
+            // return $movementBalance;
+            // return $request;
+
+            foreach($movement as $item)
+            {
+                if($item->balance > 0 && $salida > 0)
+                {
+                    if($item->balance >= $salida)
+                    {
+                        $item->decrement('balance', $salida);
+                        $salida = 0;
+                    }
+                    else
+                    {
+                        $salida = $salida - $item->balance;
+                        $item->decrement('balance', $item->balance);
+                    }
+                }
+            }
+
+
+            LoanDay::where('loan_id', $loan->id)->update([
+                'deleted_at' => Carbon::now(),
+                'deleted_userId' => Auth::user()->id,
+                'deleted_agentType' => $this->agent(Auth::user()->id)->role,
+                'deletedKey'=>$loan->id
+            ]);
+            $loan->update([
+                'deleted_at' => Carbon::now(),
+                'deleted_userId' => Auth::user()->id,
+                'deleted_agentType' => $this->agent(Auth::user()->id)->role,
+                'deleteObservation' => $request->destroyObservation,
+                'deletedKey'=>$loan->id
+            ]);
+            // $loan->update(['destroyDate'=>Carbon::now(), 'destroyObservation'=>$request->observation, 'destroy_userId'=>Auth::user()->id, 'destroy_agentType'=>$this->agent($request->agent_id)->role]);
 
             // return $cashier;
 

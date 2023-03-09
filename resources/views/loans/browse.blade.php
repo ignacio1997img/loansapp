@@ -202,12 +202,16 @@
                             <strong>Aviso: </strong>
                             <p> Usted esta eliminando un prestamo que ha sido entregado con una caja que en estos momento se encuentra cerrada, por lo tanto para poder eliminarla debera contar usted con caja abierta para realizar la eliminacion de prestamo. </p>
                         </div> 
-                        <input type="hidden" name="id" id="id">
+                        {{-- <input type="hidden" name="id" id="id"> --}}
 
                         <div class="text-center" style="text-transform:uppercase">
                             <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
                             {{-- <br>                                     --}}
-                            <p><b>Desea eliminar el siguiente registro?</b></p>
+                            {{-- <p><b>Desea eliminar el siguiente registro?</b></p> --}}
+                        </div>
+                        <div class="form-group">
+                            <label for="observation">Motivo</label>
+                            <textarea name="destroyObservation" class="form-control" rows="5" placeholder="Describa el motivo de la anulación del prestamo" required></textarea>
                         </div>
                         <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar eliminacion..!</label>
                     </div>
