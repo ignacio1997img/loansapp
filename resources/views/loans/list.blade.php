@@ -140,11 +140,6 @@
 
                             
 
-                        {{-- @if (auth()->user()->hasPermission('edit_people'))
-                            <a href="{{ route('voyager.people.edit', ['loan' => $item->id]) }}" title="Editar" class="btn btn-sm btn-primary edit">
-                                <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Editar</span>
-                            </a> 
-                        @endif--}}
                         @if (auth()->user()->hasRole('gerente')||auth()->user()->hasRole('administrador')||auth()->user()->hasRole('admin'))                            
                             @if ($item->status == 'entregado')
                                 @php
