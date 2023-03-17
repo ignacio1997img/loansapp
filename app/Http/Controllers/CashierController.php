@@ -576,13 +576,7 @@ class CashierController extends Controller
                     $au->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role,'deletedKey'=>$loan->id]);
                     Transaction::where('id', $au->transaction_id)->update(['deleted_at'=>Carbon::now()]);
 
-                }
-                // if($aux)
-                // {
-                //     Transaction::where('id', $aux->transaction_id)->update(['deleted_at'=>Carbon::now()]);
-                //     $aux->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role,'deletedKey'=>$loan->id]);
-                // }
-                
+                }              
             }
             // return 1;
 

@@ -704,7 +704,7 @@
         }
         else
         {
-          $('#label-success').css('display', 'none');
+          $('#label-success').css('display', 'none'); 
           $('#label-error').css('display', 'block');
         }
                     // alert(data)
