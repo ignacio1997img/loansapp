@@ -34,7 +34,7 @@
         <p style="text-align: right;">
             <span>Santísima Trinidad</span>, {{ date('d', strtotime($loan->date)) }} de {{ $months[intval(date('m', strtotime($loan->date)))] }} de {{ date('Y', strtotime($loan->date)) }}</p>
      
-        <table width="100%" style="text-align: center; margin-top: 120px;">
+        <table width="100%" style="text-align: center; margin-top: 1px;">
             <tr>
                 <td style="width: 50%">
                     ....................................................... <br>
@@ -50,6 +50,14 @@
                     {{-- <b>DEUDOR</b> --}}
                 </td>                
             </tr>
+
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
             <tr></tr>
             <tr></tr>
             <tr></tr>
