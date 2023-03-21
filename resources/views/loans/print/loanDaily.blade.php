@@ -50,11 +50,35 @@
                     {{-- <b>DEUDOR</b> --}}
                 </td>                
             </tr>
-        </table>
-        @if ($loan->guarantor_id)
-            <table width="100%" style="text-align: center; margin-top: 120px;">
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <br><br><br>
+            @if ($loan->guarantor_id)
                 <tr>
-                    <td style="width: 50%">
+                    <td colspan="2" style="width: 50%">
                         ....................................................... <br>
                         {{-- <em>{{ $loan->people->gender == 'masculino' ? 'Sr.' : 'Sra.' }} {{$loan->people->first_name}} {{$loan->people->last_name1}} {{$loan->people->last_name2}}</em><br> --}}
                         <em>{{$loan->guarantor->first_name}} {{$loan->guarantor->last_name1}} {{$loan->guarantor->last_name2}}</em><br>
@@ -62,8 +86,9 @@
                         <b>GARANTE</b>
                     </td>                
                 </tr>
-            </table>
-        @endif
+            @endif
+        </table>
+        
        
 
 
