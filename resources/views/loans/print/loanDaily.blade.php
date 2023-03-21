@@ -24,7 +24,7 @@
         <p><em><span style="text-decoration: underline;"><strong>PRIMERA .- </strong></span></em><em><strong>(ANTECEDENTES).- (DE LAS PARTES).-</strong></em><em> Intervienen en la suscripción del presente contrato.</em></p>
         <p><em>1.1.- </em><em><strong>CHRISTIAN MERCADO PERICON</strong></em><em>, mayor de edad, con</em><em><strong> C.I.1919784 BE, </strong></em><em>hábil por derecho, quien en adelante se denomina </em><em><strong>ACREEDOR.</strong></em></p>
         <p><em>1.2.- </em><em><strong style="text-transform: uppercase;">{{$loan->people->first_name}} {{$loan->people->last_name1}} {{$loan->people->last_name2}}</strong></em> <em>hábil en toda forma de derecho con </em>  <em><b>C.I:{{ $loan->people->ci }}</b> con telefono {{$loan->people->cell_phone}} con domicilio <b>{{$loan->people->zone}}</b>, <b>{{$loan->people->street}}, {{$loan->people->home}}</b></em> <em> quien en adelante se denomina <strong>DEUDOR</strong>.</em></p>
-        <p><em><span style="text-decoration: underline;"><strong>SEGUNDA .- </strong></span></em><em><strong>(OBJETO).- </strong></em><em> Al presente el <strong>DEUDOR</strong> declara haber recibido del <strong>ACREEDOR</strong> la suma de <strong>Bs. ({{NumerosEnLetras::convertir($loan->amountLoan,'Bolivianos',true)}})</strong> en calidad de préstamo.</em></p>
+        <p><em><span style="text-decoration: underline;"><strong>SEGUNDA .- </strong></span></em><em><strong>(OBJETO).- </strong></em><em> Al presente el <strong>DEUDOR</strong> declara haber recibido del <strong>ACREEDOR</strong> la suma de <strong>Bs. {{NumerosEnLetras::convertir($loan->amountTotal,'Bolivianos',true)}}</strong> en calidad de préstamo.</em></p>
         <p><em><span style="text-decoration: underline;"><strong>TERCERA .- </strong></span></em><em><strong>(DEL PAZO E INTERES).- </strong></em><em> La tasa de interés MENSUAL convenida entre las partes será fijada en el convencional máximo permitido por ley establecido en el Art.- 409 del Código Civil.</em></p>
         <p><em>El plazo convenido entre partes para la devolución de la suma mencionada en la cláusula segunda del presente contrato MAS LOS INTERESES GENERADOS EN EL PLAZO ESTABLECIDO es de UN MES a partir de la firma contrato.</em></p>
         <p><em><span style="text-decoration: underline;"><strong>CUARTA .- </strong></span></em><em><strong>(DE LA GARANTIA).- </strong></em><em><strong>EL DEUDOR</strong> garantiza el cumplimiento de la obligación, con todos sus bienes habidos y por haber, presentes y futuros, sin reserva de exclusión alguna.</em></p>
@@ -51,6 +51,19 @@
                 </td>                
             </tr>
         </table>
+        @if ($loan->guarantor_id)
+            <table width="100%" style="text-align: center; margin-top: 120px;">
+                <tr>
+                    <td style="width: 50%">
+                        ....................................................... <br>
+                        {{-- <em>{{ $loan->people->gender == 'masculino' ? 'Sr.' : 'Sra.' }} {{$loan->people->first_name}} {{$loan->people->last_name1}} {{$loan->people->last_name2}}</em><br> --}}
+                        <em>{{$loan->guarantor->first_name}} {{$loan->guarantor->last_name1}} {{$loan->guarantor->last_name2}}</em><br>
+                        <b>C.I:{{$loan->guarantor->ci}}</b><br>
+                        <b>GARANTE</b>
+                    </td>                
+                </tr>
+            </table>
+        @endif
        
 
 
