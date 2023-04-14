@@ -62,6 +62,30 @@
 
                                 <div class="row">
                                     <div class="form-group col-md-6">
+                                        <small for="customer_id">Beneficiario del Prestamo</small>
+                                        {{-- <div class="input-group"> --}}
+                                            <select name="people_id" class="form-control" id="select_people_id" required></select>
+
+                                            {{-- <span class="input-group-btn">
+
+                                                <button class="btn btn-primary" title="Nueva persona" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                            </span> --}}
+                                        {{-- </div> --}}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <small for="customer_id">Garante</small>
+                                        {{-- <div class="input-group"> --}}
+                                            <select name="guarantor_id" class="form-control" id="select_guarantor_id"></select>
+                                            {{-- <span class="input-group-btn">
+                                                <button class="btn btn-primary" title="Nueva persona" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                            </span> --}}
+                                        {{-- </div> --}}
+                                    </div>
+                                    {{-- <div class="form-group col-md-6">
                                         <small>Beneficiario del Prestamo</small>
                                         <select name="people_id" id="people_id" class="form-control select2" required>
                                             <option value="" disabled selected>-- Selecciona un tipo --</option>
@@ -78,7 +102,7 @@
                                                 <option value="{{$item->id}}">{{$item->last_name1}} {{$item->last_name2}} {{$item->first_name}}</option>  
                                             @endforeach
                                         </select>
-                                    </div>                                    
+                                    </div>                                     --}}
                                 </div>
                                 <input type="hidden" name="type" id="text_type">
                                 <div class="row">
@@ -414,6 +438,144 @@
             //     modal.find('.modal-body #grupo').text(grupo)
             //     modal.find('.modal-body #desc').val(desc)
             // });
+        </script>
+
+
+        <script>
+            $(document).ready(function(){
+                var productSelected;
+                
+                $('#select_people_id').select2({
+                // tags: true,
+                    placeholder: '<i class="fa fa-search"></i> Buscar...',
+                    escapeMarkup : function(markup) {
+                        return markup;
+                    },
+                    language: {
+                        inputTooShort: function (data) {
+                            return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
+                        },
+                        noResults: function () {
+                            return `<i class="far fa-frown"></i> No hay resultados encontrados`;
+                        }
+                    },
+                    quietMillis: 250,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: "{{ url('admin/loans/people/ajax') }}",        
+                        processResults: function (data) {
+                            let results = [];
+                            data.map(data =>{
+                                results.push({
+                                    ...data,
+                                    disabled: false
+                                });
+                            });
+                            return {
+                                results
+                            };
+                        },
+                        cache: true
+                    },
+                    templateResult: formatResultCustomers_people,
+                    templateSelection: (opt) => {
+                        productSelected = opt;
+                        // alert(opt)
+                        
+                        return opt.first_name?opt.first_name+' '+opt.last_name1+' '+opt.last_name2:'<i class="fa fa-search"></i> Buscar... ';
+                    }
+                }).change(function(){
+                
+                });
+
+                $('#select_guarantor_id').select2({
+                // tags: true,
+                    placeholder: '<i class="fa fa-search"></i> Buscar...',
+                    escapeMarkup : function(markup) {
+                        return markup;
+                    },
+                    language: {
+                        inputTooShort: function (data) {
+                            return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
+                        },
+                        noResults: function () {
+                            return `<i class="far fa-frown"></i> No hay resultados encontrados`;
+                        }
+                    },
+                    quietMillis: 250,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: "{{ url('admin/loans/people/ajax') }}",        
+                        processResults: function (data) {
+                            let results = [];
+                            data.map(data =>{
+                                results.push({
+                                    ...data,
+                                    disabled: false
+                                });
+                            });
+                            return {
+                                results
+                            };
+                        },
+                        cache: true
+                    },
+                    templateResult: formatResultCustomers_people,
+                    templateSelection: (opt) => {
+                        productSelected = opt;
+                        // alert(opt)
+                        
+                        return opt.first_name?opt.first_name+' '+opt.last_name1+' '+opt.last_name2:'<i class="fa fa-search"></i> Buscar... ';
+                    }
+                }).change(function(){
+                
+                });
+
+
+                // $('#form-create-customer').submit(function(e){
+                //     e.preventDefault();
+                //     $('.btn-save-customer').attr('disabled', true);
+                //     $('.btn-save-customer').val('Guardando...');
+                //     $.post($(this).attr('action'), $(this).serialize(), function(data){
+                //         if(data.people.id){
+                //             toastr.success('Registrado exitosamente', 'Éxito');
+                //             $(this).trigger('reset');
+                //         }else{
+                //             toastr.error(data.error, 'Error');
+                //         }
+                //     })
+                //     .always(function(){
+                //         $('.btn-save-customer').attr('disabled', false);
+                //         $('.btn-save-customer').text('Guardar');
+                //         $('#modal-create-customer').modal('hide');
+                //     });
+                // });
+
+            })
+
+            function formatResultCustomers_people(option){
+            // Si está cargando mostrar texto de carga
+                if (option.loading) {
+                    return '<span class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</span>';
+                }
+                let image = "{{ asset('images/default.jpg') }}";
+                if(option.image){
+                    image = "{{ asset('storage') }}/"+option.image.replace('.', '-cropped.');
+                    // alert(image)
+                }
+                
+                // Mostrar las opciones encontradas
+                return $(`  <div style="display: flex">
+                                <div style="margin: 0px 10px">
+                                    <img src="${image}" width="50px" />
+                                </div>
+                                <div>
+                                    <small>CI: </small><b style="font-size: 15px; color: black">${option.ci?option.ci:'No definido'}</b><br>
+                                    <b style="font-size: 15px; color: black">${option.first_name} ${option.last_name1} ${option.last_name2} </b>
+                                </div>
+                            </div>`);
+            }
+
         </script>
     @stop
 

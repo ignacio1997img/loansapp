@@ -68,6 +68,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/ajax/list/{cashier_id}/{type}/{search?}', [LoanController::class, 'list']);
+    Route::get('loans/people/ajax', [PeopleController::class, 'ajaxPeople']);//para obtener las personas o clientes para darles u prestamos
+
     Route::get('loans/{loan?}/rechazar', [LoanController::class, 'rechazar'])->name('loans.rechazar'); //para rechazar  los perestamos
     Route::delete('loans/{loan?}/cashierclose/destroy', [LoanController::class, 'destroyLoan'])->name('loans-cashierclose.destroy'); //para la destruccion de prestamo con caja cerrada
     Route::get('loans/ajax/notPeople/{id?}', [LoanController::class, 'ajaxNotPeople'])->name('loans-ajax.notpeople');

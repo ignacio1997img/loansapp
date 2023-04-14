@@ -17,11 +17,26 @@
     </style>
  --}}
 
-    <style>
+    {{-- <style>
         .form-control, .select2-selection, .mce-tinymce {
             border: 1px solid #000000 !important;
             color: #f40202;
             font-weight: bold;
+        }
+    </style> --}}
+
+
+    <style>
+        .form-control, .select2-selection, .mce-tinymce {
+            border: 1px solid #000000 !important;
+            color:rgb(0, 0, 0) !important;
+            /* font-weight: bold; */
+            font-family: Tahoma, Verdana, Arial; 
+            /* font-size: 15px;  */
+        }
+        label
+        {
+            color: rgb(0, 0, 0) !important;
         }
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
