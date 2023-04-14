@@ -428,16 +428,6 @@
                 return false;        
             }
 
-            // $('#modalEditar').on('show.bs.modal', function (event) {
-            //     var button = $(event.relatedTarget) //captura valor del data-empresa=""
-            //     var id = button.data('id')
-            //     var desc = button.data('desc')
-            //     var grupo = button.data('grupo')
-            //     var modal = $(this)
-            //     modal.find('.modal-body #idempresa').val(id)
-            //     modal.find('.modal-body #grupo').text(grupo)
-            //     modal.find('.modal-body #desc').val(desc)
-            // });
         </script>
 
 
