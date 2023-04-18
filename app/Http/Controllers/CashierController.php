@@ -116,6 +116,7 @@ class CashierController extends Controller
 
     public function show($id)
     {
+        // retur
         $cashier = Cashier::where('id', $id)->first();
         
         $loan = Loan::with(['people'])->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
@@ -130,12 +131,12 @@ class CashierController extends Controller
                                     // ->where('lda.deleted_at', null)
                                     ->where('lda.cashier_id', $cashier->id)
 
-                                    ->where('ld.deleted_at', null)
-                                    ->where('ld.status', 1)
+                                    // ->where('ld.deleted_at', null)
+                                    // ->where('ld.status', 1)
 
-                                    ->where('l.deleted_at', null)
+                                    // ->where('l.deleted_at', null)
 
-                                    ->select('l.id as loan', 'l.code as code', 'l.amountLoan', 'amountTotal', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.ci',
+                                    ->select('l.id as loan', 'l.code as code', 'l.deleted_at as eliminado', 'l.amountLoan', 'amountTotal', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.ci',
                                             'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'lda.transaction_id', 't.transaction', 't.created_at', 't.deleted_at')
                                     ->groupBy('loan', 'transaction')
                                     ->orderBy('transaction', 'ASC')
@@ -439,9 +440,12 @@ class CashierController extends Controller
         // return $pdf->download();
     }
 
+
+    //Para eliminar transacciones activas con cajas activas
     public function destroyTransaction(Request $request, $cashier, $transaction)
     {
         // return $request;
+        // return "error tra";
         try {
             DB::beginTransaction();
 
@@ -457,6 +461,7 @@ class CashierController extends Controller
             }
             // return $cashier;
             $loanDayAgent = LoanDayAgent::where('cashier_id', $cashier->id)->where('transaction_id', $transaction)->where('deleted_at',null)->get();
+
             $amount = $loanDayAgent->SUM('amount');
 
             $auxDay = LoanDay::where('id', $loanDayAgent->first()->loanDay_id)->first()->loan_id;
@@ -502,7 +507,7 @@ class CashierController extends Controller
     //Para eliminar los prestamos cuando no tiene ningun pago pero solo elimina el administrador o el cajero
     public function destroyDelete(Request $request)
     {
-        // return $request;
+        return "Contactese con el administrador";    
         DB::beginTransaction();
         try {
 
@@ -514,10 +519,12 @@ class CashierController extends Controller
                 return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'El prestamo ya se encuentra eliminado.', 'alert-type' => 'warning']);
             }
 
+            // return 11;
             $amountDay = $loan->loanDay->SUM('debt');
 
             // return $amountDay;
-
+            // return $loan->debt;
+            //Para comprar los dias de deuda que tiene a pagar con el total de deuda a pgara a del prestamo
             if($loan->debt != $amountDay)
             {
                 return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Ocurrio un error, comuniquese con el administradoir.', 'alert-type' => 'warning']);
@@ -529,6 +536,7 @@ class CashierController extends Controller
             ->where('id', $request->cashier_id)
             ->where('status', 'abierta')
             ->where('deleted_at', NULL)->first();
+            return $cashier;
             if(!$cashier)
             {
                 return redirect()->route('cashiers.show', ['cashier'=>$request->cashier_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'warning']);
@@ -536,9 +544,11 @@ class CashierController extends Controller
 
             //movimientos de caja
             $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->get();
+            return $movement;
           
             // agrego el monto que se le presto a lña caja
             $movement->first()->increment('balance', $loan->amountLoan);
+            return $movement;
 
             $salida = $loan->amountTotal - $amountDay;
 
@@ -573,7 +583,7 @@ class CashierController extends Controller
                 $aux = LoanDayAgent::where('loanDay_id', $item->id)->where('deleted_at', null)->get();
                 foreach($aux as $au)
                 {
-                    $au->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role,'deletedKey'=>$loan->id]);
+                    $au->update(['deleted_at'=>Carbon::now(), 'deleted_userId'=>Auth::user()->id, 'deleted_agentType'=>$this->agent(Auth::user()->id)->role,''=>$loan->id]);
                     Transaction::where('id', $au->transaction_id)->update(['deleted_at'=>Carbon::now()]);
 
                 }              

@@ -1010,24 +1010,30 @@ class LoanController extends Controller
     // y con dinero disponible 
     public function destroyLoan(Request $request, $loan)
     {
+        // return 1;
         // return $request;
-        // return $loan;
         DB::beginTransaction();
         try {
-            $cashier = Cashier::where('user_id', Auth::user()->id)
-            ->where('status', 'abierta')
-            ->where('deleted_at', NULL)->first();
+            //obtenemos la caja abierta 
+            $cashier = Cashier::with(['movements' => function($q){
+                    $q->where('deleted_at', NULL);
+                }])
+                ->where('user_id', Auth::user()->id)
+                ->where('status', 'abierta')
+                ->where('deleted_at', NULL)->first();
+
             if(!$cashier)
             {
                 return redirect()->route('loans.index')->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'error']);
             }
             // $loan = Loan::where('id', $loan)->where('deleted_at', null)->first();
+            // return $cashier;
 
 
             $loan = Loan::with(['loanDay'])
                 ->where('id', $loan)
                 ->where('deleted_at', null)->first();
-            // return $cashier;
+
             // return $loan;
             if(!$loan)
             {
@@ -1038,20 +1044,25 @@ class LoanController extends Controller
             $amountDay = $loan->loanDay->SUM('debt');
 
             // return $amountDay;
-
+            // return $cashier;
 
             //movimientos de caja
             $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->get();
             // return $movement;
           
-            // agrego el monto que se le presto a lña caja
-            $movement->first()->increment('balance', $loan->amountLoan);
-            // return $movement;
+            // return $request;
+            // agrego el monto que se le presto a la caja
+            $movement->first()->increment('balance', $loan->amountLoan);  
+            // return $movement;   
+            // return $cashier;   
 
             $salida = $loan->amountTotal - $amountDay;
             // return $salida;
 
             $movementBalance = $movement->SUM('balance');//para obtener el m onto total de todo los movimeintos de la caja
+            // return $movementBalance;
+
+            //verificamos si el monto de las caja y los movimiento sumado es mayor o igual al monto que de devolvera al cliente
             if($salida > $movementBalance)
             {
                 DB::rollBack();

@@ -200,7 +200,7 @@
                     <div class="modal-body">
                         <div class="alert alert-warning">
                             <strong>Aviso: </strong>
-                            <p> Usted esta eliminando un prestamo que ha sido entregado con una caja que en estos momento se encuentra cerrada, por lo tanto para poder eliminarla debera contar usted con caja abierta para realizar la eliminacion de prestamo. </p>
+                            <p> Usted esta eliminando un prestamo que ha sido entregado al beneficiario, por lo tanto al eliminar el prestamo usted debera contar usted con caja abierta para realizar la eliminacion de prestamo. </p>
                         </div> 
                         {{-- <input type="hidden" name="id" id="id"> --}}
 

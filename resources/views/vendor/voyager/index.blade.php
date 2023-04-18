@@ -17,6 +17,129 @@
                     </div>
                 </div>
             </div>
+            @if(!auth()->user()->hasRole('cajeros') && !auth()->user()->hasRole('cobrador'))
+        {{-- Para la parte de gerencia y administradores --}}
+                <div class="row">
+                    
+                    @php
+                        $data = App\Models\Loan::where('deleted_at', NULL)->get();
+                        // dd($data);
+                    @endphp
+                    <div class="col-md-3">
+                        <div class="panel panel-bordered" style="border-left: 5px solid #52BE80">
+                            <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                                <div class="col-md-9">
+                                    <h5>Prestamos en pagos</h5>
+                                    <h2>{{count($data->where('status', 'entregado')->where('debt', '!=', 0))}}</h2>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <i class="icon fa-solid fa-money-bill" style="color: #52BE80"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-bordered" style="border-left: 5px solid #E67E22">
+                            <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                                <div class="col-md-9">
+                                    <h5>Prestamos por entregar al cliente</h5>
+                                    <h2>{{count($data->where('status', 'aprobado'))}}</h2>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <i class="icon voyager-calendar" style="color: #E67E22"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-bordered" style="border-left: 5px solid #3498DB">
+                            <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                                <div class="col-md-9">
+                                    <h5>Prestamos por aprobar</h5>
+                                    <h2>{{count($data->where('status', 'verificado'))}}</h2>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <i class="icon voyager-certificate" style="color: #3498DB"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-bordered" style="border-left: 5px solid #E74C3C">
+                            <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                                <div class="col-md-9">
+                                    @php
+                                        
+                                    @endphp
+                                    <h5>Prestamos por verificar</h5>
+                                    <h2>{{count($data->where('status', 'pendiente'))}}</h2>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <i class="icon voyager-book" style="color: #E74C3C"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div class="panel">
+                            <div class="panel-body" style="height: 250px">
+                                <small><h4>Cobros del Día (Bs.)</h4></small>
+                                @php
+                                    $date = date('Y-m-d');
+                                    $bart_cobro = App\Models\LoanDayAgent::with(['agent'])->where('deleted_at', NULL)->whereDate('created_at', $date)->select( DB::raw('SUM(amount)as amount'), 'agent_id')->groupBy('agent_id')->get();
+                                    // dd($moneyRecaudado)
+
+                                @endphp
+
+                                <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        @php
+                            // $foodDay = App\Models\EgresMenu::WhereHas('egres', function($query) {
+                            //             $query->where('sale',1);
+                            //         })->with('food')->where('deleted_at', null)->whereDate('created_at', '=', date('Y-m-d'))
+                            // ->selectRaw('COUNT(food_id) as count,SUM(amount) as total, food_id, egre_id')
+                            // ->groupBy('food_id')->orderBy('total', 'DESC')->get();
+
+
+                            // $moneyRecaudado = App\Models\LoanDayAgent::where('deleted_at', NULL)->whereDate('created_at', $date)->get();
+                            //         $moneyRecaudado = $moneyRecaudado->SUM('amount');
+
+                            // $incomePerson = App\Models\LoanDayAgent::
+                        @endphp
+                        <div class="panel">
+                            <div class="panel-body" style="height: 250px">
+                                <canvas id="income-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel">
+                            <div class="panel-body" style="height: 300px">
+                                <small><h4>Egreso & Ingreso del Día (Bs.)</h4></small>
+                                @php
+                                    $date = date('Y-m-d');
+                                    // dd($date);
+                                    $moneyLoan = App\Models\Loan::where('deleted_at', NULL)->where('dateDelivered', $date)->get();
+                                    $moneyLoan = $moneyLoan->SUM('amountLoan');
+                                    $moneyRecaudado = App\Models\LoanDayAgent::where('deleted_at', NULL)->whereDate('created_at', $date)->get();
+                                    $moneyRecaudado = $moneyRecaudado->SUM('amount');
+                                    // dd($moneyRecaudado);
+
+                                    
+                                @endphp
+                                <canvas id="doughnut-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         
         {{-- @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador')) --}}
             @php
@@ -415,118 +538,7 @@
                 </div>
             @endif
 
-        @if(!auth()->user()->hasRole('cajeros') || !auth()->user()->hasRole('cobrador'))
-        {{-- Para la parte de gerencia y administradores --}}
-            <div class="row">
-                
-                @php
-                    $data = App\Models\Loan::where('deleted_at', NULL)->get();
-                    // dd($data);
-                @endphp
-                <div class="col-md-3">
-                    <div class="panel panel-bordered" style="border-left: 5px solid #52BE80">
-                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
-                            <div class="col-md-9">
-                                <h5>Prestamos en pagos</h5>
-                                <h2>{{count($data->where('status', 'entregado')->where('debt', '!=', 0))}}</h2>
-                            </div>
-                            <div class="col-md-3 text-right">
-                                <i class="icon fa-solid fa-money-bill" style="color: #52BE80"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-bordered" style="border-left: 5px solid #E67E22">
-                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
-                            <div class="col-md-9">
-                                <h5>Prestamos por entregar al cliente</h5>
-                                <h2>{{count($data->where('status', 'aprobado'))}}</h2>
-                            </div>
-                            <div class="col-md-3 text-right">
-                                <i class="icon voyager-calendar" style="color: #E67E22"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-bordered" style="border-left: 5px solid #3498DB">
-                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
-                            <div class="col-md-9">
-                                <h5>Prestamos por aprobar</h5>
-                                <h2>{{count($data->where('status', 'verificado'))}}</h2>
-                            </div>
-                            <div class="col-md-3 text-right">
-                                <i class="icon voyager-certificate" style="color: #3498DB"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="panel panel-bordered" style="border-left: 5px solid #E74C3C">
-                        <div class="panel-body" style="height: 100px;padding: 15px 20px">
-                            <div class="col-md-9">
-                                @php
-                                    
-                                @endphp
-                                <h5>Prestamos por verificar</h5>
-                                <h2>{{count($data->where('status', 'pendiente'))}}</h2>
-                            </div>
-                            <div class="col-md-3 text-right">
-                                <i class="icon voyager-book" style="color: #E74C3C"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="panel">
-                        <div class="panel-body" style="height: 250px">
-                            <small><h4>Cobros del Día (Bs.)</h4></small>
-                            @php
-                                $date = date('Y-m-d');
-                                $bart_cobro = App\Models\LoanDayAgent::with(['agent'])->where('deleted_at', NULL)->whereDate('created_at', $date)->select( DB::raw('SUM(amount)as amount'), 'agent_id')->groupBy('agent_id')->get();
-                                // dd($moneyRecaudado)
-
-                            @endphp
-
-                            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="panel">
-                        <div class="panel-body" style="height: 300px">
-                            {{-- <div id="chartContainer" style="height: 300x; width: 100%;"></div> --}}
-
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel">
-                        <div class="panel-body" style="height: 300px">
-                            <small><h4>Egreso & Ingreso del Día (Bs.)</h4></small>
-                            @php
-                                $date = date('Y-m-d');
-                                // dd($date);
-                                $moneyLoan = App\Models\Loan::where('deleted_at', NULL)->where('dateDelivered', $date)->get();
-                                $moneyLoan = $moneyLoan->SUM('amountLoan');
-                                $moneyRecaudado = App\Models\LoanDayAgent::where('deleted_at', NULL)->whereDate('created_at', $date)->get();
-                                $moneyRecaudado = $moneyRecaudado->SUM('amount');
-                                // dd($moneyRecaudado);
-
-                                
-                            @endphp
-                            <canvas id="doughnut-chart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
+        
     </div>
 @stop
 @section('css')
@@ -588,7 +600,7 @@
             @endif
         @endif
 
-    @if ( !(auth()->user()->hasRole('cajeros') || !auth()->user()->hasRole('cobrador')))
+    @if(!auth()->user()->hasRole('cajeros') && !auth()->user()->hasRole('cobrador'))
         <script src="{{ asset('js/plugins/chart.min.js') }}"></script>
         <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 

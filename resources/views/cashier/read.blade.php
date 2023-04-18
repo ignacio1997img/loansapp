@@ -86,8 +86,13 @@
                                         <tr>
                                             <td style="text-align: center">{{$item->transaction}}</td>
                                             <td style="text-align: center">{{$item->code}} <br>
-                                                @if ($item->deleted_at)
-                                                    <label class="label label-danger">Anulado</label>
+                                                @if ($item->deleted_at || $item->eliminado)
+                                                    @if ($item->eliminado)
+                                                        <label class="label label-danger">Prestamos eliminado</label>
+                                                        <label class="label label-success">Transaccion activa</label>                                                        
+                                                    @else
+                                                        <label class="label label-danger">Transaccion eliminada</label>                                                        
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td style="text-align: center">
@@ -103,7 +108,8 @@
                                             <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
                                             <td style="text-align: right"><small>Bs.</small> {{$item->amount}}</td>
                                             <td style="text-align: right">
-                                                @if(!$item->deleted_at)
+                                                {{-- @if(!$item->deleted_at) --}}
+                                                @if (!$item->deleted_at )
                                                     <button title="Eliminar transacción" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('cashiers-loan.transaction.delete', ['cashier'=>$cashier->id, 'transaction' => $item->transaction_id]) }}')" data-toggle="modal" data-target="#delete-transacction-modal">
                                                         <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm"></span>
                                                     </button>

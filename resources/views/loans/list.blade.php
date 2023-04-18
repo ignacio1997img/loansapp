@@ -145,11 +145,11 @@
                                 @php
                                     $destroy = \App\Models\Cashier::where('id', $item->cashier_id)->first();
                                 @endphp
-                                @if($destroy->status == 'cerrada')
-                                    <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="destroyItem('{{ route('loans-cashierclose.destroy', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#destroy-modal">
-                                        <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                {{-- @if($destroy->status == 'cerrada') --}}
+                                    <button title="Eliminar Prestamo entregado.." class="btn btn-sm btn-danger delete" onclick="destroyItem('{{ route('loans-cashierclose.destroy', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#destroy-modal">
+                                        <i class="fa-solid fa-trash"></i> <span class="hidden-xs hidden-sm">Eliminar </span>
                                     </button>
-                                @endif
+                                {{-- @endif --}}
                             @endif
                         @endif
                         @if (auth()->user()->hasPermission('delete_loans'))
