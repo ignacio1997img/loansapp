@@ -1089,7 +1089,7 @@ class LoanController extends Controller
             }
 
 
-            LoanDay::where('loan_id', $loan->id)->update([
+            LoanDay::where('loan_id', $loan->id)->where('deleted_at',null)->update([
                 'deleted_at' => Carbon::now(),
                 'deleted_userId' => Auth::user()->id,
                 'deleted_agentType' => $this->agent(Auth::user()->id)->role,

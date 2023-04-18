@@ -111,7 +111,12 @@
                             // $moneyRecaudado = App\Models\LoanDayAgent::where('deleted_at', NULL)->whereDate('created_at', $date)->get();
                             //         $moneyRecaudado = $moneyRecaudado->SUM('amount');
 
-                            // $incomePerson = App\Models\LoanDayAgent::
+                            $incomePerson = App\Models\LoanDayAgent::with(['agent'])
+                                ->where('deleted_at', null)->whereDate('created_at', $date)
+                                ->select('agent_id', DB::raw('SUM(amount) as amount'))
+                                ->groupBy('agent_id')
+                                ->get();
+                            // dd($incomePerson);
                         @endphp
                         <div class="panel">
                             <div class="panel-body" style="height: 250px">
@@ -606,6 +611,38 @@
 
         <script>
             $(document).ready(function(){
+                // ==============================================
+                let incomePerson = @json($incomePerson);
+                labels = [];
+                values = [];
+                color = [];
+
+                incomePerson.map(item => {
+                    labels.push(item.agent.name);
+                    values.push(parseInt(item.amount));
+
+                    color.push(colorRGB());
+                });
+
+                var data = {
+                    labels,
+                    datasets: [{
+                        label: 'Recolección Diaria',
+                        data: values,
+                        backgroundColor: color,
+                        hoverOffset: 4
+                    }]
+                };
+                var config = {
+                    type: 'doughnut',
+                    data
+                };
+                var myChart = new Chart(
+                    document.getElementById('income-chart'),
+                    config
+                );
+
+                //================================================================
 
                 var data = {
                     labels: [
@@ -632,6 +669,16 @@
                     config
                 );
             });
+
+            function generarNumero(numero){
+                return (Math.random()*numero).toFixed(0);
+            }
+
+            function colorRGB(){
+                // alert(1)
+                var coolor = "("+generarNumero(255)+"," + generarNumero(255) + "," + generarNumero(255) +")";
+                return "rgb" + coolor;
+            }
 
 
 
