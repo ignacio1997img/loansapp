@@ -18,6 +18,8 @@ class UpdateUserTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->smallInteger('status')->default(1);
             $table->foreignId('registerUser_id')->nullable()->constrained('users');
+            $table->string('ci')->nullable();
+
         });
     }
 

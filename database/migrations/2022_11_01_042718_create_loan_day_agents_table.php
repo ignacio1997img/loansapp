@@ -34,6 +34,8 @@ class CreateLoanDayAgentsTable extends Migration
             $table->text('deleteObservation')->nullable();
             $table->string('deletedKey')->nullable();
 
+
+
         });
     }
 
