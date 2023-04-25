@@ -187,6 +187,7 @@ class LoanController extends Controller
 
     public function create()
     {
+        // return 1;
         $cashier = Cashier::with(['movements' => function($q){
             $q->where('deleted_at', NULL);
         }])
@@ -347,9 +348,7 @@ class LoanController extends Controller
 
     public function successRequirement($loan)
     {
-        // return $loan;
-        // $url="http://api.trabajostop.com/?number=59163286317&message=hola"; //a qui pones tu url externa
-        // echo "<a href='$url'>caca</a>";
+        // return 'aprobado';
 
         DB::beginTransaction();
         try {
@@ -399,6 +398,8 @@ class LoanController extends Controller
                         'status' => 'pendiente'
             ]);
 
+            
+
             $loan->update(['code'=>'CP-'.str_pad($loan->id, 5, "0", STR_PAD_LEFT)]);
             LoanRoute::create([
                 'loan_id' => $loan->id,
@@ -418,35 +419,26 @@ class LoanController extends Controller
                 'register_agentType' => $agent->role
             ]);
 
-            // return 
+          
 
 
-            // $date = date("d-m-Y",strtotime($request->date."+ 1 days"));
-            // for($i=1;$i<=$request->day; $i++)
-            // {
-            //     $fecha = Carbon::parse($date);
-            //     $fecha = $fecha->format("l");
-            //     if($fecha == 'Sunday')
-            //     {
-            //         $date = date("Y-m-d", strtotime($date));
-            //         $date = date("d-m-Y",strtotime($date."+ 1 days"));
-            //     }
-            //     $date = date("Y-m-d", strtotime($date));
-            //     LoanDay::create([
-            //         'loan_id' => $loan->id,
-            //         'number' => $i,
-            //         'debt' => $request->amountDay,
-            //         'amount' => $request->amountDay,
+            LoanRequirement::where('loan_id',$loan->id)
+            ->update(['status'=>'1',
+                    'success_userId' => Auth::user()->id,
+                    'success_agentType' => $this->agent(Auth::user()->id)->role
+                    ]);
 
-            //         'register_userId' => $agent->id,
-            //         'register_agentType' => $agent->role,
 
-            //         'date' => $date
-            //     ]);
-            //     $date = date("d-m-Y",strtotime($date."+ 1 days"));
+            Loan::where('id', $loan->id)->update([
+                'status' => 'aprobado',
+                'success_userId' => Auth::user()->id,
+                'success_agentType' => $this->agent(Auth::user()->id)->role
+            ]);
 
-            // }
-            // return 1;
+
+
+
+
 
             DB::commit();
             return redirect()->route('loans.index')->with(['message' => 'Prestamos registrado exitosamente.', 'alert-type' => 'success']);
@@ -601,6 +593,7 @@ class LoanController extends Controller
         }
     }    
 
+    //Para aprobar un prestamo el gerente
     public function successLoan($loan)
     {
         DB::beginTransaction();
