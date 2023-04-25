@@ -422,6 +422,8 @@ class LoanController extends Controller
           
 
 
+
+            Loan::where('id', $loan->id)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
             LoanRequirement::where('loan_id',$loan->id)
             ->update(['status'=>'1',
                     'success_userId' => Auth::user()->id,
