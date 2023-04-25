@@ -207,7 +207,7 @@ class LoanController extends Controller
     }
     public function ajaxNotPeople($id)
     {
-        return People::where('id', '!=', $id)->where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
+        // return People::where('id', '!=', $id)->where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
 
     }
 
@@ -421,7 +421,7 @@ class LoanController extends Controller
 
           
 
-
+            //************************************************************************************* */
 
             Loan::where('id', $loan->id)->update(['inspector_userId'=>Auth::user()->id, 'inspector_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'verificado']);
             LoanRequirement::where('loan_id',$loan->id)
@@ -436,6 +436,8 @@ class LoanController extends Controller
                 'success_userId' => Auth::user()->id,
                 'success_agentType' => $this->agent(Auth::user()->id)->role
             ]);
+
+            //************************************************************************************* */
 
 
 

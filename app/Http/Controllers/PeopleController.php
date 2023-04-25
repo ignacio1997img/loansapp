@@ -167,7 +167,7 @@ class PeopleController extends Controller
     public function ajaxPeople()
     {
         $q = request('q');
-        $data = People::whereRaw($q ? '(ci like "%'.$q.'%" or first_name like "%'.$q.'%" or last_name1 like "%'.$q.'%" or last_name2 like "%'.$q.'%" )' : 1)
+        $data = People::whereRaw($q ? '(ci like "%'.$q.'%" or first_name like "%'.$q.'%" or last_name1 like "%'.$q.'%" or last_name2 like "%'.$q.'%" or CONCAT(first_name," " , last_name1, " ", last_name2) like "%'.$q.'%" )' : 1)
         ->where('deleted_at', null)->get();
 
         return response()->json($data);
