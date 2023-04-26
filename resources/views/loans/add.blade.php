@@ -108,27 +108,27 @@
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Monto a Prestar (Bs.)</small>
-                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" onkeypress='return inputNumeric(event)' onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Dias Total A Pagar</small>
-                                        <input type="number" min="1" id="day1" value="24" style="text-align: right" disabled onkeypress='return inputNumeric(event)' onchange="diasPagar()" onkeyup="diasPagar()" class="form-control text" required>
-                                        <input type="hidden" min="1" name="day" id="day" onkeypress='return inputNumeric(event)' value="24" class="form-control" required>
+                                        <input type="number" min="1" id="day1" value="24" style="text-align: right" disabled onkeypress="return filterFloat(event,this);" onchange="diasPagar()" onkeyup="diasPagar()" class="form-control text" required>
+                                        <input type="hidden" min="1" name="day" id="day" onkeypress="return filterFloat(event,this);" value="24" class="form-control" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos (%)</small>
-                                        <input type="number" id="porcentage1" min="0" step="any" style="text-align: right" disabled value="20" onkeypress='return inputNumeric(event)' onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
-                                        <input type="hidden" name="porcentage" id="porcentage" onkeypress='return inputNumeric(event)' value="20" class="form-control" required>
+                                        <input type="number" id="porcentage1" min="0" step="any" style="text-align: right" disabled value="20" onkeypress="return filterFloat(event,this);" onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        <input type="hidden" name="porcentage" id="porcentage" onkeypress="return filterFloat(event,this);" value="20" class="form-control" required>
                                     </div>    
                                     <div class="form-group col-md-2">
                                         <small>Interes a Pagar (Bs.)</small>
-                                        <input type="number" id="amountPorcentage1" min="0" step="any" style="text-align: right" disabled value="0" onkeypress='return inputNumeric(event)' onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
-                                        <input type="hidden" name="amountPorcentage" id="amountPorcentage" onkeypress='return inputNumeric(event)' value="0" class="form-control" required>
+                                        <input type="number" id="amountPorcentage1" min="0" step="any" style="text-align: right" disabled value="0" onkeypress="return filterFloat(event,this);" onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        <input type="hidden" name="amountPorcentage" id="amountPorcentage" onkeypress="return filterFloat(event,this);" value="0" class="form-control" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Pago Diario (Bs.)</small>
                                         <input type="text" id="amountDay1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="hidden" name="amountDay" id="amountDay"onkeypress='return inputNumeric(event)' value="0" class="form-control">
+                                        <input type="hidden" name="amountDay" id="amountDay"onkeypress="return filterFloat(event,this);" value="0" class="form-control">
                                         <b class="text-danger" id="label-amount" style="display:none">Incorrecto..</b>
                                     </div>
                                     <div class="form-group col-md-2">
@@ -176,10 +176,6 @@
 
             $(document).ready(function(){
                 $('#agent').submit(function(e){
-                    // $('#btn_guardar').css('display', 'none');
-
-                    // var uno = document.getElementById('btn_submit');
-                    // uno.textContent = 'Guardando....'; 
                     $('#btn_submit').text('Guardando...');
                     $('#btn_submit').attr('disabled', true);
 
@@ -199,6 +195,8 @@
               
                 if(type=='diario')
                 {
+                    $('#label-amount').css('display', 'none');
+                    $('#btn_submit').attr('disabled',false);
                     $('#amountLoan').val(0);
 
                     $('#day1').val(24);
@@ -222,6 +220,11 @@
                 }
                 if(type=='diarioespecial')
                 {
+                    $('#label-amount').css('display', 'none');
+                    $('#btn_submit').attr('disabled',false);
+                    $('#amountLoan').val(0);
+
+                 
                     $('#day1').val('');
                     $('#day').val(0);
 
@@ -359,15 +362,6 @@
 
                     $(`#amountDay1`).val((aux?aux.toFixed(2):0)+' - '+(amountDay!='Infinity'?amountDay.toFixed(2):0));
                     $(`#amountDay`).val(amountDay);  
-
-                    // if (amountDay % 1 == 0) {
-                    //     $('#label-amount').css('display', 'none');
-                    //     $('#btn_submit').attr('disabled',false);
-
-                    // } else {
-                    //     $('#label-amount').css('display', 'block');
-                    //     $('#btn_submit').attr('disabled',true);
-                    // }
                     
                 }
             }
@@ -421,11 +415,42 @@
 
             
             
-            function inputNumeric(event) {
-                if(event.charCode >= 48 && event.charCode <= 57){
-                    return true;
+            // function inputNumeric(event) {
+            //     if(event.charCode >= 48 && event.charCode <= 57){
+            //         return true;
+            //     }
+            //     return false;        
+            // }
+
+
+            function filterFloat(evt,input){
+                // Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
+                var key = window.Event ? evt.which : evt.keyCode;    
+                var chark = String.fromCharCode(key);
+                var tempValue = input.value+chark;
+                if(key >= 48 && key <= 57){
+                    if(filter(tempValue)=== false){
+                        return false;
+                    }else{       
+                        return true;
+                    }
                 }
-                return false;        
+                // else{
+                //     if(key == 8 || key == 13 || key == 46 || key == 0) {            
+                //         return true;              
+                //     }else{
+                //         return false;
+                //     }
+                // }
+            }
+            function filter(__val__){
+                var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+                if(preg.test(__val__) === true){
+                    return true;
+                }else{
+                return false;
+                }
+                
             }
 
         </script>

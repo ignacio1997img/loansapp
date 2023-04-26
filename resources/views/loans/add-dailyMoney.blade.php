@@ -308,7 +308,7 @@
                                               
                                                 <div class="form-group col-md-6">
                                                     <small>Cuota</small>
-                                                    <input type="number" name="amount" id="amount" min="0" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right" class="form-control text" required>                                    
+                                                    <input type="number" name="amount" id="amount" min="0.1" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right" class="form-control text" required>                                    
                                                     <b class="text-danger" id="label-amount" style="display:none">El monto incorrecto..</b>
                                                 </div>   
                                                 <div class="form-group col-md-6">
