@@ -629,6 +629,11 @@ class LoanController extends Controller
         DB::beginTransaction();
         try {
             $loan = Loan::where('id', $loan)->first();
+
+            if($loan->status== 'entregado')
+            {
+                return redirect()->route('loans.index')->with(['message' => 'El Prestamo ya fue entregado', 'alert-type' => 'error']);
+            }
             // return $loan;
             $loan->update(['cashier_id'=>$request->cashier_id,'delivered_userId'=>Auth::user()->id, 'delivered_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'entregado', 'delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
 
@@ -762,7 +767,7 @@ class LoanController extends Controller
             return redirect()->route('loans.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id,]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 0;
+            // return 0;
             return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
 
