@@ -225,7 +225,7 @@
                     $('#amountLoan').val(0);
 
                  
-                    $('#day1').val('');
+                    $('#day1').val(0); //0
                     $('#day').val(0);
 
 
@@ -236,7 +236,7 @@
                     $('#amountTotal1').val(0);
                     $('#amountTotal').val(0);
 
-                    $('#porcentage1').val('0');
+                    $('#porcentage1').val(0);//0
                     $('#porcentage').val(0);
 
                     $('#amountPorcentage1').val('');
