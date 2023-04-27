@@ -180,6 +180,7 @@
                     $('#btn_submit').attr('disabled', true);
 
                 });
+                function list()
             })
 
             $(document).ready(() => {
