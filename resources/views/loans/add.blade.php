@@ -24,8 +24,8 @@
                                 <h5 id="h4" class="panel-title">Detalle del Prestamos &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     {{-- <br> --}}
                                     {{-- <div class="col-md-12 text-right"> --}}
-                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario" ><p>Prestamo diario</p></label>
-                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial" checked><p>Prestamo Diario Especial</p> </label>
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario" checked><p>Prestamo diario</p></label>
+                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial"><p>Prestamo Diario Especial</p> </label>
                                     {{-- </div> --}}
                                 </h5>
                             </div>
@@ -180,7 +180,6 @@
                     $('#btn_submit').attr('disabled', true);
 
                 });
-                function list()
             })
 
             $(document).ready(() => {
@@ -188,7 +187,7 @@
                 $('.radio-type').click(function(){
                     $(`#text_type`).val($(".radio-type:checked").val());
                     list();
-
+                    
                 });
             });
             function list()
