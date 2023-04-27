@@ -670,7 +670,7 @@ class LoanController extends Controller
             $date = date("Y-m-d", strtotime($date));
             $date = date("d-m-Y",strtotime($date."+ 1 days"));
 
-            return $loan;
+            return $loan->typeLoan;
          
             if($loan->typeLoan == 'diario')
             {
