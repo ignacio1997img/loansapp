@@ -225,7 +225,7 @@
                     $('#amountLoan').val(0);
 
                  
-                    $('#day1').val(0); //0
+                    $('#day1').val(24); //0
                     $('#day').val(0);
 
 
