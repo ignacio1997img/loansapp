@@ -51,9 +51,9 @@
                                     <div class="form-group col-md-6">
                                         <small>Asignar Ruta</small>
                                         <select name="route_id" id="route_id" class="form-control select2" required>
-                                            <option value="" disabled selected>-- Selecciona una ruta --</option>
+                                            {{-- <option value="" disabled selected>-- Selecciona una ruta --</option> --}}
                                             @foreach ($routes as $item)
-                                                <option value="{{$item->id}}">{{$item->name}}</option>  
+                                                <option value="{{$item->id}}" @if($item->id==4) selected @endif>{{$item->name}}</option>  
                                             @endforeach
                                         </select>
                                     </div>                                  
@@ -236,7 +236,7 @@
                     $('#amountTotal1').val(0);
                     $('#amountTotal').val(0);
 
-                    $('#porcentage1').val('');
+                    $('#porcentage1').val('0');
                     $('#porcentage').val(0);
 
                     $('#amountPorcentage1').val('');
