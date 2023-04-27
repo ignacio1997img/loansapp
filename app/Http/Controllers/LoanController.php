@@ -670,6 +670,7 @@ class LoanController extends Controller
             $date = date("Y-m-d", strtotime($date));
             $date = date("d-m-Y",strtotime($date."+ 1 days"));
 
+            // return $loan;
          
             if($loan->typeLoan == 'diario')
             {
@@ -744,8 +745,6 @@ class LoanController extends Controller
                     {
                         $debA = $aux;
                     }
-            return $loan->typeLoan;
-
 
                     LoanDay::create([
                         'loan_id' => $loan->id,
