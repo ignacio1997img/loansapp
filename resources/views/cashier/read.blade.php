@@ -150,7 +150,7 @@
                                         <th style="text-align: right">Monto Prestado</th>
                                         <th style="text-align: right">Interes a Cobrar</th>
                                         <th style="text-align: right">Total</th>
-                                        <th style="text-align: right">Acciones</th>
+                                        {{-- <th style="text-align: right">Acciones</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -166,9 +166,17 @@
 
                                             </td>
                                             <td>
-                                                {{ $item->code }}
+                                                {{ $item->code }}<br>
+
+                                                
                                                 @if ($item->deleted_at)
                                                     <label class="label label-danger">Anulado</label>
+                                                @else
+                                                    @if ($item->amountTotal == $item->debt)
+                                                        <label class="label label-primary">No cuenta con pagos</label><br>
+                                                    @else
+                                                        <label class="label label-success">Cuenta con dias pagados</label><br>
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td>{{ $item->date}}</td>
@@ -199,9 +207,8 @@
                                                     <small>Bs.</small> {{ number_format($item->amountTotal, 2, ',', '.') }}
                                                 @endif
                                             </td>
-                                            <td class="text-right">
+                                            {{-- <td class="text-right">
                                                 @if (!$item->deleted_at)
-                                                    {{-- <button type="button" onclick="print_recipe({{ $payment->id }})" title="Imprimir" class="btn btn-default btn-print"><i class="glyphicon glyphicon-print"></i> Imprimir</button> --}}
                                                     @if ($item->amountTotal == $item->debt)
 
                                                     @else
@@ -212,7 +219,7 @@
                                                 @else
                                                     <label class="label label-danger">Prestamo eliminado</label>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                         @php
                                             $cont++;
@@ -225,9 +232,9 @@
                                     @endforeach
                                     <tr>
                                         <td colspan="5" style="text-align: right"><b>TOTAL</b></td>
-                                        <td style="text-align: right"><b>{{ number_format($loans, 2, ',', '.') }}</b></td>
-                                        <td style="text-align: right"><b>{{ number_format($interes, 2, ',', '.') }}</b></td>
-                                        <td style="text-align: right"><b>{{ number_format($total, 2, ',', '.') }}</b></td>
+                                        <td style="text-align: right"><small>Bs.</small> <b>{{ number_format($loans, 2, ',', '.') }}</b></td>
+                                        <td style="text-align: right"><small>Bs.</small> <b>{{ number_format($interes, 2, ',', '.') }}</b></td>
+                                        <td style="text-align: right"><small>Bs.</small> <b>{{ number_format($total, 2, ',', '.') }}</b></td>
                                     </tr>
                                 </tbody>
                             </table>

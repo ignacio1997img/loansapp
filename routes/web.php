@@ -179,11 +179,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('print/dailyCollection', [ReportManagerController::class, 'dailyCollection'])->name('print.dailyCollection');
     Route::post('print/dailyCollection/list', [ReportManagerController::class, 'dailyCollectionList'])->name('print-dailyCollection.list');
 
+    //Para ver el total de los prestamos prestado total
+    Route::get('print/loanAll', [ReportManagerController::class, 'loanAll'])->name('print-loanAll');
+    Route::post('print/loanAll/list', [ReportManagerController::class, 'loanAllList'])->name('print-loanAll.list');
+    
+    //Para ver la lista de los prestamos con dias atrazados o lista de deudas atrazadas
+    Route::get('print/loanListLate', [ReportController::class, 'loanListLate'])->name('print-loanListLate');
+    Route::post('print/loanListLate/list', [ReportController::class, 'loanListLateList'])->name('print-loanListLate.list');
 
     
 
-    Route::get('print/loanListLate', [ReportController::class, 'loanListLate'])->name('print-loanListLate');
-    Route::post('print/loanListLate/list', [ReportController::class, 'loanListLateList'])->name('print-loanListLate.list');
 
 
 

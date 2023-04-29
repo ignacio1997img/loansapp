@@ -41,7 +41,9 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "successLoan_loans" or
 
 
-                                            `key` = "browse_printdailyCollection" or
+                                            `key` = "browse_printdailyCollection" or 
+                                            `key` = "browse_printloanAll" or 
+
                                             
                                             `key` = "browse_printloanListLate" or
 

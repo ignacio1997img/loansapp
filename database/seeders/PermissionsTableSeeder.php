@@ -90,6 +90,9 @@ class PermissionsTableSeeder extends Seeder
         // para reportes en general GERENTE Y ADMINISTRADOR
         $keys = [
             'browse_printdailyCollection',
+            'browse_printloanAll',
+
+
             'browse_printdailyList',
             'browse_printloanListLate',
 

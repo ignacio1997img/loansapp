@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <th style="text-align: center">CODIGO PRESTAMO</th>
-                        <th style="text-align: center">FECHA DE PRESTAMO</th>
+                        <th style="text-align: center">FECHA DEL CALENDARIO</th>
                         <th style="text-align: center">TOTAL DEL PRESTAMO</th>
 
                         <th style="text-align: center">N. TRANS.</th>
@@ -41,7 +41,11 @@
                             <td>{{ $item->ci }}</td>
                             <td>{{ strtoupper($item->first_name)}} {{ strtoupper($item->last_name1)}} {{ strtoupper($item->last_name2)}}</td>
                             <td>{{ strtoupper($item->name)}}</td>
-                            <td style="text-align: center"><small>{{ $item->code}}</small></td>
+                            <td style="text-align: center"><small>{{ $item->code}}</small>
+                                @if ($item->deleted_at) <br>
+                                    <label class="label label-danger">Prestamo eliminado</label><label class="label label-success">Transaccion activa</label>  
+                                @endif
+                            </td>
                             <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
                             <td style="text-align: right">{{ number_format($item->amountTotal,2, ',','.') }}</td>
                             <td style="text-align: right">{{ $item->transaction}}</td>

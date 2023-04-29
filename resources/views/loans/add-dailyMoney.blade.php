@@ -322,7 +322,7 @@
 
                                             <div class="row">
                                                 <div class="col-md-12 text-right">
-                                                    <button type="submit" id="btn-sumit" style="display:block" disabled class="btn btn-success"><i class="fa-solid fa-money-bill"></i> Pagar</button>
+                                                    <button type="submit" id="btn-sumit" style="display:block" disabled class="btn btn-success btn-sumit"><i class="fa-solid fa-money-bill"></i> Pagar</button>
                                                 </div>
                                             </div>
                                         </form> 
@@ -486,8 +486,8 @@
                 })  
 
                 $('#form-abonar-pago').submit(function(e){
-                    // $('#btn-sumit').attr('disabled', true);
-                    $('#btn-sumit').css('display', 'none');
+                    $('.btn-sumit').attr('disabled', true);
+                    // $('#btn-sumit').css('display', 'none');
 
                 });
             })

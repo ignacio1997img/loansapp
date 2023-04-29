@@ -14,6 +14,16 @@
     @endif
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
+
+        /* table, th, td {
+            border-collapse: collapse !important;
+        }
+          
+        table.print-friendly tr td, table.print-friendly tr th {
+            page-break-inside: avoid !important;
+        } */
+
+
         body{
             margin: 0px auto;
             font-family: Arial, sans-serif;
