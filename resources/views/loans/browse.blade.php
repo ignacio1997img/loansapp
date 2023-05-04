@@ -78,6 +78,9 @@
                                     <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="pagado">Pagados</label>
                                     <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="rechazado">Rechazados</label>
                                 @endif
+                                @if (!auth()->user()->hasRole('cobrador') && !auth()->user()->hasRole('cajero'))
+                                    <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="eliminado">Prestamos Eliminados</label>
+                                @endif
                             </div>
                         </div>
                         <div class="row" id="div-results" style="min-height: 120px"></div>
