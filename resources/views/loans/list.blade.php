@@ -115,7 +115,7 @@
 
                             @if(!auth()->user()->hasRole('cobrador') && !auth()->user()->hasRole('cajeros'))
                                 <a href="{{ route('loan-routeOld.index', ['loan' => $item->id]) }}" title="Rutas del Prestamo" class="btn btn-sm btn-dark">
-                                    <i class="fa-solid fa-route"></i><span class="hidden-xs hidden-sm"> Rutas</span>
+                                    <i class="fa-solid fa-route"></i><span class="hidden-xs hidden-sm"></span>
                                 </a>
                             @endif
 
