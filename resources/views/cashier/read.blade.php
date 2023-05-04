@@ -207,19 +207,6 @@
                                                     <small>Bs.</small> {{ number_format($item->amountTotal, 2, ',', '.') }}
                                                 @endif
                                             </td>
-                                            {{-- <td class="text-right">
-                                                @if (!$item->deleted_at)
-                                                    @if ($item->amountTotal == $item->debt)
-
-                                                    @else
-                                                        <label class="label label-success">Cuenta con dias pagados</label><br>
-                                                    @endif
-                                                    <button type="button" data-toggle="modal" data-target="#delete_payment-modal" data-id="{{ $item->id }}" class="btn btn-danger btn-delete"><i class="voyager-trash"></i> Anular</button>                                                       
-
-                                                @else
-                                                    <label class="label label-danger">Prestamo eliminado</label>
-                                                @endif
-                                            </td> --}}
                                         </tr>
                                         @php
                                             $cont++;

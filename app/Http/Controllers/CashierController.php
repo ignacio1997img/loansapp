@@ -471,6 +471,7 @@ class CashierController extends Controller
 
             $movement = CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first();   
             // return $amount;  
+            // return $movement;
             if($amount > $movement->balance)
             {
                 return redirect()->route('cashiers.show', ['cashier'=>$cashier->id])->with(['message' => 'Error, contactese con el desarrollador del sistema.', 'alert-type' => 'warning']);

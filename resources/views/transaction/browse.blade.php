@@ -36,15 +36,24 @@
                                                 <tr>
                                                     {{-- <td style="text-align: center">{{$item->id}}</td> --}}
                                                     <td style="text-align: center">{{$item->transaction}}</td>
-                                                    <td style="text-align: center">BS. {{$item->amount}}</td>
+                                                    <td style="text-align: center">
+                                                        @if ($item->deleted_at)
+                                                            <del>BS. {{$item->amount}} <br></del>
+                                                            <label class="label label-danger">Anulado por {{$item->eliminado}}</label>
+                                                        @else
+                                                        BS. {{$item->amount}}
+                                                        @endif
+                                                    </td>
                                                     <td style="text-align: center">
                                                         {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
                                                     </td>
                                                     <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
                                                     <td class="no-sort no-click bread-actions text-right">
-                                                        <a onclick="printDailyMoney({{$item->loan}}, {{$item->transaction_id}})"  title="Imprimir"  class="btn btn-danger">
-                                                            <i class="glyphicon glyphicon-print"></i>
-                                                        </a>
+                                                        @if(!$item->deleted_at)
+                                                            <a onclick="printDailyMoney({{$item->loan}}, {{$item->transaction_id}})" title="Imprimir"  class="btn btn-danger">
+                                                                <i class="glyphicon glyphicon-print"></i>
+                                                            </a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach                                                                               

@@ -26,17 +26,15 @@ class TransactionController extends Controller
             ->join('transactions as t', 't.id', 'lda.transaction_id')
             ->join('users as u', 'u.id', 'lda.agent_id')
             ->join('people as p', 'p.id', 'l.people_id')
+            ->leftJoin('users as ud', 'ud.id', 'lda.deleted_userId')
             ->where('l.id', $loan)
             ->where('l.deleted_at', null)
-            ->select('l.id as loan', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.id as people', 'lda.transaction_id', 't.transaction', 't.created_at')
+            ->select('l.id as loan', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.id as people', 'lda.transaction_id', 'ud.name as eliminado', 't.transaction', 't.deleted_at', 't.created_at')
             ->groupBy('loan', 'transaction')
             ->orderBy('transaction', 'ASC')
             ->get();
 
             // return $data;
-
-
-
 
         return view('transaction.browse', compact('data'));
     }
