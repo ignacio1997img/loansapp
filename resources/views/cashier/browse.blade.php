@@ -93,13 +93,13 @@
                                                         </a>
                                                     @endif
                                                     
-                                                    @if ($item->status == 'abierta' || $item->status == 'apertura pendiente')
+                                                    {{-- @if ($item->status == 'abierta' || $item->status == 'apertura pendiente') --}}
                                                         
                                                         <a href="#" title="Imprimir" class="btn btn-dark" onclick="openWindow({{$item->id}})">
                                                             <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir apertura</span>
                                                         </a>
 
-                                                    @endif
+                                                    {{-- @endif --}}
                                                     @if ($item->status == 'cerrada')
                                                         
                                                         <a href="#" title="Imprimir" class="btn btn-dark" onclick="closeWindow({{$item->id}})">

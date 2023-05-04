@@ -36,11 +36,11 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <img src="{{ $image }}" alt="{{strtoupper($item->people->first_name)}} {{strtoupper($item->people->last_name1)}} {{strtoupper($item->people->last_name2)}}" style="width: 60px; height: 60px; border-radius: 30px; margin-right: 10px">
+                                    <img src="{{ $image }}" alt="{{strtoupper($item->people->first_name)}} {{strtoupper($item->people->last_name1)}} {{strtoupper($item->people->last_name2)}}" style="width: 50px; height: 50px; border-radius: 30px; margin-right: 10px">
                                 </td>
                                 <td>
                                     <small>CI:</small> {{ $item->people->ci }} <br>
-                                    <small>NOMBRE:</small> {{strtoupper($item->people->first_name)}} {{strtoupper($item->people->last_name1)}} {{strtoupper($item->people->last_name2)}}
+                                    <small>{{strtoupper($item->people->first_name)}} {{strtoupper($item->people->last_name1)}} {{strtoupper($item->people->last_name2)}} </small>
                                 </td>
                             </tr>
                             
@@ -121,7 +121,7 @@
 
                             @if($item->status != 'rechazado')
                                 <a href="{{ route('loans-requirement-daily.create', ['loan' => $item->id]) }}" title="Requisitos" class="btn btn-sm btn-warning">
-                                    <i class="fa-solid fa-file"></i><span class="hidden-xs hidden-sm"> Requisitos</span>
+                                    <i class="fa-solid fa-file"></i><span class="hidden-xs hidden-sm"></span>
                                 </a>
                             @endif
                             
