@@ -134,7 +134,7 @@
 
                             @if ($item->status == 'entregado' && $item->status != 'rechazado')
                                 <a href="{{ route('loans-daily.money', ['loan' => $item->id, 'cashier_id'=>$cashier_id]) }}" title="Abonar Pago"  class="btn btn-sm btn-success">
-                                    <i class="voyager-dollar"></i><span class="hidden-xs hidden-sm"> {{$item->debt == 0?'Ver':'Abonar Pago'}}</span>
+                                    <i class="voyager-dollar"></i><span class="hidden-xs hidden-sm"> {{$item->debt == 0?'Ver':'Abonar'}}</span>
                                 </a>
                             @endif
 
