@@ -93,7 +93,7 @@ class PermissionsTableSeeder extends Seeder
             'browse_printloanAll',
 
 
-            'browse_printdailyList',
+            'browse_printdailyList', //para imprimir la lista diaria de cobro por dias y rutas
             'browse_printloanListLate',
 
             'browse_printloanCollection', //reportes para el cajero y el cobrador en moto

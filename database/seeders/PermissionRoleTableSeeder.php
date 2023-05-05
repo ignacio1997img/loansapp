@@ -45,7 +45,9 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "browse_printloanAll" or 
 
                                             
-                                            `key` = "browse_printloanListLate" or
+                                            `key` = "browse_printloanListLate" or 
+
+                                            `key` = "browse_printdailyList" or
 
                                             
                                             `key` = "browse_clear-cache"')->get();
@@ -65,6 +67,8 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "browse_printdailyCollection" or
                                             
                                             `key` = "browse_printloanListLate" or
+
+                                            `key` = "browse_printdailyList" or
 
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
@@ -93,7 +97,7 @@ class PermissionRoleTableSeeder extends Seeder
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
 
-        //############## Cajero ####################
+        //############## Cobrador ####################
         $role = Role::where('name', 'cobrador')->firstOrFail();
         $permissions = Permission::whereRaw('table_name = "admin" or
 
