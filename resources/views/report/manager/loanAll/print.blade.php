@@ -120,12 +120,12 @@
 @endsection
 @section('css')
     <style>
-        /* table, th, td {
+        table, th, td {
             border-collapse: collapse;
         }
           
         table.print-friendly tr td, table.print-friendly tr th {
             page-break-inside: avoid;
-        } */
+        }
     </style>
 @stop
