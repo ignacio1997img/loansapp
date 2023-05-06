@@ -93,7 +93,8 @@ class ReportManagerController extends Controller
                     ->whereDate('l.dateDelivered', '<=', date('Y-m-d', strtotime($request->finish)))
                     ->whereRaw($query_filter)
                     ->select('p.first_name', 'l.dateDelivered', 'p.last_name1', 'last_name2', 'p.ci', 'u.name', 'l.code', 'l.day', 'l.amountTotal', 'l.amountLoan', 'l.debt', 'l.porcentage', 'l.amountPorcentage')
-                    ->orderBy('l.dateDelivered', 'ASC')
+                    // ->orderBy('l.dateDelivered', 'ASC')
+                    ->orderBY('l.dateDelivered', 'ASC')
                     ->get();
         // return $data->id;    
 
