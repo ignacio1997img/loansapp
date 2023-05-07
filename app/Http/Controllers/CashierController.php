@@ -32,7 +32,7 @@ class CashierController extends Controller
         $user = Auth::user();
         $vault = Vault::where('deleted_at', null)->first();
         $cashier = Cashier::with(['vault_detail' => function($q){
-                $q->where('deleted_at', NULL);
+                $q->where('type', 'egreso')->where('deleted_at', NULL);
             },  'movements' => function($q){
                 $q->where('deleted_at', NULL);
             }])
@@ -376,6 +376,7 @@ class CashierController extends Controller
         try {
             $cashier = Cashier::findOrFail($id);
             $cashier->status = 'cerrada';
+            $cashier->closeUser_id= Auth::user()->id;
             $cashier->save();
             
             $detail = VaultDetail::create([
@@ -434,12 +435,14 @@ class CashierController extends Controller
     }
 
     public function print_close($id){
-        $cashier = Cashier::with(['user',
+        $cashier = Cashier::with(['user','userclose',
         'movements' => function($q){
             $q->where('deleted_at', NULL);
         }, 'details' => function($q){
             $q->where('deleted_at', NULL);
         }])->where('id', $id)->first();
+
+        // return $cashier;    
 
 
         

@@ -53,11 +53,28 @@
     </div>
     @for ($i = 0; $i < 2; $i++)
     <div style="height: 45vh" @if ($i == 1) class="show-print" @else class="border-bottom" @endif>
+        @php
+            $amount = 0;
+            foreach($cashier->movements as $movement){
+                $amount += $movement->balance;
+            }
+
+            $close = App\Models\User::where('id', $cashier->closeUser_id)->first(); 
+        @endphp
         <table width="100%">
             <tr>
-                <td><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="120px"></td>
-                <td style="text-align: right">
+                <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="LOANSAPP" width="80px"></td>
+                <td style="text-align: center;  width:50%">
                     <h3 style="margin-bottom: 0px; margin-top: 5px">CAJAS - LOANSAPP<br> <small>CIERRE DE CAJA</small> </h3>
+                </td>
+
+                <td style="text-align: right; width:30%">
+                    <h3 style="margin-bottom: 0px; margin-top: 5px">
+                        <div id="qr_code">
+                                {{-- {!! QrCode::size(80)->generate('Total de dinero abonado: Bs '.number_format($amount,2, ',', '.').', Entregado en fecha '.date('d', strtotime($cashier->vault_details->created_at)).' de '.strtoupper($months[intval(date('m', strtotime($cashier->vault_details->created_at)))] ).' de '.date('Y', strtotime($cashier->vault_details->created_at)).' a '.strtoupper($cashier->user->name). ' con CI: '.$cashier->user->ci.' Entregado Por '.$data->name.' con CI: '.$data->ci); !!} --}}
+                        </div>
+                        <small style="font-size: 9px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
+                    </h3>
                 </td>
             </tr>
         </table>
@@ -103,7 +120,7 @@
 
                             // Recorer movimientos de caja
                             foreach($cashier->movements as $movement){
-                                if($movement->type == 'ingreso' && $movement->description == 'Monto de apertura de caja.'){
+                                if($movement->type == 'ingreso'){
                                     $amount_open += $movement->amount;
                                 }
                                 if($movement->type == 'ingreso' && $movement->description != 'Monto de apertura de caja.'){
@@ -187,17 +204,13 @@
                         <tr>
                             <td colspan="4" style="text-align: center"><b><small>RECIBIDO</small></b></td>
                         </tr>
-                        @php
+                        {{-- @php
                             $total_cashier = $amount_open + $amount_in - $amount_out - $amount_payments;
-                        @endphp
-                        <tr>
+                        @endphp --}}
+                        <tr>                            
                             <tr>
                                 <td><b>SALDO CAJA</b></td>
-                                <td style="border: 1px solid #ddd">{{ number_format($cashier->movements[0]->balance, 2, ',', '.') }}</td>
-                            {{-- </tr>
-                            <tr> --}}
-                                {{-- <td style="text-align: right; width: 120px"><b>SALDO ARQUEO</b></td>
-                                <td style="border: 1px solid #ddd">{{ number_format($amount_close, 2, ',', '.') }}</td> --}}
+                                <td style="border: 1px solid #ddd">{{ number_format($amount, 2, ',', '.') }}</td>
                             </tr>
                         </tr>
                         {{-- @php
@@ -235,7 +248,7 @@
                     <br>
                     <div>
                         <br>
-                        <p style="text-align: center">.............................................. <br> <small>{{ strtoupper(Auth::user()->name) }}</small> <br> <small>{{ Auth::user()->ci }}</small> <br> <b>{{ strtoupper(Auth::user()->role->display_name) }}</b> </p>
+                        <p style="text-align: center">.............................................. <br> <small>{{ $close->name }}</small> <br> <small>{{ $close->ci }}</small> <br> <b>{{ strtoupper($close->role->display_name) }}</b> </p>
                     </div>
                 </td>
             </tr>

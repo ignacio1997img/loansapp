@@ -22,6 +22,8 @@ class CreateCashiersTable extends Migration
             $table->string('status')->nullable();
             $table->timestamps();
             $table->datetime('closed_at')->nullable();
+            $table->foreignId('closeUser_id')->nullable()->constrained('users');
+
             $table->softDeletes();
         });
     }

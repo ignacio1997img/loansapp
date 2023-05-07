@@ -10,7 +10,7 @@ class Cashier extends Model
     use HasFactory;
 
     protected $fillable = [
-        'vault_id', 'user_id', 'title', 'observations', 'status', 'closed_at', 'deleted_at'
+        'vault_id', 'user_id', 'title', 'observations', 'status', 'closed_at', 'deleted_at', 'closeUser_id'
     ];
 
     public function movements(){
@@ -19,6 +19,10 @@ class Cashier extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function userclose(){
+        return $this->belongsTo(User::class, 'closeUser_id');
     }
 
     public function vault()
