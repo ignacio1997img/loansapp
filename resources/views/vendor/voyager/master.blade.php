@@ -43,6 +43,8 @@
 
     <link rel="stylesheet" href="{{ asset('css/style/dataTable.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style/h.css') }}">
+    
+    <link rel="stylesheet" href="{{ asset('css/style/loading.css') }}">
 
     {{-- show swetalert message --}}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

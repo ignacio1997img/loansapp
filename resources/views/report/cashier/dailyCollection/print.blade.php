@@ -35,22 +35,25 @@
                     <div id="qr_code">
                         {!! QrCode::size(80)->generate('Total Cobrado: Bs'.number_format($amount,2, ',', '.').', Cobrado Por: '.$agent.', Recaudado en Fecha '.date('d', strtotime($date)).' de '.strtoupper($months[intval(date('m', strtotime($date)))] ).' de '.date('Y', strtotime($date))); !!}
                     </div>
-                    <small style="font-size: 8px; font-weight: 100">Impreso por: {{ Auth::user()->name }} {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 8px; font-weight: 100">Impreso por: {{ Auth::user()->name }} {{ date('d/m/Y H:i:s') }}</small>
                 </h3>
             </td>
         </tr>
     </table>
-    <table style="width: 100%; font-size: 8px" border="1" cellspacing="0" cellpadding="4">
+    {{-- <table style="width: 100%; font-size: 8px" border="1" cellspacing="0" cellpadding="4"> --}}
+    <table style="width: 100%; font-size: 10px" border="1" class="print-friendly" cellspacing="0" cellpadding="2">
+
         <thead>
             <tr>
                 <th rowspan="2" style="width:5px">N&deg;</th>   
                 <th rowspan="2" style="text-align: center">CI</th>
                 <th rowspan="2" style="text-align: center">CLIENTE</th>
+                <th rowspan="2" style="text-align: center">ATENDIDO POR</th>
                 <th colspan="3" style="text-align: center">DETALLE DEL PRESTAMOS</th>
                 <th colspan="3" style="text-align: center">DETALLE DE PAGO</th>
             </tr>
             <tr>
-                <th style="text-align: center; width:5px">CODIGO PRESTAMO</th>
+                <th style="text-align: center; width:55px">CODIGO</th>
                 <th style="text-align: center; width:5px">FECHA DE PRESTAMO</th>
                 <th style="text-align: center; width:5px">TOTAL DEL PRESTAMO</th>
 
@@ -69,8 +72,9 @@
                     <td>{{ $count }}</td>
                     <td><b>CI:</b> {{ $item->ci}}</td>
                     <td>                        
-                        <b>{{strtoupper($item->first_name)}} {{ strtoupper($item->last_name1)}} {{ strtoupper($item->last_name2)}}</b>
+                        {{strtoupper($item->first_name)}} {{ strtoupper($item->last_name1)}} {{ strtoupper($item->last_name2)}}
                     </td>
+                    <td>{{ strtoupper($item->name)}}</td>
                     <td style="text-align: center"><b>{{ $item->code}}</b></td>
                     <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
                     <td style="text-align: right">{{ number_format($item->amountTotal, 2, ',', '.') }}</td>
@@ -89,7 +93,7 @@
                 </tr>
             @endforelse
             <tr>
-                <th colspan="8" style="text-align: right">Total</th>
+                <th colspan="9" style="text-align: right">Total</th>
                 <td style="text-align: right"><strong>Bs. {{ number_format($total,2, ',', '.') }}</strong></td>
             </tr>
         </tbody>       
@@ -131,6 +135,11 @@
     <style>
         table, th, td {
             border-collapse: collapse;
+        }
+        /* @media print { div{ page-break-inside: avoid; } }  */
+          
+        table.print-friendly tr td, table.print-friendly tr th {
+            page-break-inside: avoid;
         }
           
     </style>

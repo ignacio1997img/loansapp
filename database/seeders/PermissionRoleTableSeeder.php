@@ -43,7 +43,7 @@ class PermissionRoleTableSeeder extends Seeder
 
                                             `key` = "browse_printdailyCollection" or 
                                             `key` = "browse_printloanAll" or 
-
+                                            `key` = "browse_printloanCollection" or                                             
                                             
                                             `key` = "browse_printloanListLate" or 
 
@@ -65,6 +65,7 @@ class PermissionRoleTableSeeder extends Seeder
 
 
                                             `key` = "browse_printdailyCollection" or
+                                            `key` = "browse_printloanCollection" or                                             
                                             
                                             `key` = "browse_printloanListLate" or
 
