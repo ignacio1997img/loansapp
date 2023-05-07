@@ -47,17 +47,38 @@
     </style>
 </head>
 <body>
+    @php
+        $months = array('', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');    
+    @endphp
     <div class="hide-print" style="text-align: right; padding: 10px 0px">
         <button class="btn-print" onclick="window.close()">Cancelar <i class="fa fa-close"></i></button>
         <button class="btn-print" onclick="window.print()"> Imprimir <i class="fa fa-print"></i></button>
     </div>
     @for ($i = 0; $i < 2; $i++)
+    
     <div style="height: 45vh" @if ($i == 1) class="show-print" @else class="border-bottom" @endif>
+        @php
+            $amount = 0;
+            foreach($cashier->vault_details->cash as $movement){
+                $amount += $movement->cash_value * $movement->quantity;
+            }
+
+            $data = App\Models\User::where('id', $cashier->vault_details->user_id)->first(); 
+        @endphp
         <table width="100%">
             <tr>
-                <td><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="80px"></td>
-                <td style="text-align: right">
-                    <h3 style="margin-bottom: 0px; margin-top: 5px">CAJAS - LOANSAPP<br> <small>ENTREGA DE FONDOS</small> </h3>
+                <td style="width: 20%"><img src="{{ asset('images/icon.png') }}" alt="LOANSAPP" width="80px"></td>
+                <td style="text-align: center;  width:50%">
+                    <h3 style="margin-bottom: 0px; margin-top: 5px">CAJAS - LOANSAPP<br> <small>ENTREGA DE FONDOS</small>
+                    </h3>
+                </td>
+                <td style="text-align: right; width:30%">
+                    <h3 style="margin-bottom: 0px; margin-top: 5px">
+                        <div id="qr_code">
+                            {!! QrCode::size(80)->generate('Total de dinero abonado: Bs '.number_format($amount,2, ',', '.').', Entregado en fecha '.date('d', strtotime($cashier->vault_details->created_at)).' de '.strtoupper($months[intval(date('m', strtotime($cashier->vault_details->created_at)))] ).' de '.date('Y', strtotime($cashier->vault_details->created_at)).' a '.strtoupper($cashier->user->name). ' con CI: '.$cashier->user->ci.' Entregado Por '.$data->name.' con CI: '.$data->ci); !!}
+                        </div>
+                        <small style="font-size: 9px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
+                    </h3>
                 </td>
             </tr>
         </table>
@@ -80,7 +101,7 @@
                                     $dias = ['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
                                     $meses = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
                                 @endphp
-                                {{ $dias[date('N', strtotime($cashier->created_at))].', '.date('d', strtotime($cashier->created_at)).' de '.$meses[intval(date('m', strtotime($cashier->created_at)))].' de '.date('Y', strtotime($cashier->created_at)).' a las '.date('H:i:s', strtotime($cashier->created_at)) }}
+                                {{ $dias[date('N', strtotime($cashier->vault_details->created_at))].', '.date('d', strtotime($cashier->vault_details->created_at)).' de '.$meses[intval(date('m', strtotime($cashier->vault_details->created_at)))].' de '.date('Y', strtotime($cashier->vault_details->created_at)).' a las '.date('H:i:s', strtotime($cashier->created_at)) }}
                             </td>
                         </tr>
                         <tr>
@@ -92,15 +113,7 @@
                             <td style="border: 1px solid #ddd">Apertura de caja</td>
                         </tr>
                         <tr>
-                            <td><b>MONTO</b></td>
-                            @php
-                                $amount = 0;
-                                foreach($cashier->movements as $movement){
-                                    if($movement->description == 'Monto de apertura de caja.'){
-                                        $amount += $movement->amount;
-                                    }
-                                }
-                            @endphp
+                            <td><b>MONTO</b></td>                            
                             <td style="border: 1px solid #ddd">{{ number_format($amount, 2, ',', '.') }}</td>
                         </tr>
                         <tr>
@@ -126,14 +139,18 @@
                         <br>
                         <p style="text-align: center">.............................................. <br> <small>{{ strtoupper($cashier->user->name) }}</small> <br> <small>{{ $cashier->user->ci }}</small> <br> <b>{{ strtoupper($cashier->user->role->display_name) }}</b> </p>
                     </div>
+                    <br>
                     <div>
                         <p style="text-align: center; margin-top: 0px"><b><small>ENTREGADO POR</small></b></p>
                         <br>
-                        <p style="text-align: center">.............................................. <br> <small>{{ strtoupper(Auth::user()->name) }}</small> <br> <small>{{ Auth::user()->ci }}</small> <br> <b>{{ strtoupper(Auth::user()->role->display_name) }}</b> </p>
+                        
+                        <p style="text-align: center">.............................................. <br> <small>{{ $data->name }}</small> <br> <small>{{ $data->ci }}</small> <br> <b>{{ $data->role->display_name }}</b> </p>
                     </div>
                 </td>
             </tr>
         </table>
+        {{-- <small style="font-size: 9px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small> --}}
+
     </div>
     @endfor
 

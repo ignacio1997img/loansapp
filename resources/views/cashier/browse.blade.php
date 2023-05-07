@@ -82,6 +82,31 @@
                                 
                                                 <td style="text-align: right">
 
+
+                                                    <div class="btn-group" style="margin-right: 3px">
+                                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                                            Mas <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" role="menu" >
+                                                            @php
+                                                                $x=0;
+                                                            @endphp
+                                                            @foreach ($item->vault_detail as $aux)
+                                                                @php
+                                                                    $x++;
+                                                                @endphp
+                                                                <li><a href="#" onclick="openWindow({{$aux->id}})" class="btn-rotation" style="color: blue"  data-toggle="modal" title="Imprimir Comprobante" ><i class="fa-solid fa-print"></i> {{$x==1?'Imprimir Comporbante de Apertura':'Imprimir Comporbante de Abono #'.$x}}</a></li>
+                                                            @endforeach
+                                                            @if ($item->status == 'cerrada')
+                                                                <li><a href="#" onclick="closeWindow({{$item->id}})" class="btn-rotation" style="color: red" data-toggle="modal" title="Imprimir Comprobante de Cierre" ><i class="fa-solid fa-print"></i> Imprimir Comprobante de Cierre</a></li>
+                                                            @endif                
+                                                        </ul>
+                                                    </div>
+
+
+
+
+
                                                     @if ($item->status == 'abierta')
                                                         <a href="{{route('cashiers.amount', ['cashier'=>$item->id])}}" title="Editar" class="btn btn-sm btn-success">
                                                             <i class="voyager-dollar"></i> <span class="hidden-xs hidden-sm">Abonar Dinero</span>
@@ -93,20 +118,14 @@
                                                         </a>
                                                     @endif
                                                     
-                                                    {{-- @if ($item->status == 'abierta' || $item->status == 'apertura pendiente') --}}
-                                                        
-                                                        <a href="#" title="Imprimir" class="btn btn-dark" onclick="openWindow({{$item->id}})">
-                                                            <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir apertura</span>
-                                                        </a>
-
-                                                    {{-- @endif --}}
-                                                    @if ($item->status == 'cerrada')
+                                         
+                                                    {{-- @if ($item->status == 'cerrada')
                                                         
                                                         <a href="#" title="Imprimir" class="btn btn-dark" onclick="closeWindow({{$item->id}})">
                                                             <i class="glyphicon glyphicon-print"></i> <span class="hidden-xs hidden-sm">Imprimir cierre</span>
                                                         </a>
 
-                                                    @endif
+                                                    @endif --}}
 
                                                     @if ($item->status == "cierre pendiente")
                                                         <a href="{{route('cashiers.confirm_close',['cashier' => $item->id])}}" title="Ver" class="btn btn-sm btn-primary pull-right">

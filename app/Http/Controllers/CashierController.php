@@ -31,7 +31,13 @@ class CashierController extends Controller
     {
         $user = Auth::user();
         $vault = Vault::where('deleted_at', null)->first();
-        $cashier = Cashier::where('deleted_at', null)->get();
+        $cashier = Cashier::with(['vault_detail' => function($q){
+                $q->where('deleted_at', NULL);
+            },  'movements' => function($q){
+                $q->where('deleted_at', NULL);
+            }])
+            ->where('deleted_at', null)->get();
+        // return $cashier;
         return view('cashier.browse', compact('cashier', 'vault'));
     }
 
@@ -217,7 +223,7 @@ class CashierController extends Controller
                     // return $detail;
                     for ($i=0; $i < count($request->cash_value); $i++) { 
                         VaultDetailCash::create([
-                            'vaults_detail_id' => $detail->id,
+                            'vault_detail_id' => $detail->id,
                             'cash_value' => $request->cash_value[$i],
                             'quantity' => $request->quantity[$i],
                         ]);
@@ -299,8 +305,6 @@ class CashierController extends Controller
     }
 
     public function close_store($id, Request $request){
-        // dd($request);
-        // return $request;
         DB::beginTransaction();
         try {
             $cashier = Cashier::findOrFail($id);
@@ -408,13 +412,19 @@ class CashierController extends Controller
 
 
     public function print_open($id){
-        $cashier = Cashier::with(['user', 'vault_details' => function($q){
-            $q->where('deleted_at', NULL);
-        }, 'vault_details.cash' => function($q){
-            $q->where('deleted_at', NULL);
-        }, 'movements' => function($q){
-            $q->where('deleted_at', NULL);
-        }])->where('id', $id)->first();
+        // return $id;
+        $vaultDeatil = VaultDetail::where('id', $id)->where('deleted_at', null)->first();
+        $aux = $id;
+        // return $vaultDeatil;
+        $cashier = Cashier::with(['user', 'vault_details' => function($q) use($aux){
+                $q->where('id', $aux)->where('deleted_at', NULL);
+            }, 'vault_details.cash' => function($q){
+                $q->where('deleted_at', NULL);
+            }, 'movements' => function($q){
+                $q->where('deleted_at', NULL);
+            }])
+            ->where('id', $vaultDeatil->cashier_id)->first();
+        // return $cashier;    
         // dd($cashier);
         $view = view('cashier.print-open', compact('cashier'));
         return $view;
