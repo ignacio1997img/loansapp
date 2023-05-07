@@ -87,7 +87,7 @@
                                                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                                             Mas <span class="caret"></span>
                                                         </button>
-                                                        <ul class="dropdown-menu" role="menu" >
+                                                        <ul class="dropdown-menu" role="menu" style="left: -90px !important" >
                                                             @php
                                                                 $x=0;
                                                             @endphp
