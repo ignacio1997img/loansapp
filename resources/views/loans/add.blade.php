@@ -46,14 +46,14 @@
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Fecha</small>
-                                        <input type="date" name="date" class="form-control text">
+                                        <input type="date" name="date" class="form-control text" required>
                                     </div>   
                                     <div class="form-group col-md-6">
                                         <small>Asignar Ruta</small>
                                         <select name="route_id" id="route_id" class="form-control select2" required>
-                                            {{-- <option value="" disabled selected>-- Selecciona una ruta --</option> --}}
+                                            <option value="" disabled selected>-- Selecciona una ruta --</option>
                                             @foreach ($routes as $item)
-                                                <option value="{{$item->id}}" @if($item->id==4) selected @endif>{{$item->name}}</option>  
+                                                <option value="{{$item->id}}">{{$item->name}}</option>  
                                             @endforeach
                                         </select>
                                     </div>                                  
@@ -226,8 +226,8 @@
                     $('#amountLoan').val(0);
 
                  
-                    $('#day1').val(24); //0
-                    $('#day').val(24);
+                    $('#day1').val(0); //0
+                    $('#day').val(0);
 
 
 
@@ -240,7 +240,7 @@
                     $('#porcentage1').val(0);//0
                     $('#porcentage').val(0);
 
-                    $('#amountPorcentage1').val('');
+                    $('#amountPorcentage1').val(0);
                     $('#amountPorcentage').val(0);
 
                     $('#day1').attr('disabled',false);         
