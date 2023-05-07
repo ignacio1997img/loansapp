@@ -55,11 +55,11 @@
     <div style="height: 45vh" @if ($i == 1) class="show-print" @else class="border-bottom" @endif>
         <table width="100%">
             <tr>
-                <td><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="120px"></td>
+                <td><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="80px"></td>
                 <td style="text-align: right">
                     <h3 style="margin-bottom: 0px; margin-top: 5px">
                         CAPRESI - LOANSAPP<br> <small>ESTADO DE BÓVEDA </small> <br>
-                        <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
+                        <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                     </h3>
                 </td>
             </tr>

@@ -57,7 +57,7 @@
                 <td><img src="{{ asset('images/icon.png') }}" alt="GADBENI" width="80px"></td>
                 <td style="text-align: right">
                     <h3 style="margin-bottom: 0px; margin-top: 5px">
-                        CAJAS - GOBERNACIÓN<br> <small>{{ Str::upper($detail->type) }} A BÓVEDA </small> <br>
+                        CAJAS - CAPRESI<br> <small>{{ Str::upper($detail->type) }} A BÓVEDA </small> <br>
                         <small style="font-size: 11px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/M/Y H:i:s') }}</small>
                     </h3>
                 </td>
