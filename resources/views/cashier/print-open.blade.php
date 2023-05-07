@@ -75,7 +75,7 @@
                 <td style="text-align: right; width:30%">
                     <h3 style="margin-bottom: 0px; margin-top: 5px">
                         <div id="qr_code">
-                            {!! QrCode::size(80)->generate('Total de dinero abonado: Bs '.number_format($amount,2, ',', '.').', Entregado en fecha '.date('d', strtotime($cashier->vault_details->created_at)).' de '.strtoupper($months[intval(date('m', strtotime($cashier->vault_details->created_at)))] ).' de '.date('Y', strtotime($cashier->vault_details->created_at)).' a '.strtoupper($cashier->user->name). ' con CI: '.$cashier->user->ci.' Entregado Por '.$data->name.' con CI: '.$data->ci); !!}
+                            {!! QrCode::size(80)->generate('Total de dinero abonado: Bs '.number_format($amount,2, ',', '.').', Entregado en fecha '.date('d', strtotime($cashier->vault_details->created_at)).' de '.strtoupper($months[intval(date('m', strtotime($cashier->vault_details->created_at)))] ).' de '.date('Y', strtotime($cashier->vault_details->created_at)).' a '.strtoupper($cashier->user->name). ' con CI: '.$cashier->user->ci.' Entregado Por '.strtoupper($data->name).' con CI: '.$data->ci); !!}
                         </div>
                         <small style="font-size: 9px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                     </h3>
@@ -144,7 +144,7 @@
                         <p style="text-align: center; margin-top: 0px"><b><small>ENTREGADO POR</small></b></p>
                         <br>
                         
-                        <p style="text-align: center">.............................................. <br> <small>{{ $data->name }}</small> <br> <small>{{ $data->ci }}</small> <br> <b>{{ $data->role->display_name }}</b> </p>
+                        <p style="text-align: center">.............................................. <br> <small>{{ strtoupper($data->name) }}</small> <br> <small>{{ $data->ci }}</small> <br> <b>{{ strtoupper($data->role->display_name) }}</b> </p>
                     </div>
                 </td>
             </tr>

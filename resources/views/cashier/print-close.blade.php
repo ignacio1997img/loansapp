@@ -47,6 +47,9 @@
     </style>
 </head>
 <body>
+    @php
+        $months = array('', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');    
+    @endphp
     <div class="hide-print" style="text-align: right; padding: 10px 0px">
         <button class="btn-print" onclick="window.close()">Cancelar <i class="fa fa-close"></i></button>
         <button class="btn-print" onclick="window.print()"> Imprimir <i class="fa fa-print"></i></button>
@@ -71,7 +74,7 @@
                 <td style="text-align: right; width:30%">
                     <h3 style="margin-bottom: 0px; margin-top: 5px">
                         <div id="qr_code">
-                                {{-- {!! QrCode::size(80)->generate('Total de dinero abonado: Bs '.number_format($amount,2, ',', '.').', Entregado en fecha '.date('d', strtotime($cashier->vault_details->created_at)).' de '.strtoupper($months[intval(date('m', strtotime($cashier->vault_details->created_at)))] ).' de '.date('Y', strtotime($cashier->vault_details->created_at)).' a '.strtoupper($cashier->user->name). ' con CI: '.$cashier->user->ci.' Entregado Por '.$data->name.' con CI: '.$data->ci); !!} --}}
+                        {!! QrCode::size(80)->generate('Saldo en caja: Bs '.number_format($amount,2, ',', '.').', Recibido a Boveda en fecha '.date('d', strtotime($cashier->closed_at)).' de '.strtoupper($months[intval(date('m', strtotime($cashier->closed_at)))] ).' de '.date('Y', strtotime($cashier->closed_at)).' a '.strtoupper($close->name). ' con CI: '.$close->ci.', Entregado Por '.strtoupper($cashier->user->name).' con CI: '.$cashier->user->ci); !!}
                         </div>
                         <small style="font-size: 9px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
                     </h3>
@@ -89,11 +92,11 @@
                     @php
                         $dias = ['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
                     @endphp
-                    {{ $dias[date('N', strtotime($cashier->created_at))].', '.date('d', strtotime($cashier->created_at)).' de '.date('m', strtotime($cashier->created_at)).' de '.date('Y', strtotime($cashier->created_at)) }}
+                    {{ $dias[date('N', strtotime($cashier->closed_at))].', '.date('d', strtotime($cashier->closed_at)).' de '.date('m', strtotime($cashier->closed_at)).' de '.date('Y', strtotime($cashier->closed_at)) }}
                 </td>
                 <td><b>HORA</b></td>
                 <td style="border: 1px solid #ddd">
-                    {{ date('H:i:s', strtotime($cashier->created_at)) }}
+                    {{ date('H:i:s', strtotime($cashier->closed_at)) }}
                 </td>
             </tr>
             <tr>
@@ -151,7 +154,7 @@
 
 
                             $loans = \App\Models\Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
-                                        ->where('deleted_at', null)->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
+                                    ->where('status', 'entregado')->where('cashier_id', $cashier->id)->get();
                             $loanTotal = 0;
                             foreach ($loans as $item) {
                                 $loanTotal+= $item->amountLoan;
@@ -163,14 +166,15 @@
                                     ->join('transactions as t', 't.id', 'lda.transaction_id')
                                     ->join('users as u', 'u.id', 'lda.agent_id')
                                     ->join('people as p', 'p.id', 'l.people_id')
+
                                     ->where('lda.status', 1)
                                     ->where('lda.deleted_at', null)
                                     ->where('lda.cashier_id', $cashier->id)
 
-                                    ->where('ld.deleted_at', null)
-                                    ->where('ld.status', 1)
+                                    // ->where('ld.deleted_at', null)
+                                    // ->where('ld.status', 1)
 
-                                    ->where('l.deleted_at', null)
+                                    // ->where('l.deleted_at', null)
 
                                     ->select('l.id as loan', DB::raw('SUM(lda.amount)as amount'), 'u.name', 'lda.agentType', 'p.id as people', 'lda.transaction_id', 't.transaction', 't.created_at')
                                     ->groupBy('loan', 'transaction')
@@ -248,7 +252,7 @@
                     <br>
                     <div>
                         <br>
-                        <p style="text-align: center">.............................................. <br> <small>{{ $close->name }}</small> <br> <small>{{ $close->ci }}</small> <br> <b>{{ strtoupper($close->role->display_name) }}</b> </p>
+                        <p style="text-align: center">.............................................. <br> <small>{{ strtoupper($close->name) }}</small> <br> <small>{{ $close->ci }}</small> <br> <b>{{ strtoupper($close->role->display_name) }}</b> </p>
                     </div>
                 </td>
             </tr>
