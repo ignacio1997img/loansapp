@@ -105,12 +105,15 @@ class ReportCashierController extends Controller
         $agent = User::where('id', $request->agent_id)->first()->name;
         $ci = User::where('id', $request->agent_id)->first()->ci;
         // dump($data);
+        $cashier = Cashier::where('user_id', Auth::user()->id)
+        ->where('status', '!=', 'cerrada')
+        ->where('deleted_at', NULL)->count();
 
         if($request->print){
             $date = $request->date;
             return view('report.cashier.loanDelivered.print', compact('data', 'date', 'amount', 'agent'));
         }else{
-            return view('report.cashier.loanDelivered.list', compact('data'));
+            return view('report.cashier.loanDelivered.list', compact('data', 'cashier'));
         }        
     }
 

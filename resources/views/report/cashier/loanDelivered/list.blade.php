@@ -1,6 +1,13 @@
 
 <div class="col-md-12 text-right">
-    <button type="button" onclick="report_print()" class="btn btn-dark"><i class="glyphicon glyphicon-print"></i> Imprimir</button>
+    @if ($cashier==0 || auth()->user()->hasRole('admin') || auth()->user()->hasRole('gerente') || auth()->user()->hasRole('administrador'))
+        <button type="button" onclick="report_print()" class="btn btn-dark"><i class="glyphicon glyphicon-print"></i> Imprimir</button>
+    @else
+        <div class="alert alert-warning">
+            <strong>Advertencia:</strong>
+            <p>Para poder imprimir su reporte no debe tener caja abierta o pendiente.</p>
+        </div>
+    @endif
 </div>
 <div class="col-md-12">
 <div class="panel panel-bordered">
