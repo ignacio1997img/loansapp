@@ -37,7 +37,7 @@ class TemplateController extends Controller
         $aux = rand(10,99).''.rand(1,9).''.rand(100,999);
         codeVerification::where('loan_id', $request->loan_id)->where('type','solicitudCliente')->where('status',1)->update(['status'=>0]);
         CodeVerification::create(['type'=>'solicitudCliente', 'loan_id'=>$request->loan_id, 'cell_phone'=>$request->cell_phone, 'code'=>$aux]);
-        Http::get('http://whatsapp.capresi.net/?number=591'.$request->cell_phone.'&message=CAPRESI%0A%0A*'.$aux.'* es tu codigo de verificación.%0A%0ANo lo compartas con nadie mas');
+        Http::get('https://api.whatsapp.capresi.net/?number=591'.$request->cell_phone.'&message=CAPRESI%0A%0A*'.$aux.'* es tu codigo de verificación.%0A%0ANo lo compartas con nadie mas');
 
         return true;
     }
@@ -61,7 +61,7 @@ class TemplateController extends Controller
                 $cadena=$cadena.''.Carbon::parse($iten->date)->format('d/m/Y').'                  '.$iten->amount.'                '.str_pad(($iten->amount-$iten->debt), 2, "0", STR_PAD_LEFT).($i!=$cant?'%0A':'');
                 
             }
-            Http::get('http://whatsapp.capresi.net/?number=591'.$phone.'&message=
+            Http::get('https://api.whatsapp.capresi.net/?number=591'.$phone.'&message=
   *COMPROBANTE DE DEUDA PENDIENTE*
 
     

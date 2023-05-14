@@ -63,7 +63,7 @@
     </div>
     
 
-        <table width="90%">
+        <table width="100%">
             <tr>
                 <td colspan="2" style="text-align: center">
                     <h3 style="margin-bottom: 0px; margin-top: 50px; font-size: 22px"><small>COMPROBANTE DE PAGO</small> </h3>
@@ -74,7 +74,7 @@
         {{-- <div id="watermark">
             <img src="{{ asset('images/icon.png') }}" height="100%" width="100%" /> 
         </div> --}}
-        <table width="90%" cellpadding="5" style="font-size: 15px">
+        <table width="100%" cellpadding="5" style="font-size: 15px">
             <tr>
                 <th style="text-align: right; width: 10%">
                     CODIGO:
@@ -111,14 +111,14 @@
             </tr>
         </table>
         {{-- <hr> --}}
-        <table width="90%">
+        <table width="100%">
             <tr>
                 <td colspan="2" style="text-align: center">
                     <h3 style="margin-bottom: 0px; margin-top: 0px; font-size: 20px"><small>DETALLE DEL PAGO</small> </h3>
                 </td>
             </tr>
         </table>
-        <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
+        <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
             <tr style="text-align: center">
                 <th class="border" style="width: 5%">
                     ATRASO

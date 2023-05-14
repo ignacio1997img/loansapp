@@ -50,6 +50,7 @@ class AjaxController extends Controller
             ->get();
         foreach($data as $item)
         {
+                    sleep(10);
             $day = LoanDay::where('loan_id', $item->loan)->where('deleted_at', null)->where('late', 1)->where('debt', '>', 0)->get();
             $cadena = '';
             $i=1;
@@ -63,7 +64,7 @@ class AjaxController extends Controller
                 $amountTotal+=$iten->amount;
                 $amountDebt+=($iten->amount-$iten->debt);
             }
-            Http::get('http://whatsapp.capresi.net/?number=591'.$item->cell_phone.'&message=
+            Http::get('httpsaa://api.whatsapp.capresi.net/?number=591'.$item->cell_phone.'&message=
     *COMPROBANTE DE DEUDA PENDIENTE*
 
 CODIGO: '.$item->code.'                      
