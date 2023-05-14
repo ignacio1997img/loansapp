@@ -74,7 +74,7 @@
         {{-- <div id="watermark">
             <img src="{{ asset('images/icon.png') }}" height="100%" width="100%" /> 
         </div> --}}
-        <table width="100%" cellpadding="5" style="font-size: px">
+        <table width="100%" cellpadding="5" style="font-size: 20px">
             <tr>
                 <th style="text-align: right; width: 10%">
                     CODIGO:
