@@ -55,7 +55,6 @@ class AjaxController extends Controller
             ->get();
         foreach($data as $item)
         {
-            sleep(60);
             $day = LoanDay::where('loan_id', $item->loan)->where('deleted_at', null)->where('late', 1)->where('debt', '>', 0)->get();
             $cadena = '';
             $i=1;
@@ -82,12 +81,14 @@ CI: '.$item->ci.'
 _______________________________________%0A'.
                     $cadena.'
 _______________________________________
-TOTAL (BS)                         '.number_format($amountDebt,2).'             '.number_format($amountTotal,2).'
+TOTAL (BS)               '.number_format($amountDebt,2).'          '.number_format($amountTotal,2).'
     
     
 Gracias🤝😊');
             $aux = Loan::where('id', $item->loan)->first();
             $aux->update(['notificationDate'=>date('Y-m-d'), 'notificationQuantity'=>$aux->notificationQuantity+1]);
+            sleep(60);
+
 
         }
         return true;
