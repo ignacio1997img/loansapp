@@ -88,7 +88,7 @@ TOTAL (BS)                  '.number_format($amountDebt,2).'         '.number_fo
 Gracias🤝😊');
             $aux = Loan::where('id', $item->loan)->first();
             $aux->update(['notificationDate'=>date('Y-m-d'), 'notificationQuantity'=>$aux->notificationQuantity+1]);
-            sleep(60);
+            sleep(15);
 
 
         }
