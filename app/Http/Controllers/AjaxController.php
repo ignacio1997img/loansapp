@@ -51,7 +51,7 @@ class AjaxController extends Controller
             ->whereDate('l.notificationDate', '<', date('Y-m-d'))
             ->select('l.id as loan', 'l.dateDelivered', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
             ->groupBy('loan')
-            ->limit(100)
+            ->limit(50)
             ->get();
         foreach($data as $item)
         {
@@ -88,7 +88,7 @@ TOTAL (BS)                  '.number_format($amountDebt,2).'         '.number_fo
 Gracias🤝😊');
             $aux = Loan::where('id', $item->loan)->first();
             $aux->update(['notificationDate'=>date('Y-m-d'), 'notificationQuantity'=>$aux->notificationQuantity+1]);
-            sleep(15);
+            sleep(65);
 
 
         }
