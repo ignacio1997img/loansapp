@@ -159,14 +159,14 @@
             </tr>
         </table>
         {{-- <hr> --}}
-        <table width="90%">
+        <table width="100%">
             <tr>
                 <td colspan="2" style="text-align: center">
                     <h3 style="margin-bottom: 0px; margin-top: 5px; font-size: 20px"><small>ATENDIDO POR</small> </h3>
                 </td>
             </tr>
         </table>
-        <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
+        <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 17px">
             <tr>
                 <td style="text-align: right; width: 40%">
                     {{strtoupper($loanDayAgent[0]->agentType)}}:
@@ -186,7 +186,7 @@
             </tr>
         </table>
         <hr>
-        <table width="90%" cellpadding="5" style="font-size: 12px">
+        <table width="100%" cellpadding="5" style="font-size: 17px">
             <tr>
                 <th style="text-align: right; width: 10%">
                     FIRMA:
@@ -213,10 +213,10 @@
             </tr>
         </table>
         <br><br>
-        <table width="90%" style="font-size: 12px">
+        <table width="100%" style="font-size: 15px">
             <tr style="text-align: center">
                 <td>
-                    <small style="font-size: 10px; font-weight: 100">Impreso por: {{ Auth::user()->name }} {{ date('d/M/Y H:i:s') }}</small>
+                    <small style="font-size: 12px; font-weight: 100">Impreso por: {{ Auth::user()->name }} {{ date('d/m/Y H:i:s') }}</small>
                     <br>
                     <small><b>LOANSAPP V1</b></small>
                 </td>
