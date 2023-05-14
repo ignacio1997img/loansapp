@@ -66,7 +66,7 @@
         <table width="100%">
             <tr>
                 <td colspan="2" style="text-align: center">
-                    <h3 style="margin-bottom: 0px; margin-top: 50px;"><small>COMPROBANTE DE PAGO</small> </h3>
+                    <h3 style="margin-bottom: 0px; margin-top: 50px; font-size: 50px"><small>COMPROBANTE DE PAGO</small> </h3>
                 </td>
             </tr>
         </table>
