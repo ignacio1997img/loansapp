@@ -49,7 +49,7 @@ class AjaxController extends Controller
             ->where('ld.debt', '>', 0)
             // ->where('')
             ->whereDate('l.notificationDate', '<', date('Y-m-d'))
-            ->select('l.id as loan', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
+            ->select('l.id as loan', 'l.dateDelivered', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
             ->groupBy('loan')
             ->limit(1)
             ->get();
@@ -73,7 +73,7 @@ class AjaxController extends Controller
 *COMPROBANTE DE DEUDA PENDIENTE*
 
 CODIGO: '.$item->code.'                      
-FECHA: '.date('d/m/Y').'
+FECHA: '.Carbon::parse($item->dateDelivered)->format('d/m/Y').'
 BENEFICIARIO: '.$item->last_name1.' '.$item->last_name2.' '.$item->first_name.'
 CI: '.$item->ci.'
     
@@ -82,7 +82,7 @@ CI: '.$item->ci.'
 ___________________________________%0A'.
                     $cadena.'
 ___________________________________
-TOTAL (BS)                 '.number_format($amountDebt,2).'          '.number_format($amountTotal,2).'
+TOTAL (BS)                  '.number_format($amountDebt,2).'          '.number_format($amountTotal,2).'
     
     
 Gracias🤝😊');
