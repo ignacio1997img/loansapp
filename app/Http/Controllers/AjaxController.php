@@ -68,7 +68,8 @@ class AjaxController extends Controller
                 $amountTotal+=$iten->amount;
                 $amountDebt+=($iten->amount-$iten->debt);
             }
-            Http::get('https://api.whatsapp.capresi.net/?number=591'.$item->cell_phone.'&message=
+            // $item->cell_phone
+            Http::get('https://api.whatsapp.capresi.net/?number=59167285914&message=
     *COMPROBANTE DE DEUDA PENDIENTE*
 
 CODIGO: '.$item->code.'                      
@@ -78,9 +79,9 @@ CI: '.$item->ci.'
     
                 *DETALLE TOTAL A PAGAR*
 *DIAS ATRASADOS*      |   *CUOTAS*    |   *DEUDA*
-_______________________________________%0A'.
+___________________________________%0A'.
                     $cadena.'
-_______________________________________
+___________________________________
 TOTAL (BS)               '.number_format($amountDebt,2).'          '.number_format($amountTotal,2).'
     
     
