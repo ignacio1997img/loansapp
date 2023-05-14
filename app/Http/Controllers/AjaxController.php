@@ -63,7 +63,7 @@ class AjaxController extends Controller
             $amountDebt =0;
             foreach($day as $iten)
             {
-                $cadena=$cadena.''.Carbon::parse($iten->date)->format('d/m/Y').'                        '.number_format($iten->amount-$iten->debt,2).'         '.$iten->amount.($i!=$cant?'%0A':'');
+                $cadena=$cadena.''.Carbon::parse($iten->date)->format('d/m/Y').'                     '.number_format($iten->amount-$iten->debt,2).'         '.$iten->amount.($i!=$cant?'%0A':'');
                 $i++;
                 $amountTotal+=$iten->amount;
                 $amountDebt+=($iten->amount-$iten->debt);
