@@ -70,15 +70,16 @@ class AjaxController extends Controller
             }
             // $item->cell_phone
             Http::get('https://api.whatsapp.capresi.net/?number=59167285914&message=
-    *COMPROBANTE DE DEUDA PENDIENTE*
+        *COMPROBANTE DE DEUDA*
+            *PENDIENTE*
 
 CODIGO: '.$item->code.'                      
 FECHA: '.date('d/m/Y').'
 BENEFICIARIO: '.$item->last_name1.' '.$item->last_name2.' '.$item->first_name.'
 CI: '.$item->ci.'
     
-                *DETALLE TOTAL A PAGAR*
-*DIAS ATRASADOS*      |   *CUOTAS*    |   *DEUDA*
+        *DETALLE TOTAL A PAGAR*
+*DIAS ATRASADOS* | *CUOTAS* | *DEUDA*
 ___________________________________%0A'.
                     $cadena.'
 ___________________________________
