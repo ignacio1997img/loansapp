@@ -51,7 +51,7 @@ class AjaxController extends Controller
             ->whereDate('l.notificationDate', '<', date('Y-m-d'))
             ->select('l.id as loan', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
             ->groupBy('loan')
-            ->limit(5)
+            ->limit(1)
             ->get();
         foreach($data as $item)
         {
@@ -70,8 +70,7 @@ class AjaxController extends Controller
             }
             // $item->cell_phone
             Http::get('https://api.whatsapp.capresi.net/?number=59167285914&message=
-        *COMPROBANTE DE DEUDA*
-            *PENDIENTE*
+*COMPROBANTE DE DEUDA PENDIENTE*
 
 CODIGO: '.$item->code.'                      
 FECHA: '.date('d/m/Y').'
@@ -89,7 +88,7 @@ TOTAL (BS)               '.number_format($amountDebt,2).'          '.number_form
 Gracias🤝😊');
             // $aux = Loan::where('id', $item->loan)->first();
             // $aux->update(['notificationDate'=>date('Y-m-d'), 'notificationQuantity'=>$aux->notificationQuantity+1]);
-            sleep(60);
+            // sleep(60);
 
 
         }
