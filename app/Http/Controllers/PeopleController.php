@@ -39,7 +39,8 @@ class PeopleController extends Controller
                     ->OrWhereRaw($search ? "last_name1 like '%$search%'" : 1)
                     ->OrWhereRaw($search ? "last_name2 like '%$search%'" : 1)
                     ->OrWhereRaw($search ? "CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%'" : 1)
-                    ->OrWhereRaw($search ? "ci like '%$search%'" : 1);
+                    ->OrWhereRaw($search ? "ci like '%$search%'" : 1)
+                    ->OrWhereRaw($search ? "cell_phone like '%$search%'" : 1);
                     // ->OrWhereRaw($search ? "phone like '%$search%'" : 1);
                     })
                     ->where('deleted_at', NULL)->orderBy('id', 'DESC')->paginate($paginate);
