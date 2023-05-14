@@ -51,7 +51,7 @@ class AjaxController extends Controller
             ->whereDate('l.notificationDate', '<', date('Y-m-d'))
             ->select('l.id as loan', 'l.dateDelivered', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
             ->groupBy('loan')
-            ->limit(1)
+            ->limit(10)
             ->get();
         foreach($data as $item)
         {
@@ -68,8 +68,8 @@ class AjaxController extends Controller
                 $amountTotal+=$iten->amount;
                 $amountDebt+=($iten->amount-$iten->debt);
             }
-            // $item->cell_phone
-            Http::get('https://api.whatsapp.capresi.net/?number=59167285914&message=
+            // 
+            Http::get('https://api.whatsapp.capresi.net/?number=591'.$item->cell_phone.'&message=
 *COMPROBANTE DE DEUDA PENDIENTE*
 
 CODIGO: '.$item->code.'                      
@@ -86,9 +86,9 @@ TOTAL (BS)                  '.number_format($amountDebt,2).'         '.number_fo
     
     
 Gracias🤝😊');
-            // $aux = Loan::where('id', $item->loan)->first();
-            // $aux->update(['notificationDate'=>date('Y-m-d'), 'notificationQuantity'=>$aux->notificationQuantity+1]);
-            // sleep(60);
+            $aux = Loan::where('id', $item->loan)->first();
+            $aux->update(['notificationDate'=>date('Y-m-d'), 'notificationQuantity'=>$aux->notificationQuantity+1]);
+            sleep(60);
 
 
         }
