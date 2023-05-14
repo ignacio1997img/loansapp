@@ -82,7 +82,7 @@ CI: '.$item->ci.'
 ___________________________________%0A'.
                     $cadena.'
 ___________________________________
-TOTAL (BS)                  '.number_format($amountDebt,2).'          '.number_format($amountTotal,2).'
+TOTAL (BS)                  '.number_format($amountDebt,2).'         '.number_format($amountTotal,2).'
     
     
 Gracias🤝😊');
