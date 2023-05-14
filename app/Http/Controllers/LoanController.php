@@ -607,7 +607,7 @@ class LoanController extends Controller
                 ->where('id', $loan)->first();
             Http::get('https://api.whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝');
             
-            return $loan;
+            // return $loan;
             Loan::where('id', $loan)->update([
                 'status' => 'aprobado',
                 'success_userId' => Auth::user()->id,
