@@ -118,7 +118,7 @@
                 </td>
             </tr>
         </table>
-        <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
+        <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 20px">
             <tr style="text-align: center">
                 <th class="border" style="width: 5%">
                     ATRASO
