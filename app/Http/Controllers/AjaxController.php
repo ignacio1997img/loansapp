@@ -64,7 +64,7 @@ class AjaxController extends Controller
             $amountDebt =0;
             foreach($day as $iten)
             {
-                $cadena=$cadena.'     '.Carbon::parse($iten->date)->format('d/m/Y').'                        '.number_format($iten->amount-$iten->debt,2).'             '.$iten->amount.($i!=$cant?'%0A':'');
+                $cadena=$cadena.''.Carbon::parse($iten->date)->format('d/m/Y').'        '.number_format($iten->amount-$iten->debt,2).'       '.$iten->amount.($i!=$cant?'%0A':'');
                 $i++;
                 $amountTotal+=$iten->amount;
                 $amountDebt+=($iten->amount-$iten->debt);
@@ -78,11 +78,11 @@ BENEFICIARIO: '.$item->last_name1.' '.$item->last_name2.' '.$item->first_name.'
 CI: '.$item->ci.'
     
                 *DETALLE TOTAL A PAGAR*
-*DIAS ATRASADOS*        |   *CUOTAS*    |   *DEUDA*
-_____________________________________________%0A'.
+*DIAS ATRASADOS*      |   *CUOTAS*    |   *DEUDA*
+_______________________________________%0A'.
                     $cadena.'
-________________________________________________
-TOTAL (BS)                             '.number_format($amountDebt,2).'             '.number_format($amountTotal,2).'
+_______________________________________
+TOTAL (BS)                         '.number_format($amountDebt,2).'             '.number_format($amountTotal,2).'
     
     
 Gracias🤝😊');
