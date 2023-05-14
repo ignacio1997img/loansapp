@@ -56,6 +56,9 @@ class Loan extends Model
         // 'destroy_userId',
         // 'destroy_agentType'
 
+        'notificationDate',
+        'notificationQuantity'
+
     ];
 
 

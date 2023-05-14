@@ -64,6 +64,10 @@ class CreateLoansTable extends Migration
             $table->text('deleteObservation')->nullable();
             $table->string('deletedKey')->nullable();
 
+
+            $table->date('notificationDate')->default(date('Y-m-d'));
+            $table->bigInteger('notificationQuantity')->default(0);
+
             //para la destrucion de de un prestamo con caja cerrada pero que mantenga el historia
             // $table->dateTime('destroyDate')->nullable();
             // $table->text('destroyObservation')->nullable();

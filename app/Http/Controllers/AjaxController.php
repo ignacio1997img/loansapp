@@ -38,19 +38,24 @@ class AjaxController extends Controller
 
     public function notificationLate()
     {
-        
+        // 'notificationDate',
+        // 'notificationQuantity'
+
         $data = DB::table('loans as l')
             ->join('loan_days as ld', 'ld.loan_id', 'l.id')
             ->join('people as p', 'p.id', 'l.people_id')
             ->where('l.deleted_at', null)
             ->where('ld.late', 1)
             ->where('ld.debt', '>', 0)
+            // ->where('')
+            ->whereDate('l.notificationDate', '<', date('Y-m-d'))
             ->select('l.id as loan', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
             ->groupBy('loan')
+            ->limit(5)
             ->get();
         foreach($data as $item)
         {
-                    sleep(10);
+            sleep(60);
             $day = LoanDay::where('loan_id', $item->loan)->where('deleted_at', null)->where('late', 1)->where('debt', '>', 0)->get();
             $cadena = '';
             $i=1;
@@ -64,7 +69,7 @@ class AjaxController extends Controller
                 $amountTotal+=$iten->amount;
                 $amountDebt+=($iten->amount-$iten->debt);
             }
-            Http::get('httpsaa://api.whatsapp.capresi.net/?number=591'.$item->cell_phone.'&message=
+            Http::get('https://api.whatsapp.capresi.net/?number=591'.$item->cell_phone.'&message=
     *COMPROBANTE DE DEUDA PENDIENTE*
 
 CODIGO: '.$item->code.'                      
@@ -81,6 +86,9 @@ TOTAL (BS)                             '.number_format($amountDebt,2).'         
     
     
 Gracias🤝😊');
+            $aux = Loan::where('id', $item->loan)->first();
+            $aux->update(['notificationDate'=>date('Y-m-d'), 'notificationQuantity'=>$aux->notificationQuantity+1]);
+
         }
         return true;
     }
