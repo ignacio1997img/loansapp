@@ -44,7 +44,7 @@ class RouteController extends Controller
 
     public function indexCollector($route)
     {
-        // return $route;
+        return $route;
         $id = $route;
         $collector = User::where('role_id', 5)->get();
         return view('routes.collector.browse', compact('id', 'collector'));
