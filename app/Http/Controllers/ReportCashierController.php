@@ -123,8 +123,8 @@ class ReportCashierController extends Controller
     public function dailyList()
     {
         $route = Route::where('status', 1)->where('deleted_at', null)->get();
-        return $route;
-        if(Auth::user()->hasRole('cobrador'))
+        // return $route;
+        if(Auth::user()->hasRole('cobrador') || Auth::user()->hasRole('cajeros'))
         {
             $aux = RouteCollector::where('status',1)->where('deleted_at', null)->where('user_id', Auth::user()->id)->first();
             
