@@ -46,6 +46,7 @@ class PermissionsTableSeeder extends Seeder
 
 
         Permission::generateFor('category_garments');
+        Permission::generateFor('brand_garments');
 
 
         

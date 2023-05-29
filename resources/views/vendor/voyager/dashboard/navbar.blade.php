@@ -5,7 +5,7 @@
                 <span class="hamburger-inner"></span>
             </button>
             @section('breadcrumbs')
-            <ol class="breadcrumb hidden-xs">
+            <ol class="breadcrumb hidden-xs" style="display: none">
                 @php
                 $segments = array_filter(explode('/', str_replace(route('voyager.dashboard'), '', Request::url())));
                 $url = route('voyager.dashboard');
@@ -31,7 +31,7 @@
                 @endif
             </ol>
             @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('gerente') || auth()->user()->hasRole('cajero'))
-                <a href="#" data-toggle="modal" data-target="#notificar-modal" title="Notificar a todos los deudores" class="btn btn-sm">
+                <a href="#" data-toggle="modal" data-target="#notificar-modal1" title="Notificar a todos los deudores" class="btn btn-sm">
                     <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i> <small></small>
                 </a>
             @endif
