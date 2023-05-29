@@ -2449,7 +2449,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 0,
                 'details' => '{"display":{"width":4},"model":"App\\\\Models\\\\BrandGarment","table":"brand_garments","type":"belongsTo","column":"brandGarment_id","key":"id","label":"name","pivot_table":"articles","pivot":"0","taggable":"0"}',
-                'order' => 12,
+                'order' => 13,
             ),
             152 => 
             array (
@@ -2465,7 +2465,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 0,
                 'details' => '{"display":{"width":4},"model":"App\\\\Models\\\\CategoryGarment","table":"category_garments","type":"belongsTo","column":"categoryGarment_id","key":"id","label":"name","pivot_table":"articles","pivot":"0","taggable":"0"}',
-                'order' => 14,
+                'order' => 12,
             ),
             153 => 
             array (
@@ -2481,7 +2481,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{"display":{"width":4},"model":"App\\\\Models\\\\ModelGarment","table":"model_garments","type":"belongsTo","column":"modelGarment_id","key":"id","label":"name","pivot_table":"articles","pivot":"0","taggable":"0"}',
-                'order' => 13,
+                'order' => 14,
             ),
         ));
         

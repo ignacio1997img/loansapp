@@ -287,7 +287,7 @@ class DataTypesTableSeeder extends Seeder
                 'server_side' => 0,
                 'details' => '{"order_column":null,"order_display_column":null,"order_direction":"asc","default_search_key":null,"scope":null}',
                 'created_at' => '2023-05-29 17:52:42',
-                'updated_at' => '2023-05-29 18:01:03',
+                'updated_at' => '2023-05-29 18:07:18',
             ),
         ));
         
