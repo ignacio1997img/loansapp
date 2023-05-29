@@ -46,5 +46,12 @@ class RolesTableSeeder extends Seeder
         if (!$role->exists) {
             $role->fill(['display_name' => 'Cobradores en Moto'])->save();
         }
+
+
+
+        $role = Role::firstOrNew(['name' => 'prenda']);
+        if (!$role->exists) {
+            $role->fill(['display_name' => 'Prendario'])->save();
+        }
     }
 }
