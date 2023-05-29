@@ -253,6 +253,24 @@ class DataTypesTableSeeder extends Seeder
                 'created_at' => '2023-05-29 16:40:43',
                 'updated_at' => '2023-05-29 16:42:36',
             ),
+            13 => 
+            array (
+                'id' => 20,
+                'name' => 'model_garments',
+                'slug' => 'model-garments',
+                'display_name_singular' => 'Modelo',
+                'display_name_plural' => 'Modelos',
+                'icon' => 'fa-solid fa-sitemap',
+                'model_name' => 'App\\Models\\ModelGarment',
+                'policy_name' => NULL,
+                'controller' => NULL,
+                'description' => NULL,
+                'generate_permissions' => 1,
+                'server_side' => 0,
+                'details' => '{"order_column":null,"order_display_column":null,"order_direction":"asc","default_search_key":null,"scope":null}',
+                'created_at' => '2023-05-29 17:37:55',
+                'updated_at' => '2023-05-29 17:39:02',
+            ),
         ));
         
         
