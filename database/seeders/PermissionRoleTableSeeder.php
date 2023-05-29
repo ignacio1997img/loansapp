@@ -125,6 +125,7 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "brand_garments" or
                                             table_name = "category_garments" or
                                             table_name = "model_garments" or
+                                            table_name = "articles" or
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
