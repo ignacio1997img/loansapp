@@ -12,9 +12,9 @@
                 <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
             </a>
         @endcan
-        @can('delete', app($dataType->model_name))
+        {{-- @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
-        @endcan
+        @endcan --}}
         @can('edit', app($dataType->model_name))
             @if(!empty($dataType->order_column) && !empty($dataType->order_display_column))
                 <a href="{{ route('voyager.'.$dataType->slug.'.order') }}" class="btn btn-primary btn-add-new">
@@ -22,11 +22,11 @@
                 </a>
             @endif
         @endcan
-        @can('delete', app($dataType->model_name))
+        {{-- @can('delete', app($dataType->model_name))
             @if($usesSoftDeletes)
                 <input type="checkbox" @if ($showSoftDeleted) checked @endif id="show_soft_deletes" data-toggle="toggle" data-on="{{ __('voyager::bread.soft_deletes_off') }}" data-off="{{ __('voyager::bread.soft_deletes_on') }}">
             @endif
-        @endcan
+        @endcan --}}
         @foreach($actions as $action)
             @if (method_exists($action, 'massAction'))
                 @include('voyager::bread.partials.actions', ['action' => $action, 'data' => null])
@@ -75,14 +75,14 @@
                             </form>
                         @endif
                         <div class="table-responsive">
-                            <table id="dataTable" class="table table-hover">
+                            <table id="dataStyle" class="table table-hover">
                                 <thead>
                                     <tr>
-                                        @if($showCheckboxColumn)
+                                        {{-- @if($showCheckboxColumn)
                                             <th class="dt-not-orderable">
                                                 <input type="checkbox" class="select_all">
                                             </th>
-                                        @endif
+                                        @endif --}}
                                         @foreach($dataType->browseRows as $row)
                                         <th>
                                             @if ($isServerSide && in_array($row->field, $sortableColumns))
@@ -107,11 +107,11 @@
                                 <tbody>
                                     @foreach($dataTypeContent as $data)
                                     <tr>
-                                        @if($showCheckboxColumn)
+                                        {{-- @if($showCheckboxColumn)
                                             <td>
                                                 <input type="checkbox" name="row_id" id="checkbox_{{ $data->getKey() }}" value="{{ $data->getKey() }}">
                                             </td>
-                                        @endif
+                                        @endif --}}
                                         @foreach($dataType->browseRows as $row)
                                             @php
                                             if ($data->{$row->field.'_browse'}) {

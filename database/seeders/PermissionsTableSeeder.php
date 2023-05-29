@@ -45,6 +45,9 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('settings');
 
 
+        Permission::generateFor('category_garments');
+
+
         
         $keys = [
             'browse_vaults',
