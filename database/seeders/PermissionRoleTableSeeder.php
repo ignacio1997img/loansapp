@@ -114,6 +114,19 @@ class PermissionRoleTableSeeder extends Seeder
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
+
+
+
+
+        //############## Prendario ####################
+        $role = Role::where('name', 'prenda')->firstOrFail();
+        $permissions = Permission::whereRaw('table_name = "admin" or
+
+                                            table_name = "brand_garments" or
+                                            table_name = "category_garments" or
+                                            
+                                            `key` = "browse_clear-cache"')->get();
+        $role->permissions()->sync($permissions->pluck('id')->all());
     }
 
     
