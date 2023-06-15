@@ -145,10 +145,21 @@ class SettingsTableSeeder extends Seeder
                 'id' => 13,
                 'key' => 'configuracion.dollar',
             'display_name' => 'Precio del Dolar ($)',
-                'value' => '7',
+                'value' => '6.8465735',
                 'details' => NULL,
                 'type' => 'text',
                 'order' => 8,
+                'group' => 'Configuración',
+            ),
+            12 => 
+            array (
+                'id' => 14,
+                'key' => 'configuracion.porcentageGarment',
+            'display_name' => 'Interes de Prenda (%)',
+                'value' => '10',
+                'details' => NULL,
+                'type' => 'text',
+                'order' => 9,
                 'group' => 'Configuración',
             ),
         ));

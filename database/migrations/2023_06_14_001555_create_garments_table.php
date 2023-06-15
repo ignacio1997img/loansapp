@@ -46,7 +46,7 @@ class CreateGarmentsTable extends Migration
 
             $table->integer('cantMonth')->nullable();
 
-            $table->text('observation')->nullable();
+            $table->text('observation')->nullable();//Para las observacones en general
             $table->string('status')->nullable('pendiente');
 
             // Para saber quien lo entrega el dinero o el prendario

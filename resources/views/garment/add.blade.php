@@ -8,9 +8,9 @@
         <h1 id="titleHead" class="page-title">
             <i class="fa-solid fa-handshake"></i> Crear Prendario
         </h1>
-        <a href="{{ route('garments.index') }}" class="btn btn-warning">
+        {{-- <a href="{{ route('garments.index') }}" class="btn btn-warning">
             <i class="fa-solid fa-rotate-left"></i> <span>Volver</span>
-        </a>
+        </a> --}}
     @stop
 
     @section('content')
@@ -21,13 +21,7 @@
                     <div class="col-md-12">
                         <div class="panel panel-bordered">
                             <div class="panel-heading">
-                                <h5 id="h4" class="panel-title">Detalle del Prendario &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    {{-- <br> --}}
-                                    {{-- <div class="col-md-12 text-right"> --}}
-                                        {{-- <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diario" checked><p>Prestamo diario</p></label>
-                                        <label class="radio-inline"><input type="radio" class="radio-type" name="optradio" value="diarioespecial"><p>Prestamo Diario Especial</p> </label> --}}
-                                    {{-- </div> --}}
-                                </h5>
+                                <h5 id="h4" class="panel-title">Detalle del Prendario</h5>
                             </div>
                             <div class="panel-body">
                                 @if (!$cashier)  
@@ -58,24 +52,51 @@
                                 <h5>Detalle de la Prenda</h5>
 
                                 <div class="row">
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-12">
                                         <small for="customer_id">Artículo</small>
                                         <select name="article_id" class="form-control" id="select_article_id" required></select>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <small for="customer_id">Prenda (Fotografía)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="filePrenda[]" id="filePrenda" class="form-control text imageLength" required>
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="filePrenda[]" id="filePrenda" class="form-control text imageLength">
                                     </div>
+                                    <div class="form-group col-md-4">
+                                        <small for="customer_id">Documento Respaldo (Documento)</small>
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="docPrenda[]" id="docPrenda" class="form-control text imageLength">
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <small>Fojas Doc. (Cant)</small>
+                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="0" step="1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                    </div>
+                                    
                                     <div class="form-group col-md-12">
                                         <small for="customer_id">Detalle/Descripcion de la Prenda</small>
                                         <textarea name="articleDescription" id="articleDescription" class="form-control" rows="5" required></textarea>
                                     </div>
+                                    
                                 </div>
 
                                 <hr>
-                                <h5>Detalle de Pago</h5>
+                                <h5>Detalle del Contrato</h5>
 
-
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <small>Tipo</small>
+                                        <select name="contract" id="contract" class="form-control select2" required>
+                                            <option value="" disabled selected>--Selecciona una opción--</option>
+                                            <option value="compacto">Minuta de Compacto de Rescate</option>
+                                            <option value="contratoprivado">Contrato Privado</option>
+                                        </select>
+                                    </div>    
+                                    <div class="form-group col-md-4">
+                                        <small>Cantidad Mes</small>
+                                        <select name="contractMes" id="contractMes" class="form-control select2" required>
+                                            <option value="" disabled selected>--Selecciona una opción--</option>
+                                            <option value="1">1 Mes</option>
+                                            <option value="3">3 Mes</option>
+                                        </select>
+                                    </div>                                 
+                                </div>
 
                                 <div class="row">
                                     <div class="form-group col-md-2">
@@ -83,31 +104,22 @@
                                         <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <small>Dias Total A Pagar</small>
-                                        <input type="number" min="1" id="day1" value="24" style="text-align: right" disabled onkeypress="return filterFloat(event,this);" onchange="diasPagar()" onkeyup="diasPagar()" class="form-control text" required>
-                                        <input type="hidden" min="1" name="day" id="day" onkeypress="return filterFloat(event,this);" value="24" class="form-control" required>
+                                        <small>Precio del Dolar ($)</small>
+                                        <input type="number" id="priceDollar" name="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" disabled class="form-control text" required>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <small>Monto a Prestar ($)</small>
+                                        <input type="number" id="amountLoanDollar" name="amountLoanDollar" style="text-align: right" disabled value="0" class="form-control text">
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos (%)</small>
-                                        <input type="number" id="porcentage1" min="0" step="any" style="text-align: right" disabled value="20" onkeypress="return filterFloat(event,this);" onchange="porcentagePagar()" onkeyup="porcentagePagar()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
-                                        <input type="hidden" name="porcentage" id="porcentage" onkeypress="return filterFloat(event,this);" value="20" class="form-control" required>
+                                        <input type="number" id="porcentage" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" disabled class="form-control text" required>
                                     </div>    
                                     <div class="form-group col-md-2">
                                         <small>Interes a Pagar (Bs.)</small>
-                                        <input type="number" id="amountPorcentage1" min="0" step="any" style="text-align: right" disabled value="0" onkeypress="return filterFloat(event,this);" onchange="porcentageAmount()" onkeyup="porcentageAmount()" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
-                                        <input type="hidden" name="amountPorcentage" id="amountPorcentage" onkeypress="return filterFloat(event,this);" value="0" class="form-control" required>
+                                        <input type="number" id="amountPorcentage" name="amountPorcentage" value="0" step="any" style="text-align: right" disabled class="form-control text" required>
                                     </div>
-                                    <div class="form-group col-md-2">
-                                        <small>Pago Diario (Bs.)</small>
-                                        <input type="text" id="amountDay1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="hidden" name="amountDay" id="amountDay"onkeypress="return filterFloat(event,this);" value="0" class="form-control">
-                                        <b class="text-danger" id="label-amount" style="display:none">Incorrecto..</b>
-                                    </div>
-                                    <div class="form-group col-md-2">
-                                        <small>Total a Pagar (Bs.)</small>
-                                        <input type="number" id="amountTotal1" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="hidden" name="amountTotal" id="amountTotal" value="0" class="form-control">
-                                    </div>
+                                    
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-12">
@@ -154,189 +166,42 @@
                 });
             })
 
-            $(document).ready(() => {
-                $(`#text_type`).val($(".radio-type:checked").val());
-                $('.radio-type').click(function(){
-                    $(`#text_type`).val($(".radio-type:checked").val());
-                    list();
-                    
-                });
-            });
-            function list()
-            {
-                let type = $(".radio-type:checked").val();
-              
-                if(type=='diario')
-                {
-                    $('#label-amount').css('display', 'none');
-                    $('#btn_submit').attr('disabled',false);
-                    $('#amountLoan').val(0);
-
-                    $('#day1').val(24);
-                    $('#day').val(24);
-
-                    $('#porcentage1').val(20);
-                    $('#porcentage').val(20);
-
-                    $('#amountPorcentage1').val(0);
-                    $('#amountPorcentage').val(0);
-
-                    $('#amountDay1').val(0);
-                    $('#amountDay').val(0);
-
-                    $('#amountTotal1').val(0);
-                    $('#amountTotal').val(0);
-                    
-                    $('#day1').attr('disabled',true);
-                    $('#porcentage1').attr('disabled',true);
-                    $('#amountPorcentage1').attr('disabled',true);
-                }
-                if(type=='diarioespecial')
-                {
-                    $('#label-amount').css('display', 'none');
-                    $('#btn_submit').attr('disabled',false);
-                    $('#amountLoan').val(0);
-
-                 
-                    $('#day1').val(0); //0
-                    $('#day').val(0);
-
-
-
-                    $('#amountDay1').val(0);
-                    $('#amountDay').val(0);
-
-                    $('#amountTotal1').val(0);
-                    $('#amountTotal').val(0);
-
-                    $('#porcentage1').val(0);//0
-                    $('#porcentage').val(0);
-
-                    $('#amountPorcentage1').val(0);
-                    $('#amountPorcentage').val(0);
-
-                    $('#day1').attr('disabled',false);         
-                    $('#porcentage1').attr('disabled',false);     
-                    $('#amountPorcentage1').attr('disabled',false);
-
-                    
-                }
-            }
-            function diasPagar()
-            {
-                let day = $(`#day1`).val() ? parseFloat($(`#day1`).val()) : 0;
-                $('#day').val(day);
-
-                subTotal()
-            }
-            function porcentagePagar()
-            {
-                let porcentage = $(`#porcentage1`).val() ? parseFloat($(`#porcentage1`).val()) : 0;
-                $('#porcentage').val(porcentage);
-
-                let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
-
-                porcentage = porcentage/100;
-                let amountPorcentage = amountLoan*porcentage;
-                $(`#amountPorcentage1`).val(amountPorcentage.toFixed(2));
-                $(`#amountPorcentage`).val(amountPorcentage.toFixed(2));
-
-                subTotal()
-            }
-            function porcentageAmount()
-            {
-                let amountPorcentage = $(`#amountPorcentage1`).val() ? parseFloat($(`#amountPorcentage1`).val()) : 0;
-                $('#amountPorcentage').val(amountPorcentage.toFixed(2));
-
-                let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
-
-                amountPorcentage = amountPorcentage/amountLoan;
-                amountPorcentage = amountPorcentage*100;
-                
-                $(`#porcentage1`).val(amountPorcentage.toFixed(2));
-                $(`#porcentage`).val(amountPorcentage.toFixed(2));
-
-                subTotal();
-
-            }
             function subTotal()
             {
-                let type = $(".radio-type:checked").val();
-                if(type=='diario')
-                {
-                    $(`#text_type`).val('diario');
+                // let type = $(".radio-type:checked").val();      
+                // alert(1)     
 
-                    let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
-                    let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
+                let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
+                let priceDollar = $(`#priceDollar`).val() ? parseFloat($(`#priceDollar`).val()) : 0;
+                let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
 
-                    let day = $(`#day`).val() ? parseFloat($(`#day`).val()) : 0;
+                porcentage = porcentage/100;
+                // priceDollar = priceDollar/100;
 
-                    porcentage = porcentage/100;
-                    let amountPorcentage = amountLoan*porcentage;
-                    let amountTotal = amountLoan+amountPorcentage;
-                    let amountDay = amountTotal / day;
+                let amountPorcentage = amountLoan*porcentage;
+                let amountLoanDollar = amountLoan/priceDollar;
 
                 
 
-                    $(`#amountPorcentage1`).val(amountPorcentage);
-                    $(`#amountTotal1`).val(amountTotal);         
+                $(`#amountPorcentage`).val(amountPorcentage.toFixed(2));
+                $(`#amountLoanDollar`).val(amountLoanDollar.toFixed(2));
+                // $(`#amountTotal1`).val(amountTotal);         
 
-                    $(`#amountPorcentage`).val(amountPorcentage);
-                    $(`#amountTotal`).val(amountTotal);  
+                // $(`#amountPorcentage`).val(amountPorcentage);
+                // $(`#amountTotal`).val(amountTotal);  
 
-                    $(`#amountDay1`).val(amountDay);
-                    $(`#amountDay`).val(amountDay);  
+                // $(`#amountDay1`).val(amountDay);
+                // $(`#amountDay`).val(amountDay);  
 
-                    if (amountDay % 1 == 0) {
-                        $('#label-amount').css('display', 'none');
-                        $('#btn_submit').attr('disabled',false);
+                // if (amountDay % 1 == 0) {
+                //     $('#label-amount').css('display', 'none');
+                //     $('#btn_submit').attr('disabled',false);
 
-                    } else {
-                        $('#label-amount').css('display', 'block');
-                        $('#btn_submit').attr('disabled',true);
-                    }
-                }
-                if(type=='diarioespecial')
-                {
-                    $(`#text_type`).val('diarioespecial');
-
-                    let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
-                    let day = $(`#day1`).val() ? parseFloat($(`#day1`).val()) : 0;
-
-
-                    let porcentage = $(`#porcentage1`).val() ? parseFloat($(`#porcentage1`).val()) : 0;
-                    $('#porcentage').val(porcentage.toFixed(2));
-
-                    porcentage = porcentage/100;
-                    porcentage = amountLoan*porcentage;
-
-                    $(`#amountPorcentage1`).val(porcentage.toFixed(2));
-                    $(`#amountPorcentage`).val(porcentage.toFixed(2));
-
-
-                    let amountPorcentage = $(`#amountPorcentage1`).val() ? parseFloat($(`#amountPorcentage1`).val()) : 0;
-
-
-                    let amountTotal = (amountLoan+amountPorcentage).toFixed(2);
-
-                    $(`#amountTotal1`).val(amountTotal);         
-                    $(`#amountTotal`).val(amountTotal);  
-
-                    let amountDay = amountTotal / day;
-
-                    amountDay = Math.trunc(amountDay);
-                    
-                    let amountDayTotal =amountDay * day;
-
-                    let aux = amountTotal-amountDayTotal;
-                    aux = amountDay+aux;
-
-
-
-                    $(`#amountDay1`).val((aux?aux.toFixed(2):0)+' - '+(amountDay!='Infinity'?amountDay.toFixed(2):0));
-                    $(`#amountDay`).val(amountDay);  
-                    
-                }
+                // } else {
+                //     $('#label-amount').css('display', 'block');
+                //     $('#btn_submit').attr('disabled',true);
+                // }
+                
             }
 
 
