@@ -45,18 +45,6 @@ class LoanController extends Controller
             {
                 $q->where('name','cobrador');
             }])->get();
-        // return DB::table('loans as l')
-        // ->join('loan_days as ld', 'ld.loan_id', 'l.id')
-        // ->join('people as p', 'p.id', 'l.people_id')
-        // ->where('l.deleted_at', null)
-        // ->where('ld.late', 1)
-        // ->where('ld.debt', '>', 0)
-        // // ->where('')
-        // ->whereDate('l.notificationDate', '<', date('Y-m-d'))
-        // ->select('l.id as loan', 'l.dateDelivered', 'p.id as people', 'p.first_name', 'p.last_name1', 'p.last_name2', 'p.cell_phone', 'p.ci', 'l.code')
-        // ->groupBy('loan')
-        // ->limit(50)
-        // ->get();
 
         $user_id = Auth::user()->id;
 
@@ -206,15 +194,9 @@ class LoanController extends Controller
         ->where('status', 'abierta')
         ->where('deleted_at', NULL)->first();
         
-        // return $cashier;
-
-        $people = People::where('deleted_at', null)->where('status',1)->where('token','!=', null)->get();
-
-
-
         $routes = Route::where('deleted_at', null)->where('status', 1)->orderBy('name')->get();
 
-        return view('loans.add', compact('people', 'routes', 'cashier'));
+        return view('loans.add', compact( 'routes', 'cashier'));
     }
     public function ajaxNotPeople($id)
     {

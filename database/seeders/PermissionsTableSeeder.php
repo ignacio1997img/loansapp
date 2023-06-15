@@ -191,5 +191,23 @@ class PermissionsTableSeeder extends Seeder
                 'table_name' => 'user',
             ]);
         }
+
+        // #################################################################################################
+        // ###########################################   PRENDARIO   #######################################
+        // #################################################################################################
+
+        $keys = [
+            'browse_garments',
+            'add_garments',
+            'read_garments',
+            'delete_garments'
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'garments',
+            ]);
+        }
     }
 }

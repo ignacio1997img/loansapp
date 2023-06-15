@@ -10,6 +10,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\CollectorController;
 use App\Http\Controllers\DevelopmentController;
+use App\Http\Controllers\GarmentController;
 use App\Http\Controllers\GpsController;
 use App\Http\Controllers\ReportCashierController;
 use App\Http\Controllers\ReportController;
@@ -125,6 +126,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::resource('collectors', CollectorController::class);
     Route::get('collectors/ajax/list/{search?}', [PeopleController::class, 'list']);
+    
+
+    // ##################################################################################################################################
+    // ###########################################################    PRENDARIO    ##########################################################
+    // ##################################################################################################################################
+
+    Route::resource('garments', GarmentController::class);
+
+    // ##################################################################################################################################
+    // ###########################################################       FIN       #####################################################
+    // ##################################################################################################################################
+
 
 
 
