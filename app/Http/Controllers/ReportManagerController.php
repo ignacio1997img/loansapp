@@ -26,6 +26,17 @@ class ReportManagerController extends Controller
     public function dailyCollectionList(Request $request)
     {
         $query_filter = 'lda.agent_id = '. $request->agent_id;
+
+        $type = 1;
+        if($request->type=='Efectivo')
+        {
+            $type = "t.type='Efectivo'";
+        }
+        if($request->type=='Qr')
+        {
+            $type = "t.type='Qr'";
+        }
+
         if ($request->agent_id=='todo') {
             $query_filter = 1;
         }
@@ -46,9 +57,10 @@ class ReportManagerController extends Controller
                     ->whereDate('lda.created_at', '<=', date('Y-m-d', strtotime($request->finish)))
                     // ->where('lda.agent_id', $request->agent_id)
                     ->whereRaw($query_filter)
+                    ->whereRaw($type)
                     ->select('l.deleted_at','p.first_name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name', 'l.id as loan', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id',
                                 DB::raw('SUM(lda.amount)as amount'), 't.transaction',
-                            'lda.created_at as loanDayAgent_fecha')
+                            'lda.created_at as loanDayAgent_fecha', 't.type')
                     ->groupBy('loan', 'transaction')
                     ->orderBy('lda.created_at', 'ASC')
                     ->get();

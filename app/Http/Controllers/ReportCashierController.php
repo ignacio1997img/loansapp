@@ -36,6 +36,16 @@ class ReportCashierController extends Controller
     public function loanCollectionList(Request $request)
     {
 
+        // dump($request);
+        $type = 1;
+        if($request->type=='Efectivo')
+        {
+            $type = "t.type='Efectivo'";
+        }
+        if($request->type=='Qr')
+        {
+            $type = "t.type='Qr'";
+        }
         // $article = Article::whereRaw($query_filter)->get();
         $data = DB::table('loan_day_agents as lda')
                     ->join('loan_days as ld', 'ld.id', 'lda.loanDay_id')
@@ -49,10 +59,11 @@ class ReportCashierController extends Controller
                     ->where('lda.deleted_at', null)
                     ->whereDate('lda.created_at', date('Y-m-d', strtotime($request->date)))
                     ->where('lda.agent_id', $request->agent_id)
+                    ->whereRaw($type)
                     // ->whereRaw($query_filter)
                     ->select('p.first_name', 'u.name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name',
                             'l.id as loan', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id', DB::raw('SUM(lda.amount)as amount'),
-                            'lda.created_at as loanDayAgent_fecha', 't.transaction')
+                            'lda.created_at as loanDayAgent_fecha', 't.transaction', 't.type')
                     ->groupBy('loan', 'transaction')
                     ->orderBy('lda.created_at', 'ASC')
                     ->get();

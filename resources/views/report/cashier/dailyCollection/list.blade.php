@@ -51,7 +51,10 @@
                             <td style="text-align: right">{{ $item->code}}</td>
                             <td style="text-align: center">{{date('d/m/Y', strtotime($item->dateDay))}}</td>
                             <td style="text-align: right">{{ number_format($item->amountTotal,2, ',', '.') }}</td>
-                            <td style="text-align: right">{{ $item->transaction}}</td>
+                            <td style="text-align: left"><small>Nº: </small>{{ $item->transaction}}
+                                <br>
+                                <small>Tipo de Pago: </small>{{$item->type}}
+                            </td>
                             <td style="text-align: center">{{date('d/m/Y H:m:s', strtotime($item->loanDayAgent_fecha))}}</td>
                             <td style="text-align: right"><small>Bs. </small> {{ number_format($item->amount,2, ',', '.') }}</td>
                                                                                   

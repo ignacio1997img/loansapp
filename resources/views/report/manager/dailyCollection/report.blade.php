@@ -44,6 +44,17 @@
                                         <small>Persona</small>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <select name="type" class="form-control select2" required>
+                                            <option value=""disabled selected>--- Seleccione una opcion ---</option>                                      
+                                            <option value="Todos">Todos</option>                                      
+                                            <option value="Efectivo">Cobros en efectivos</option>                                      
+                                            <option value="Qr">Cobros con Qr</option>                                      
+                                        </select>
+                                        <small>Tipo de Cobro</small>
+                                    </div>
+                                </div>
                                 
                                 <div class="text-right">
                                     <button type="submit" class="btn btn-primary" style="padding: 5px 10px"> <i class="voyager-settings"></i> Generar</button>
