@@ -155,7 +155,7 @@
         
         // $(".select2").css("background-color", "#8e00ff ");
         $(document).ready(function(){
-            $(".select2").select2({theme: "classic"});
+            // $(".select2").select2({theme: "classic"});
 
             let vault = JSON.parse('@json($cash_value)');
             $(`#input-cash-200`).attr('max', vault['200.00']);

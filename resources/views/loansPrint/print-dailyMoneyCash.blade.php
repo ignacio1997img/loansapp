@@ -54,6 +54,19 @@
                 padding: 20px 0px;
             }
         }
+
+        @media all {
+        div.saltopagina{
+            display: none;
+        }
+        }
+        
+        @media print{
+        div.saltopagina{
+            display:block;
+            page-break-before:always;
+        }
+        }
     </style>
 </head>
 <body>

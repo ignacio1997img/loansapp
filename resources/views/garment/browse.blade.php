@@ -21,7 +21,7 @@
                             <h1 id="titleHead" class="page-title money">
                                 <i class="fa-solid fa-dollar-sign"></i> {{$balance}}
                             </h1>
-                            @if (auth()->user()->hasPermission('add_loans'))
+                            @if (auth()->user()->hasPermission('add_garments'))
                                 <a href="{{ route('garments.create') }}" class="btn btn-success">
                                     <i class="voyager-plus"></i> <span>Crear</span>
                                 </a>

@@ -64,10 +64,10 @@
                                         <small for="customer_id">Documento Respaldo (Documento)</small>
                                         <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="docPrenda[]" id="docPrenda" class="form-control text imageLength">
                                     </div>
-                                    <div class="form-group col-md-2">
+                                    {{-- <div class="form-group col-md-2">
                                         <small>Fojas Doc. (Cant)</small>
-                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="0" step="1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
-                                    </div>
+                                        <input type="number" name="fojaCant" id="fojaCant" style="text-align: right" value="0" min="0" step="1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                    </div> --}}
                                     
                                     <div class="form-group col-md-12">
                                         <small for="customer_id">Detalle/Descripcion de la Prenda</small>
@@ -82,7 +82,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <small>Tipo</small>
-                                        <select name="contract" id="contract" class="form-control select2" required>
+                                        <select name="type" id="type" class="form-control select2" required>
                                             <option value="" disabled selected>--Selecciona una opción--</option>
                                             <option value="compacto">Minuta de Compacto de Rescate</option>
                                             <option value="contratoprivado">Contrato Privado</option>
@@ -90,7 +90,7 @@
                                     </div>    
                                     <div class="form-group col-md-4">
                                         <small>Cantidad Mes</small>
-                                        <select name="contractMes" id="contractMes" class="form-control select2" required>
+                                        <select name="month" id="month" class="form-control select2" required>
                                             <option value="" disabled selected>--Selecciona una opción--</option>
                                             <option value="1">1 Mes</option>
                                             <option value="3">3 Mes</option>
@@ -105,19 +105,23 @@
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Precio del Dolar ($)</small>
-                                        <input type="number" id="priceDollar" name="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" disabled class="form-control text" required>
+                                        <input type="number" id="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" disabled class="form-control text">
+                                        <input type="number" name="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" class="form-control text" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Monto a Prestar ($)</small>
-                                        <input type="number" id="amountLoanDollar" name="amountLoanDollar" style="text-align: right" disabled value="0" class="form-control text">
+                                        <input type="number" id="amountLoanDollar" style="text-align: right" disabled value="0" class="form-control text">
+                                        <input type="number" id="amountLoanDollar1" step="any" name="amountLoanDollar" style="text-align: right" value="0" class="form-control text" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos (%)</small>
-                                        <input type="number" id="porcentage" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" disabled class="form-control text" required>
+                                        <input type="number" id="porcentage" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" disabled class="form-control text" >
+                                        <input type="number" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" class="form-control text" required>
                                     </div>    
                                     <div class="form-group col-md-2">
                                         <small>Interes a Pagar (Bs.)</small>
-                                        <input type="number" id="amountPorcentage" name="amountPorcentage" value="0" step="any" style="text-align: right" disabled class="form-control text" required>
+                                        <input type="number" id="amountPorcentage" value="0" step="any" style="text-align: right" disabled class="form-control text">
+                                        <input type="number" id="amountPorcentage1" name="amountPorcentage" value="0" step="any" style="text-align: right" class="form-control text" required>
                                     </div>
                                     
                                 </div>
@@ -131,7 +135,7 @@
                                 @if ($cashier)    
                                     @if ($cashier->status == 'abierta')
 
-                                        <input type="hidden" name="cashier_id" value="{{$cashier->id}}">
+                                        <input type="hidden" name="cashierRegister_id" value="{{$cashier->id}}">
                                         <div class="row">
                                             <div class="col-md-12 text-right">
                                                 <button type="submit" id="btn_submit" class="btn btn-primary">Guardar</button>
@@ -168,15 +172,13 @@
 
             function subTotal()
             {
-                // let type = $(".radio-type:checked").val();      
-                // alert(1)     
-
                 let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
                 let priceDollar = $(`#priceDollar`).val() ? parseFloat($(`#priceDollar`).val()) : 0;
                 let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
 
                 porcentage = porcentage/100;
                 // priceDollar = priceDollar/100;
+                
 
                 let amountPorcentage = amountLoan*porcentage;
                 let amountLoanDollar = amountLoan/priceDollar;
@@ -185,80 +187,13 @@
 
                 $(`#amountPorcentage`).val(amountPorcentage.toFixed(2));
                 $(`#amountLoanDollar`).val(amountLoanDollar.toFixed(2));
-                // $(`#amountTotal1`).val(amountTotal);         
-
-                // $(`#amountPorcentage`).val(amountPorcentage);
-                // $(`#amountTotal`).val(amountTotal);  
-
-                // $(`#amountDay1`).val(amountDay);
-                // $(`#amountDay`).val(amountDay);  
-
-                // if (amountDay % 1 == 0) {
-                //     $('#label-amount').css('display', 'none');
-                //     $('#btn_submit').attr('disabled',false);
-
-                // } else {
-                //     $('#label-amount').css('display', 'block');
-                //     $('#btn_submit').attr('disabled',true);
-                // }
+                $(`#amountPorcentage1`).val(amountPorcentage.toFixed(2));
+                $(`#amountLoanDollar1`).val(amountLoanDollar.toFixed(2));
                 
             }
 
 
 
-
-            $(function()
-            {
-                $('#people_id').on('change', onselect_guarantor);
-            });
-
-            function onselect_guarantor()
-            {      
-                var people =  $(this).val();
-
-                var guarantor=$("#guarantor_id").val();
-
-                if(people)
-                {
-                    if(people == guarantor || guarantor == null)
-                    {
-                        $.get('{{route('loans-ajax.notpeople')}}/'+people, function(data){
-                            var html_guarantor=    '<option value="" disabled selected>-- Seleccionar un garante --</option>'
-                                for(var i=0; i<data.length; ++i)
-                                    html_guarantor += '<option value="'+data[i].id+'">'+data[i].last_name1+' '+data[i].last_name2+' '+data[i].first_name+'</option>'
-
-                            $('#guarantor_id').html(html_guarantor);                           
-                            
-                        });
-                    }
-                    else
-                    {
-                        $.get('{{route('loans-ajax.notpeople')}}/'+people, function(data){
-                            var html_people=    '<option value="" disabled selected>-- Seleccionar un garante --</option>'
-                                for(var i=0; i<data.length; ++i)
-                                    html_people += '<option value="'+data[i].id+'">'+data[i].last_name1+' '+data[i].last_name2+' '+data[i].first_name+'</option>'
-
-                            $('#guarantor_id').html(html_people);                           
-                            
-                        });
-                    }
-                    
-                }
-                else
-                {
-                    alert(0)
-                }
-            }
-
-
-            
-            
-            // function inputNumeric(event) {
-            //     if(event.charCode >= 48 && event.charCode <= 57){
-            //         return true;
-            //     }
-            //     return false;        
-            // }
 
 
             function filterFloat(evt,input){
@@ -297,6 +232,7 @@
         <script>
             $(document).ready(function(){
                 var productSelected;
+                var articleSelected;
                 
                 $('#select_people_id').select2({
                 // tags: true,
@@ -341,7 +277,7 @@
                 
                 });
 
-                $('#select_guarantor_id').select2({
+                $('#select_article_id').select2({
                 // tags: true,
                     placeholder: '<i class="fa fa-search"></i> Buscar...',
                     escapeMarkup : function(markup) {
@@ -358,7 +294,7 @@
                     quietMillis: 250,
                     minimumInputLength: 2,
                     ajax: {
-                        url: "{{ url('admin/loans/people/ajax') }}",        
+                        url: "{{ url('admin/garments/article/ajax') }}",        
                         processResults: function (data) {
                             let results = [];
                             data.map(data =>{
@@ -373,36 +309,16 @@
                         },
                         cache: true
                     },
-                    templateResult: formatResultCustomers_people,
+                    templateResult: formatResultCustomers_article,
                     templateSelection: (opt) => {
-                        productSelected = opt;
-                        // alert(opt)
+                        articleSelected = opt;
                         
-                        return opt.first_name?opt.first_name+' '+opt.last_name1+' '+opt.last_name2:'<i class="fa fa-search"></i> Buscar... ';
+                        return opt.id?opt.name+', Modelo: '+opt.model.name+', Marca: '+opt.marca.name+'. Categoría: '+opt.category.name:'<i class="fa fa-search"></i> Buscar... ';
                     }
                 }).change(function(){
                 
                 });
 
-
-                // $('#form-create-customer').submit(function(e){
-                //     e.preventDefault();
-                //     $('.btn-save-customer').attr('disabled', true);
-                //     $('.btn-save-customer').val('Guardando...');
-                //     $.post($(this).attr('action'), $(this).serialize(), function(data){
-                //         if(data.people.id){
-                //             toastr.success('Registrado exitosamente', 'Éxito');
-                //             $(this).trigger('reset');
-                //         }else{
-                //             toastr.error(data.error, 'Error');
-                //         }
-                //     })
-                //     .always(function(){
-                //         $('.btn-save-customer').attr('disabled', false);
-                //         $('.btn-save-customer').text('Guardar');
-                //         $('#modal-create-customer').modal('hide');
-                //     });
-                // });
 
             })
 
@@ -425,6 +341,31 @@
                                 <div>
                                     <small>CI: </small><b style="font-size: 15px; color: black">${option.ci?option.ci:'No definido'}</b><br>
                                     <b style="font-size: 15px; color: black">${option.first_name} ${option.last_name1} ${option.last_name2} </b>
+                                </div>
+                            </div>`);
+            }
+
+            function formatResultCustomers_article(option){
+            // Si está cargando mostrar texto de carga
+                if (option.loading) {
+                    return '<span class="text-center"><i class="fas fa-spinner fa-spin"></i> Buscando...</span>';
+                }
+                let image = "{{ asset('images/default.jpg') }}";
+                if(option.image){
+                    image = "{{ asset('storage') }}/"+option.image.replace('.', '-cropped.');
+                    // alert(image)
+                }
+                
+                // Mostrar las opciones encontradas
+                return $(`  <div style="display: flex">
+                                <div style="margin: 0px 10px">
+                                    <img src="${image}" width="50px" />
+                                </div>
+                                <div>
+                                    <small>Artículo: </small><b style="font-size: 15px; color: black">${option.name}</b><br>
+                                    <small>Modelo: </small><b style="font-size: 15px; color: black">${option.model.name}</b><br>
+                                    <small>Marca: </small><b style="font-size: 15px; color: black">${option.marca.name}</b><br>
+                                    <small>Categoría: </small><b style="font-size: 15px; color: black">${option.category.name}</b><br>
                                 </div>
                             </div>`);
             }

@@ -17,7 +17,8 @@
                     </div>
                 </div>
             </div>
-            @if(!auth()->user()->hasRole('cajeros') && !auth()->user()->hasRole('cobrador'))
+            {{-- @if(!auth()->user()->hasRole('cajeros') && !auth()->user()->hasRole('cobrador')) --}}
+            @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('gerente') || auth()->user()->hasRole('administrador'))
         {{-- Para la parte de gerencia y administradores --}}
                 <div class="row">
                     
@@ -250,136 +251,137 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">                            
-                            <div class="col-md-12">
-                                <div class="panel panel-bordered">
-                                    <div class="panel-body">
-                                        <div class="table-responsive">
-                                            <h3 id="h3">Prestamos Entregados <label class="label label-danger">Egreso</label></h3>
-                                            <table id="dataStyle" class="table table-bordered table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Id</th>
-                                                        <th>Código</th>
-                                                        <th>Fecha de Entrega</th>
-                                                        <th>Nombre Cliente</th>                    
-                                                        <th>Tipo de Préstamos</th>                    
-                                                        <th>Entregado por</th>                    
-                                                        <th>Monto Prestado</th>       
-                                                        <th>Interes a Cobrar</th>       
-                                                        <th>Monto Prestado + Interes a Cobrar</th>       
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-                                                        $amountLoans = 0;
-                                                        $amountPorcentages = 0;
-                                                        $amountLoanTotal = 0;
-                                                    @endphp
-                                                    @forelse ($loans as $item)
+                        @if (auth()->user()->hasRole('cajeros') || auth()->user()->hasRole('cobrador'))    
+                            <div class="row">                            
+                                <div class="col-md-12">
+                                    <div class="panel panel-bordered">
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <h3 id="h3">Prestamos Entregados <label class="label label-danger">Egreso</label></h3>
+                                                <table id="dataStyle" class="table table-bordered table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                            <td>{{ $item->id }}</td>
-                                                            <td>{{ $item->code }}</td>
-                                                            <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
-                                                            {{-- <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td> --}}
-                                                            <td>
-                                                                <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
-                                                                {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
-                                                            </td>
-                                                            <td>{{$item->typeLoan}}</td>
-                                                            <td style="text-align: center"><small>{{$item->delivered_agentType}}</small> <br> {{$item->agentDelivered->name}}</td>
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>      
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>      
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>      
+                                                            <th>Id</th>
+                                                            <th>Código</th>
+                                                            <th>Fecha de Entrega</th>
+                                                            <th>Nombre Cliente</th>                    
+                                                            <th>Tipo de Préstamos</th>                    
+                                                            <th>Entregado por</th>                    
+                                                            <th>Monto Prestado</th>       
+                                                            <th>Interes a Cobrar</th>       
+                                                            <th>Monto Prestado + Interes a Cobrar</th>       
                                                         </tr>
+                                                    </thead>
+                                                    <tbody>
                                                         @php
-                                                            $amountLoans+= $item->amountLoan;
-                                                            $amountPorcentages+= $item->amountPorcentage;
-                                                            $amountLoanTotal+= $item->amountTotal;
+                                                            $amountLoans = 0;
+                                                            $amountPorcentages = 0;
+                                                            $amountLoanTotal = 0;
                                                         @endphp
-                                                    @empty
-                                                        <tr>
-                                                            <td style="text-align: center" valign="top" colspan="9" class="dataTables_empty">No hay datos disponibles en la tabla</td>
-                                                        </tr>
-                                                    @endforelse
-                                                    @if ($amountLoanTotal != 0)
-                                                        <tr>
-                                                            <td colspan="6" style="text-align: left"><small>Total</small></td>
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$amountLoans}}</td>     
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$amountPorcentages}}</td>     
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$amountLoanTotal}}</td>     
-                                                        </tr>
-                                                    @endif
-                                                    
-                                                </tbody>
-                                            </table>
+                                                        @forelse ($loans as $item)
+                                                            <tr>
+                                                                <td>{{ $item->id }}</td>
+                                                                <td>{{ $item->code }}</td>
+                                                                <td>{{ date("d-m-Y", strtotime($item->dateDelivered)) }}</td>
+                                                                {{-- <td>{{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}</td> --}}
+                                                                <td>
+                                                                    <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
+                                                                    {{$item->people->first_name}} {{$item->people->last_name1}} {{$item->people->last_name2}}
+                                                                </td>
+                                                                <td>{{$item->typeLoan}}</td>
+                                                                <td style="text-align: center"><small>{{$item->delivered_agentType}}</small> <br> {{$item->agentDelivered->name}}</td>
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>      
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>      
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>      
+                                                            </tr>
+                                                            @php
+                                                                $amountLoans+= $item->amountLoan;
+                                                                $amountPorcentages+= $item->amountPorcentage;
+                                                                $amountLoanTotal+= $item->amountTotal;
+                                                            @endphp
+                                                        @empty
+                                                            <tr>
+                                                                <td style="text-align: center" valign="top" colspan="9" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                            </tr>
+                                                        @endforelse
+                                                        @if ($amountLoanTotal != 0)
+                                                            <tr>
+                                                                <td colspan="6" style="text-align: left"><small>Total</small></td>
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$amountLoans}}</td>     
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$amountPorcentages}}</td>     
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$amountLoanTotal}}</td>     
+                                                            </tr>
+                                                        @endif
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                          
-                            <div class="col-md-12">
-                                <div class="panel panel-bordered">
-                                    <div class="panel-body">
-                                        <div class="table-responsive">
-                                            <h3 id="h3">Cobros Realizados <label class="label label-success">Ingreso</label></h3>
-                                            <table id="dataStyle" class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="text-align: center; width:5%">N&deg; Transacción</th>                                                    
-                                                        <th style="text-align: center">Código</th>
-                                                        <th style="text-align: center">Fecha Pago</th>
-                                                        <th style="text-align: center">Cliente</th>
-                                                        <th style="text-align: center">Monto Prestado</th>
-                                                        <th style="text-align: center">Monto Prestado + Interes</th>
-                                                        <th style="text-align: center">Atendido Por</th>
-                                                        <th style="text-align: center">Monto Cobrado</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-                                                        $cont = 1;
-                                                        $total_movements = 0;
-                                                    @endphp
-                                                    @forelse ($trans as $item)
+                            
+                                <div class="col-md-12">
+                                    <div class="panel panel-bordered">
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <h3 id="h3">Cobros Realizados <label class="label label-success">Ingreso</label></h3>
+                                                <table id="dataStyle" class="table table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                            <td style="text-align: center">{{$item->transaction}}</td>
-                                                            <td style="text-align: center">{{$item->code}}</td>
-                                                            <td style="text-align: center">
-                                                                {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
-                                                            </td>
-                                                            <td>
-                                                                <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
-                                                                {{$item->first_name}} {{$item->last_name1}} {{$item->last_name2}}
-                                                            </td>
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
-
-                                                            <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
-                                                            <td style="text-align: right"><small>Bs.</small> {{$item->amount}}</td>
+                                                            <th style="text-align: center; width:5%">N&deg; Transacción</th>                                                    
+                                                            <th style="text-align: center">Código</th>
+                                                            <th style="text-align: center">Fecha Pago</th>
+                                                            <th style="text-align: center">Cliente</th>
+                                                            <th style="text-align: center">Monto Prestado</th>
+                                                            <th style="text-align: center">Monto Prestado + Interes</th>
+                                                            <th style="text-align: center">Atendido Por</th>
+                                                            <th style="text-align: center">Monto Cobrado</th>
                                                         </tr>
+                                                    </thead>
+                                                    <tbody>
                                                         @php
-                                                            $total_movements+= $item->amount;
+                                                            $cont = 1;
+                                                            $total_movements = 0;
                                                         @endphp
-                                                    @empty
-                                                        <tr>
-                                                            <td style="text-align: center" valign="top" colspan="8" class="dataTables_empty">No hay datos disponibles en la tabla</td>
-                                                        </tr>
-                                                    @endforelse
-                                                    @if ($total_movements != 0)
-                                                        <tr>
-                                                            <td colspan="7">Total</td>
-                                                            <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
-                                                        </tr>
-                                                    @endif
-                                                </tbody>
-                                            </table>
+                                                        @forelse ($trans as $item)
+                                                            <tr>
+                                                                <td style="text-align: center">{{$item->transaction}}</td>
+                                                                <td style="text-align: center">{{$item->code}}</td>
+                                                                <td style="text-align: center">
+                                                                    {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
+                                                                </td>
+                                                                <td>
+                                                                    <small>CI:</small> {{$item->ci?$item->ci:'No definido'}} <br>
+                                                                    {{$item->first_name}} {{$item->last_name1}} {{$item->last_name2}}
+                                                                </td>
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
+
+                                                                <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
+                                                                <td style="text-align: right"><small>Bs.</small> {{$item->amount}}</td>
+                                                            </tr>
+                                                            @php
+                                                                $total_movements+= $item->amount;
+                                                            @endphp
+                                                        @empty
+                                                            <tr>
+                                                                <td style="text-align: center" valign="top" colspan="8" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                            </tr>
+                                                        @endforelse
+                                                        @if ($total_movements != 0)
+                                                            <tr>
+                                                                <td colspan="7">Total</td>
+                                                                <td style="text-align: right"> <small>Bs.</small> {{$total_movements}}</td>     
+                                                            </tr>
+                                                        @endif
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>                    
+                            </div>  
+                        @endif                  
                     @else
                         <div class="row">
                             <div class="col-md-12">
@@ -605,7 +607,8 @@
             @endif
         @endif
 
-    @if(!auth()->user()->hasRole('cajeros') && !auth()->user()->hasRole('cobrador'))
+    {{-- @if(!auth()->user()->hasRole('cajeros') && !auth()->user()->hasRole('cobrador')) --}}
+    @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('gerente') || auth()->user()->hasRole('administrador'))
         <script src="{{ asset('js/plugins/chart.min.js') }}"></script>
         <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 

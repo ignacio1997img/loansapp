@@ -13,6 +13,7 @@ class LoanDayAgent extends Model
         'transaction_id',
         'cashier_id',
         'amount',
+        'type',
         'agent_id',
         'agentType',
         'status',

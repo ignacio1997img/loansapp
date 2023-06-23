@@ -22,29 +22,36 @@ class CreateGarmentsTable extends Migration
             $table->foreignId('brandGarment_id')->nullable()->constrained('brand_garments');
             $table->foreignId('modelGarment_id')->nullable()->constrained('model_garments');
 
+            $table->text('fileCi')->nullable();
+
             $table->string('article')->nullable();
             $table->string('categoryGarment')->nullable();
             $table->string('brandGarment')->nullable();
             $table->string('modelGarment')->nullable();
+
+            // $table->smallInteger('fojaCant')->nullable();
 
             $table->text('articleDescription')->nullable();
             
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
 
             $table->string('type')->nullable();
+            $table->integer('month')->nullable();
+            $table->integer('monthCant')->nullable();
+
             $table->date('date')->nullable();
 
             $table->decimal('amountLoan',11,2)->nullable();
-            $table->decimal('amountLoanDollar',11,2)->nullable();
             $table->decimal('priceDollar',11,2)->nullable();
+            $table->decimal('amountLoanDollar',11,2)->nullable();
 
 
             $table->decimal('amountPorcentage',11,2)->nullable();
             $table->decimal('porcentage',11,2)->nullable();
 
-            $table->decimal('amountTotal',11,2)->nullable();
+            // $table->decimal('amountTotal',11,2)->nullable();
 
-            $table->integer('cantMonth')->nullable();
+            
 
             $table->text('observation')->nullable();//Para las observacones en general
             $table->string('status')->nullable('pendiente');

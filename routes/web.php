@@ -8,6 +8,7 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CollectorController;
 use App\Http\Controllers\DevelopmentController;
 use App\Http\Controllers\GarmentController;
@@ -133,6 +134,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     // ##################################################################################################################################
 
     Route::resource('garments', GarmentController::class);
+    Route::get('garments/article/ajax', [ArticleController::class, 'ajaxArticle']);//para obtener los articulo para realizar la prenda
+
 
     // ##################################################################################################################################
     // ###########################################################       FIN       #####################################################

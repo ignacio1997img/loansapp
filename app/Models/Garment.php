@@ -16,6 +16,7 @@ class Garment extends Model
         'categoryGarment_id',
         'brandGarment_id',
         'modelGarment_id',
+        'fileCi',
         'article',
         'categoryGarment',
         'brandGarment',
@@ -24,13 +25,15 @@ class Garment extends Model
         'cashier_id',
         'type',
         'date',
+
         'amountLoan',
         'amountLoanDollar',
         'priceDollar',
         'amountPorcentage',
         'porcentage',
-        'amountTotal',
-        'cantMonth',
+        // 'amountTotal',
+        'month',
+        'monthCant',
         'observation',
         'status',
 
@@ -53,6 +56,12 @@ class Garment extends Model
 
         'deleted_at'
     ];
+
+
+    public function people()
+    {
+        return $this->belongsTo(People::class, 'people_id');
+    }
 
 
 

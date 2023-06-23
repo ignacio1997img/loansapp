@@ -318,6 +318,17 @@
                                                     </select>
                                                 </div>                                
                                             </div>
+                                            <div class="row">
+                                                {{-- <div class="col-md-12">                            --}}                                
+                                                    <div class="form-group">
+                                                        <input type="radio" id="html" name="qr" value="Efectivo" checked>
+                                                        <label for="html"><small style="font-size: 15px">Efectivo</small></label>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <input type="radio" id="css" name="qr" value="Qr">
+                                                        <label for="css"><small style="font-size: 15px">QR</small></label>
+                                                    </div>
+                                                {{-- </div> --}}
+                                            </div>
                                             <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar Pago..!</label>
 
                                             <div class="row">

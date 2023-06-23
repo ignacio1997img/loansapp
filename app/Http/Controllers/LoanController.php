@@ -786,6 +786,7 @@ class LoanController extends Controller
     // para ver el prestamos y poder abonar o pagar el dinero
     public function dailyMoney($loan, $cashier_id)
     {
+        // return 
         $cashier = Cashier::with(['movements' => function($q){
             $q->where('deleted_at', NULL);
         }])
@@ -824,6 +825,7 @@ class LoanController extends Controller
 // funcion para guardar el dinero diario en ncada prestamos
     public function dailyMoneyStore(Request $request)
     {
+        // return $request;
         $request->merge(['amount'=>floatval($request->amount)]);
         // return $request;
         if(!$request->amount || $request->amount ==0)
@@ -841,7 +843,7 @@ class LoanController extends Controller
         }
         DB::beginTransaction();
         try {
-            $transaction = Transaction::create(['transaction'=>$code+1]);
+            $transaction = Transaction::create(['type'=>$request->qr, 'transaction'=>$code+1]);
             $loan->update(['transaction_id'=>$transaction->transaction]);
             $amount = $request->amount;
             // return $amount;
@@ -866,6 +868,7 @@ class LoanController extends Controller
 
                 LoanDayAgent::create([
                     'loanDay_id' => $ok->id,
+                    'type'=>$request->qr,
                     'cashier_id' => $request->cashier_id,
                     'transaction_id'=>$transaction->id,
                     'amount' => $debt,
@@ -901,7 +904,8 @@ class LoanController extends Controller
 
                     LoanDayAgent::create([
                         'loanDay_id' => $item->id,
-                        'cashier_id' => $request->cashier_id,
+                        'cashier_id' => $request->cashier_id, 
+                        'type'=>$request->qr,
                         'transaction_id'=>$transaction->id,
                         'amount' => $debt,
                         'agent_id' => $request->agent_id,
