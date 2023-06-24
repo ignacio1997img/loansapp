@@ -71,7 +71,8 @@
                                     
                                     <div class="form-group col-md-12">
                                         <small for="customer_id">Detalle/Descripcion de la Prenda</small>
-                                        <textarea name="articleDescription" id="articleDescription" class="form-control" rows="5" required></textarea>
+                                        <textarea name="articleDescription" id="articleDescription" class="richTextBox"></textarea>
+                                        {{-- <textarea class="form-control richTextBox" id="bloquear" name="detalles"></textarea> --}}
                                     </div>
                                     
                                 </div>
@@ -106,22 +107,22 @@
                                     <div class="form-group col-md-2">
                                         <small>Precio del Dolar ($)</small>
                                         <input type="number" id="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" disabled class="form-control text">
-                                        <input type="number" name="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" class="form-control text" required>
+                                        <input type="hidden" name="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" class="form-control text" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Monto a Prestar ($)</small>
                                         <input type="number" id="amountLoanDollar" style="text-align: right" disabled value="0" class="form-control text">
-                                        <input type="number" id="amountLoanDollar1" step="any" name="amountLoanDollar" style="text-align: right" value="0" class="form-control text" required>
+                                        <input type="hidden" id="amountLoanDollar1" step="any" name="amountLoanDollar" style="text-align: right" value="0" class="form-control text" required>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos (%)</small>
                                         <input type="number" id="porcentage" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" disabled class="form-control text" >
-                                        <input type="number" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" class="form-control text" required>
+                                        <input type="hidden" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" class="form-control text" required>
                                     </div>    
                                     <div class="form-group col-md-2">
                                         <small>Interes a Pagar (Bs.)</small>
                                         <input type="number" id="amountPorcentage" value="0" step="any" style="text-align: right" disabled class="form-control text">
-                                        <input type="number" id="amountPorcentage1" name="amountPorcentage" value="0" step="any" style="text-align: right" class="form-control text" required>
+                                        <input type="hidden" id="amountPorcentage1" name="amountPorcentage" value="0" step="any" style="text-align: right" class="form-control text" required>
                                     </div>
                                     
                                 </div>
@@ -143,12 +144,11 @@
                                         </div>
                                     @endif
                                 @endif
+  
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                
+                </div>         
             </form>              
         </div>
     @stop
@@ -160,14 +160,62 @@
     @endsection
 
     @section('javascript')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script> --}}
         <script>
 
             $(document).ready(function(){
+
+                var additionalConfig = {
+                    selector: 'textarea.richTextBox[name="articleDescription"]',
+                    // selector: 'textarea#basic-example',
+                    height: 10,
+                    menubar: false,
+
+
+
+                    plugins: [
+                        'advlist autolink lists link image charmap print preview anchor',
+                        'searchreplace visualblocks code fullscreen',
+                        'insertdatetime media table paste code help wordcount'
+                    ],
+                    toolbar: 'undo redo | formatselect | ' +
+                    'bold italic backcolor | alignleft aligncenter |'+
+                    'alignright alignjustify',
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                }
+                
+                tinymce.init(window.voyagerTinyMCE.getConfig(additionalConfig));
+
                 $('#agent').submit(function(e){
                     $('#btn_submit').text('Guardando...');
                     $('#btn_submit').attr('disabled', true);
 
                 });
+
+
+                // tinymce.init({
+                //     selector: 'textarea#basic-example',
+                //     height: 300,
+                //     menubar: false,
+                //     plugins: [
+                //         'advlist autolink lists link image charmap print preview anchor',
+                //         'searchreplace visualblocks code fullscreen',
+                //         'insertdatetime media table paste code help wordcount'
+                //     ],
+                //     toolbar: 'undo redo | formatselect | ' +
+                //     'bold italic backcolor | alignleft aligncenter ' +
+                //     'alignright alignjustify | bullist numlist outdent indent | ' +
+                //     'removeformat | help',
+                //     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                // });
+
+
+
+
+
+
+
+
             })
 
             function subTotal()

@@ -59,6 +59,7 @@
                                     <option value="todo">Todos</option>
                                     <option value="enpago" selected>En Pago</option>
                                     <option value="pendiente">Pendiente</option>
+                                    <option value="poraprobar">Por Aprobar</option>
                                     <option value="concluida">Prenda Concluida</option>
                                     <option value="entregada">Prenda Entregada</option>
                                     <option value="rechazado">Rechazado</option>
@@ -372,8 +373,6 @@
             });
         })
 
-        var countPage = 10, order = 'id', typeOrder = 'desc';
-
         var balance = 0;
         var cashier_id = {{$cashier_id}}
         $(function() {
@@ -393,14 +392,20 @@
             );
         
         });
+        
 
-
-
+        var countPage = 10, order = 'id', typeOrder = 'desc';   
 
         $(document).ready(() => {
             list();
 
-            $('.radio-type').click(function(){
+            // $('#select-status').click(function(){
+            //     list();
+            // });
+
+            $("#select-status").change(function(){
+                // var estado = $("#estado").val();
+                // alert(estado);
                 list();
             });
             
@@ -418,16 +423,15 @@
         });
 
         function list(page = 1){
-            // $('#div-results').loading({message: 'Cargando...'});
-
-            // $("#div-results").LoadingOverlay("show");
-            let type = $(".radio-type:checked").val();
+            // let type = $(".radio-type:checked").val();
+            // let type =$("#select-status option:selected").text();
+            let type =$("#select-status").val();
             // alert(type)
 
             var loader = '<div class="col-md-12 bg"><div class="loader" id="loader-3"></div></div>'
             $('#div-results').html(loader);
 
-            let url = "{{ url('admin/loans/ajax/list')}}/"+cashier_id;
+            let url = "{{ url('admin/garments/ajax/list')}}/"+cashier_id;
             let search = $('#input-search').val() ? $('#input-search').val() : '';
 
             $.ajax({

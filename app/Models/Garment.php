@@ -63,6 +63,16 @@ class Garment extends Model
         return $this->belongsTo(People::class, 'people_id');
     }
 
+    public function doc()
+    {
+        return $this->hasMany(GarmentsDoc::class, 'garment_id');
+    }
+
+    public function image()
+    {
+        return $this->hasMany(GarmentsImage::class, 'garment_id');
+    }
+
 
 
 }

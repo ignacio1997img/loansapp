@@ -91,6 +91,7 @@ class PermissionRoleTableSeeder extends Seeder
 
 
                                             `key` = "browse_printloanCollection" or 
+                                            `key` = "browse_printdailyList" or
                                             `key` = "browse_printloanDelivered" or
                                             
 
@@ -127,6 +128,8 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "model_garments" or
                                             table_name = "articles" or
                                             table_name = "garments" or
+
+                                            table_name = "people" or
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());

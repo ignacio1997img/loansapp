@@ -58,7 +58,7 @@ class CreateGarmentsTable extends Migration
 
             // Para saber quien lo entrega el dinero o el prendario
             $table->string('delivered')->default('No');
-            $table->date('dateDelivered')->nullable();
+            $table->dateTime('dateDelivered')->nullable();
             $table->foreignId('delivered_userId')->nullable()->constrained('users');
             $table->string('delivered_agentType')->nullable();
 
