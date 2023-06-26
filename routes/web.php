@@ -136,6 +136,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::resource('garments', GarmentController::class);
     Route::get('garments/article/ajax', [ArticleController::class, 'ajaxArticle']);//para obtener los articulo para realizar la prenda
     Route::get('garments/ajax/list/{cashier_id}/{type}/{search?}', [GarmentController::class, 'list']);//Para generar la lista en el index
+    Route::get('garments/{garment?}/rechazar', [GarmentController::class, 'rechazar'])->name('garments.rechazar'); //para rechazar  los prendfarios ante de prestar
+    Route::get('garments/{garment?}/success', [GarmentController::class, 'successLoan'])->name('garments.success');
+    Route::post('garments/{garment?}/money/deliver', [GarmentController::class, 'moneyDeliver'])->name('garments-money.deliver');
+
 
 
     // ##################################################################################################################################

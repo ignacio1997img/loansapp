@@ -67,6 +67,9 @@
                         @if ($item->status == 'pendiente')
                             <label class="label label-danger">PENDIENTE</label>                            
                         @endif
+                        @if ($item->status == 'aprobado')
+                            <label class="label label-primary">APROBADO</label>                            
+                        @endif
                         {{-- @if ($item->status == 'verificado')
                             <label class="label label-warning">VERIFICADO</label>                            
                         @endif
@@ -85,15 +88,15 @@
                             <a href="#" data-toggle="modal" data-target="#notificar-modal" data-name="{{ $item->people->first_name }} {{ $item->people->last_name1 }} {{ $item->people->last_name2 }}" data-phone="{{$item->people->cell_phone}}" title="Notificar al beneficiario" class="btn btn-sm">
                                 <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i>
                             </a>
-                            @if (auth()->user()->hasPermission('deliverMoney_loans'))
-                                <a title="Entregar dinero al Beneficiario" class="btn btn-sm btn-success" onclick="deliverItem('{{ route('loans-money.deliver', ['loan' => $item->id]) }}',{{$item->id}}, {{$item->amountLoan}})" data-toggle="modal" data-target="#deliver-modal" data-fechass="{{$item->date}}">
+                            @if (auth()->user()->hasPermission('deliverMoney_garments'))
+                                <a title="Entregar dinero al Beneficiario" class="btn btn-sm btn-success" onclick="deliverItem('{{ route('garments-money.deliver', ['garment' => $item->id]) }}',{{$item->id}}, {{$item->amountLoan}})" data-toggle="modal" data-target="#deliver-modal" data-fechass="{{$item->date}}">
                                     <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Entregar</span>
                                 </a>
                             @endif
                         @endif
 
 
-                        @if($item->status != 'rechazado')
+                        {{-- @if($item->status != 'rechazado')
                             <div class="btn-group" style="margin-right: 3px">
                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                     Mas <span class="caret"></span>
@@ -110,7 +113,7 @@
                                     @endif                      
                                 </ul>
                             </div>
-                        @endif
+                        @endif --}}
 
                          
 
@@ -120,9 +123,9 @@
                                 </a>
                             @endif
                             
-                            @if ($item->status=='pendiente' && auth()->user()->hasPermission('successLoan_loans') && $item->status != 'rechazado')
-                                <a title="Aprobar prestamo" class="btn btn-sm btn-dark" onclick="successItem('{{ route('loans.success', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#success-modal">
-                                    <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Aprobar Prestamos</span>
+                            @if ($item->status=='pendiente' && auth()->user()->hasPermission('successLoan_garments'))
+                                <a title="Aprobar prestamo de prendario" class="btn btn-sm btn-dark" onclick="successItem('{{ route('garments.success', ['garment' => $item->id]) }}')" data-toggle="modal" data-target="#success-modal">
+                                    <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Aprobar</span>
                                 </a>
                             @endif
 
@@ -150,11 +153,11 @@
 
 
                         @if (auth()->user()->hasPermission('delete_garments'))
-                            @if ($item->status != 'rechazado' && $item->status != 'entregado')
-                                <button title="Rechazar" class="btn btn-sm btn-dark" onclick="rechazarItem('{{ route('loans.rechazar', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#rechazar-modal">
+                            @if ($item->status != 'rechazado' && $item->status != 'entregado' && $item->deleted_at ==null)
+                                <button title="Rechazar" class="btn btn-sm btn-dark" onclick="rechazarItem('{{ route('garments.rechazar', ['garment' => $item->id]) }}')" data-toggle="modal" data-target="#rechazar-modal">
                                     <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Rechazar</span>
                                 </button>
-                                <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('loans.destroy', ['loan' => $item->id]) }}')" data-toggle="modal" data-target="#delete-modal">
+                                <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('garments.destroy', ['garment' => $item->id]) }}')" data-toggle="modal" data-target="#delete-modal">
                                     <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span>
                                 </button>
                             @endif

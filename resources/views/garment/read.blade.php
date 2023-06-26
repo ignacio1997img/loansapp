@@ -197,52 +197,34 @@
 
                         <div class="col-md-3">
                             <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Estado</h3>
+                                <h3 class="panel-title">F. Nacimiento</h3>
                             </div>
-                            <div class="panel-body" style="padding-top:0;">
-                               
-                                    <span class="label label-danger">Habitacion Ocuṕada</span>
-                              
-                             
+                            <div class="panel-body" style="padding-top:0;">                               
+                                <p><small>{{ date('d-m-Y H:i', strtotime($garment->people->birth_date)) }}</small></p>                                
                             </div>
                             <hr style="margin:0;">
                         </div>  
                         <div class="col-md-3">
                             <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">CI / Pasaporte</h3>
+                                <h3 class="panel-title">Celular</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p></p>
+                                <p><small>{{$garment->people->cell_phone}}</small></p>
                             </div>
                             <hr style="margin:0;">
-                        </div>       
+                        </div>  
                         <div class="col-md-3">
                             <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Nombre</h3>
+                                <h3 class="panel-title">Telefono</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p></p>
-                            </div>
-                            <hr style="margin:0;">
-                        </div>     
-                        <div class="col-md-3">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Fecha Inicio</h3>
-                            </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                {{-- <p>{{ date('d-m-Y h:i', strtotime($service->start)) }}</p> --}}
-                            </div>
-                            <hr style="margin:0;">
-                        </div>       
-                        <div class="col-md-3">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Recomendado Por</h3>
-                            </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p></p>
+                                <p><small>{{$garment->people->phone}}</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div>        
+                       
+                          
+                         
                   
                         
                      

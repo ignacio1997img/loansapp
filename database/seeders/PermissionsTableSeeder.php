@@ -200,7 +200,13 @@ class PermissionsTableSeeder extends Seeder
             'browse_garments',
             'add_garments',
             'read_garments',
-            'delete_garments'
+            'delete_garments',
+
+            'successLoan_garments',//para que el gerente apruebe el prestamo del prendario
+            'deliverMoney_garments', //para quye entregen el dinero al beneficiario
+
+
+            // 'addMoneyDaily_garments',//para agregar o pagar el prestamo diario
         ];
 
         foreach ($keys as $key) {

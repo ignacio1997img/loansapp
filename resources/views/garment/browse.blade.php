@@ -59,7 +59,8 @@
                                     <option value="todo">Todos</option>
                                     <option value="enpago" selected>En Pago</option>
                                     <option value="pendiente">Pendiente</option>
-                                    <option value="poraprobar">Por Aprobar</option>
+                                    <option value="porentregar">Por Entregar Prestamo</option>
+
                                     <option value="concluida">Prenda Concluida</option>
                                     <option value="entregada">Prenda Entregada</option>
                                     <option value="rechazado">Rechazado</option>
@@ -83,7 +84,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"><i class="fa-solid fa-money-check-dollar"></i> Aprobar Prestamo</h4>
+                    <h4 class="modal-title"><i class="fa-solid fa-money-check-dollar"></i> Aprobar Prestamo de Prenda</h4>
                 </div>
                 <div class="modal-footer">
                     <form action="#" id="success_form" method="GET">
@@ -94,7 +95,7 @@
                                 <i class="fa-solid fa-money-check-dollar" style="color: rgb(68, 68, 68); font-size: 5em;"></i>
                                 <br>
                                 
-                                <p><b>Desea aprobar el prestamo?</b></p>
+                                <p><b>Desea aprobar el prestamode prenda?</b></p>
                             </div>
                         <input type="submit" class="btn btn-dark pull-right delete-confirm" value="Sí, aprobar">
                     </form>
@@ -241,22 +242,22 @@
                     <h4 class="modal-title"><i class="fa-solid fa-money-check-dollar"></i> Entregar Dinero</h4>
                 </div>
                 <div class="modal-footer">
-                                @if (!$cashier)  
-                                    <div class="alert alert-warning">
-                                        <strong>Advertencia:</strong>
-                                        <p>No puedes entregar el prestamo debido a que no tiene una caja asignada.</p>
-                                    </div>
-                                @else     
-                                    @if ($cashier->status != 'abierta')
-                                        <div class="alert alert-warning">
-                                            <strong>Advertencia:</strong>
-                                            <p>No puedes entregar el prestamo debido a que no tiene una caja activa.</p>
-                                        </div>
-                                    @endif
-                                @endif
+                        @if (!$cashier)  
+                            <div class="alert alert-warning">
+                                <strong>Advertencia:</strong>
+                                <p>No puedes entregar el prestamo debido a que no tiene una caja asignada.</p>
+                            </div>
+                        @else     
+                            @if ($cashier->status != 'abierta')
+                                <div class="alert alert-warning">
+                                    <strong>Advertencia:</strong>
+                                    <p>No puedes entregar el prestamo debido a que no tiene una caja activa.</p>
+                                </div>
+                            @endif
+                        @endif
                     <form action="#" id="deliver_form" method="POST">
                         {{ csrf_field() }}
-                            <input type="hidden" name="cashier_id" value="{{$cashier_id}}">
+                            <input type="text" name="cashier_id" value="{{$cashier_id}}">
 
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-solid fa-money-check-dollar" style="color: rgb(68, 68, 68); font-size: 5em;"></i>
@@ -449,9 +450,9 @@
         }
 
         //Para la destruccion de un prestamos pero con caja cerrada 
-        function destroyItem(url){
-            $('#destroy_form').attr('action', url);
-        }
+        // function destroyItem(url){
+        //     $('#destroy_form').attr('action', url);
+        // }
         
         function rechazarItem(url){
             $('#rechazar_form').attr('action', url);
@@ -460,15 +461,17 @@
             $('#success_form').attr('action', url);
         }
 
-        function agentItem(url){
-            $('#agent_form').attr('action', url);
-        }
+        // function agentItem(url){
+        //     $('#agent_form').attr('action', url);
+        // }
 
         var loanC = 0;
 
         function deliverItem(url, id, amountTotal){
+            // alert(amountTotal)
             $('#deliver_form').attr('action', url);
             loanC = id;
+
             if(amountTotal > balance && cashier_id!=0)
             {
                 // $('#btn-submit-delivered').attr('disabled', 'disabled');

@@ -13,6 +13,7 @@ use App\Models\Article;
 use App\Models\GarmentsDoc;
 use App\Models\GarmentsImage;
 use PhpParser\Node\Expr\FuncCall;
+use Illuminate\Support\Carbon;
 
 class GarmentController extends Controller
 {
@@ -68,20 +69,22 @@ class GarmentController extends Controller
                     // dump($data);
                 return view('garment.list', compact('data', 'cashier_id'));
                 break;
-            case 'entregado':
-                    $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
-                        ->where(function($query) use ($search){
-                            if($search){
-                                $query->OrwhereHas('people', function($query) use($search){
-                                    $query->whereRaw("(ci like '%$search%' or first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
-                                })
-                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
-                                ->OrWhereRaw($search ? "code like '%$search%'" : 1);
-                            }
-                        })
-                        ->where('deleted_at', NULL)->where('status', 'entregado')->where('debt', '!=', 0)->orderBy('date', 'DESC')->paginate($paginate);
-                    return view('loans.list', compact('data', 'cashier_id'));
-                    break;
+            case 'porentregar':
+                $data = Garment::with(['people'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query->OrwhereHas('people', function($query) use($search){
+                                $query->whereRaw("(ci like '%$search%' or first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                            })
+                            // ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                            ->OrWhereRaw($search ? "code like '%$search%'" : 1);
+                        }
+                    })
+                    ->where('deleted_at', NULL)->where('status', 'aprobado')->orderBy('id', 'DESC')->paginate($paginate);
+                    // dump($data);
+                return view('garment.list', compact('data', 'cashier_id'));
+                break;
+
             case 'verificado':
                 $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
                     ->where(function($query) use ($search){
@@ -268,4 +271,230 @@ class GarmentController extends Controller
             return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
     }
+
+
+    public function rechazar($id)
+    {
+        // return $id;
+        try {
+            $ok= Garment::where('id', $id)->where('deleted_at', null)->where('status', '!=', 'entregado')->first();
+            if(!$ok)
+            {
+                return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+            }
+            Garment::where('id', $id)->update([
+                'status' => 'rechazado',
+            ]);
+
+            return redirect()->route('garments.index')->with(['message' => 'Rechazado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $ok= Garment::where('id', $id)->where('deleted_at', null)->where('status', '!=', 'entregado')->first();
+            if(!$ok)
+            {
+                return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+            }
+            Garment::where('id', $id)->update([
+                'deleted_at' => Carbon::now(),
+                'deleted_userId' => Auth::user()->id,
+                'deleted_agentType' => $this->agent(Auth::user()->id)->role
+            ]);
+            return redirect()->route('garments.index')->with(['message' => 'Anulado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+    }
+
+    //Para aprobar un prestamo el gerente
+    public function successLoan($id)
+    {
+        // return $id;
+        DB::beginTransaction();
+        try {
+            $ok = Garment::with(['people'])
+                ->where('id', $id)->first();
+
+            // Http::get('https://api.whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝');
+            
+            // return $loan;
+            $ok= Garment::where('id', $id)->where('deleted_at', null)->where('status', 'pendiente')->first();
+            if(!$ok)
+            {
+                return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+            }
+
+            Garment::where('id', $id)->update([
+                'status' => 'aprobado',
+                'success_userId' => Auth::user()->id,
+                'success_agentType' => $this->agent(Auth::user()->id)->role
+            ]);
+
+
+            DB::commit();
+            return redirect()->route('garments.index')->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+    }
+
+    // funcion para entregar dinero al beneficiario
+    public function moneyDeliver(Request $request, $loan)
+    {
+        return $loan;
+        DB::beginTransaction();
+        try {
+            $loan = Loan::where('id', $loan)->first();
+
+            if($loan->status== 'entregado')
+            {
+                return redirect()->route('loans.index')->with(['message' => 'El Prestamo ya fue entregado', 'alert-type' => 'error']);
+            }
+            // return $loan;
+            $loan->update(['cashier_id'=>$request->cashier_id,'delivered_userId'=>Auth::user()->id, 'delivered_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'entregado', 'delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
+
+            $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->get();
+            $countM = $movement->count();
+
+            $amountLoan = $loan->amountLoan;
+
+            foreach($movement as $item)
+            {
+                if($item->balance > 0 && $amountLoan > 0)
+                {
+                    if($item->balance >= $amountLoan)
+                    {
+                        $item->decrement('balance', $amountLoan);
+                        $amountLoan = 0;
+                    }
+                    else
+                    {
+                        $amountLoan = $amountLoan - $item->balance;
+                        $item->decrement('balance', $item->balance);
+                    }
+                }
+            }       
+            // $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
+            // $movement->decrement('balance', $loan->amountLoan);
+
+            $user = Auth::user();
+            $agent = $this->agent($user->id);
+
+
+            $date = date("d-m-Y",strtotime(date('y-m-d h:i:s')."+ 1 days"));
+            $date = Carbon::parse($request->fechass);
+            $date = date("Y-m-d", strtotime($date));
+            $date = date("d-m-Y",strtotime($date."+ 1 days"));
+
+            // return $loan;
+         
+            if($loan->typeLoan == 'diario')
+            {
+                // return 2;
+                for($i=1;$i<=$loan->day; $i++)
+                {
+                    $fecha = Carbon::parse($date);
+                    $fecha = $fecha->format("l");
+                    // return $fecha;
+                    if($fecha == 'Sunday' )
+                    {
+                        $date = date("Y-m-d", strtotime($date));
+                        $date = date("d-m-Y",strtotime($date."+ 1 days"));
+                    }
+                    $date = date("Y-m-d", strtotime($date));
+                    LoanDay::create([
+                        'loan_id' => $loan->id,
+                        'number' => $i,
+                        'debt' => $loan->amountTotal/$loan->day,
+                        'amount' => $loan->amountTotal/$loan->day,
+
+                        'register_userId' => $agent->id,
+                        'register_agentType' => $agent->role,
+
+                        'date' => $date
+                    ]);
+                    $date = date("d-m-Y",strtotime($date."+ 1 days"));
+
+                }
+            }
+            else
+            {
+                $loanDay = $loan->day;
+                $amount = $loan->amountTotal;
+                $amountDay = $amount/$loanDay;
+
+                $aux = intval($amountDay);
+
+                $dayT = $aux*($loanDay);
+                // return $aux;
+
+
+                $firstAux = $amount - $dayT;
+                // return $first;
+                $first = $aux + $firstAux;
+                // return $first;
+                // return $dayT+$firstAux;
+
+                if($amount != ($dayT+$firstAux))
+                {
+                    DB::rollBack();
+                    return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error en la distribucion.', 'alert-type' => 'error']);
+                }
+
+
+                for($i=1;$i<=$loanDay; $i++)
+                {
+                    $fecha = Carbon::parse($date);
+                    $fecha = $fecha->format("l");
+                    // return $fecha;
+                    if($fecha == 'Sunday' )
+                    {
+                        $date = date("Y-m-d", strtotime($date));
+                        $date = date("d-m-Y",strtotime($date."+ 1 days"));
+                    }
+                    $date = date("Y-m-d", strtotime($date));
+                    if($i==1)
+                    {
+                        $debA = $first;
+                    }
+                    else
+                    {
+                        $debA = $aux;
+                    }
+
+                    LoanDay::create([
+                        'loan_id' => $loan->id,
+                        'number' => $i,
+                        'debt' => $debA,
+                        'amount' => $debA,
+
+                        'register_userId' => $agent->id,
+                        'register_agentType' => $agent->role,
+
+                        'date' => $date
+                    ]);
+                    $date = date("d-m-Y",strtotime($date."+ 1 days"));
+
+                }
+            }
+
+
+            DB::commit();
+            return redirect()->route('loans.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id,]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            // return 0;
+            return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
+
+    }
+
+
+
 }
