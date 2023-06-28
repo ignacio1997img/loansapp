@@ -139,6 +139,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('garments/{garment?}/rechazar', [GarmentController::class, 'rechazar'])->name('garments.rechazar'); //para rechazar  los prendfarios ante de prestar
     Route::get('garments/{garment?}/success', [GarmentController::class, 'successLoan'])->name('garments.success');
     Route::post('garments/{garment?}/money/deliver', [GarmentController::class, 'moneyDeliver'])->name('garments-money.deliver');
+    Route::get('garments/contract/daily/{garment?}', [GarmentController::class, 'printContracDaily']);//Para imprimir contrato privado
+
 
 
 
@@ -239,6 +241,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 });
 Route::get('loans/loanDay/late', [AjaxController::class, 'late'])->name('loans-loanDay.late');
 Route::get('loans/loanDay/notificationLate', [AjaxController::class, 'notificationLate'])->name('loans-loanDay.notificationLate');
+Route::get('garments/month/late', [AjaxController::class, 'lateGarment'])->name('garments-month.late');
+
 
 Route::post('template/loan/search', [TemplateController::class, 'searchLoan'])->name('template-loan.search');
 Route::post('template/loan/search/codeVerification', [TemplateController::class, 'codeVerification'])->name('template-loan-search.codeverification');

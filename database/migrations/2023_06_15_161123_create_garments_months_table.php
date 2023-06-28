@@ -20,6 +20,7 @@ class CreateGarmentsMonthsTable extends Migration
             $table->date('finish')->nullable();
 
             $table->decimal('amount',11,2)->nullable();
+            $table->string('status')->default('pendiente');
 
 
             $table->timestamps();

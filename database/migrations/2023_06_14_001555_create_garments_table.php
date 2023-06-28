@@ -49,7 +49,7 @@ class CreateGarmentsTable extends Migration
             $table->decimal('amountPorcentage',11,2)->nullable();
             $table->decimal('porcentage',11,2)->nullable();
 
-            // $table->decimal('amountTotal',11,2)->nullable();
+            $table->decimal('amountTotal',11,2)->nullable();
 
             
 

@@ -31,7 +31,7 @@ class Loggin
         } catch (\Throwable $th) {}
 
         // Evitar que registre cuando el usuario ingrese a la lista de logs
-        if (!str_contains(request()->url(), 'admin/compass') && !str_contains(request()->url(), 'admin/loans/cashier/balance') && !str_contains(request()->url(), 'loans/loanDay/late')) {
+        if (!str_contains(request()->url(), 'admin/compass') && !str_contains(request()->url(), 'admin/loans/cashier/balance') && !str_contains(request()->url(), 'loans/loanDay/late') && !str_contains(request()->url(), 'garments/month/late')) {
             try {
                 if(!Auth::user()->hasRole('admin'))
                 {

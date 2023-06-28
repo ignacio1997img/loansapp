@@ -4,7 +4,7 @@
 @if (auth()->user()->hasPermission('read_garments'))
 
 @section('page_header')
-    <h1 class="page-title">
+    <h1 id="titleHead" class="page-title">
         <i class="fa-solid fa-handshake"></i> Detalle de la Prenda
         <a href="{{ route('garments.index') }}" class="btn btn-warning">
             <span class="glyphicon glyphicon-list"></span>&nbsp;
@@ -209,7 +209,7 @@
                                 <h3 class="panel-title">Celular</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{$garment->people->cell_phone}}</small></p>
+                                <p><small>{{$garment->people->cell_phone??'SN'}}</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div>  
@@ -218,18 +218,65 @@
                                 <h3 class="panel-title">Telefono</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{$garment->people->phone}}</small></p>
+                                <p><small>{{$garment->people->phone??'SN'}}</small></p>
                             </div>
                             <hr style="margin:0;">
-                        </div>        
-                       
-                          
-                         
-                  
-                        
-                     
-                        
-                        
+                        </div>     
+                    </div>
+                </div>
+
+                {{-- Para mostrar los meses --}}
+
+                <div class="panel panel-bordered">                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table id="dataStyle" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" style="width: 50px">Nº</th>
+                                            <th class="text-center">Fecha Inicio</th>
+                                            <th class="text-center">Fecha Fin</th>                    
+                                            <th class="text-center">Monto</th>   
+                                            <th class="text-center">Estado</th>            
+                                            <th class="text-right">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $i = 0;
+                                        @endphp
+                                        @forelse ($garment->months as $item)
+                                            @php
+                                                $i = $i+1;
+                                            @endphp
+                                            <tr>
+                                                <td class="text-center"><small>{{ $i }}</small></td>
+                                                <td class="text-center">{{ date("d-m-Y", strtotime($item->start)) }}</td>
+                                                <td class="text-center">{{ date("d-m-Y", strtotime($item->finish)) }}</td>
+                                                <td style="text-align: right"><small>Bs. {{ number_format($item->amount,2, ',','.') }}</small></td>
+
+                                                <td class="text-center">
+                                                    @if ($item->status == 'pendiente')
+                                                        <label class="label label-danger">PENDIENTE</label>                            
+                                                    @endif
+                                                    @if ($item->status == 'pagado')
+                                                        <label class="label label-success">PAGADO</label>                            
+                                                    @endif
+                                                </td>
+                                                
+                                                
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td style="text-align: center" valign="top" colspan="10" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    
                     </div>
                 </div>
             </div>

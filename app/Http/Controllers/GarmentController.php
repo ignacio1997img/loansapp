@@ -14,6 +14,10 @@ use App\Models\GarmentsDoc;
 use App\Models\GarmentsImage;
 use PhpParser\Node\Expr\FuncCall;
 use Illuminate\Support\Carbon;
+use App\Models\CashierMovement;
+use App\Models\GarmentsMonth;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Month;
+use ReturnTypeWillChange;
 
 class GarmentController extends Controller
 {
@@ -24,7 +28,6 @@ class GarmentController extends Controller
     
     public function index()
     {   
-
         $user = Auth::user();
 
         $cashier = Cashier::with(['movements' => function($q){
@@ -50,6 +53,7 @@ class GarmentController extends Controller
 
     public function list($cashier_id, $type, $search = null){
         $user = Auth::user();
+        $type = $type;
         $paginate = request('paginate') ?? 10;
         switch($type)
         {
@@ -67,7 +71,7 @@ class GarmentController extends Controller
                     })
                     ->where('deleted_at', NULL)->where('status', 'pendiente')->orderBy('id', 'DESC')->paginate($paginate);
                     // dump($data);
-                return view('garment.list', compact('data', 'cashier_id'));
+                return view('garment.list', compact('data', 'cashier_id', 'type'));
                 break;
             case 'porentregar':
                 $data = Garment::with(['people'])
@@ -82,22 +86,23 @@ class GarmentController extends Controller
                     })
                     ->where('deleted_at', NULL)->where('status', 'aprobado')->orderBy('id', 'DESC')->paginate($paginate);
                     // dump($data);
-                return view('garment.list', compact('data', 'cashier_id'));
+                return view('garment.list', compact('data', 'cashier_id', 'type'));
                 break;
 
-            case 'verificado':
-                $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+            case 'enpago':
+                $data = Garment::with(['people'])
                     ->where(function($query) use ($search){
                         if($search){
                             $query->OrwhereHas('people', function($query) use($search){
                                 $query->whereRaw("(ci like '%$search%' or first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                             })
-                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                            // ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
                             ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
-                    ->where('deleted_at', NULL)->where('status', 'verificado')->orderBy('date', 'DESC')->paginate($paginate);
-                return view('loans.list', compact('data', 'cashier_id'));
+                    ->where('deleted_at', NULL)->where('status', 'entregado')->orderBy('id', 'DESC')->paginate($paginate);
+                    // dump($data);
+                return view('garment.list', compact('data', 'cashier_id', 'type'));
                 break;
             case 'aprobado':
                     $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
@@ -175,7 +180,7 @@ class GarmentController extends Controller
     public function show($id)
     {
         // return $id;
-        $garment = Garment::with(['people', 'doc', 'image'])->where('id', $id)->first();
+        $garment = Garment::with(['people', 'doc', 'months', 'image'])->where('id', $id)->first();
         // return $garment;
 
 
@@ -212,6 +217,7 @@ class GarmentController extends Controller
                 'month'=>$request->month,
                 'monthCant'=>1,
                 'amountLoan'=>$request->amountLoan,
+                'amountTotal'=>$request->amountLoan+$request->amountPorcentage,
                 'priceDollar'=>$request->priceDollar,
                 'amountLoanDollar'=>$request->amountLoanDollar,
                 'porcentage'=>$request->porcentage,
@@ -345,24 +351,32 @@ class GarmentController extends Controller
     }
 
     // funcion para entregar dinero al beneficiario
-    public function moneyDeliver(Request $request, $loan)
+    public function moneyDeliver(Request $request, $garment)
     {
-        return $loan;
+        // return $garment;
         DB::beginTransaction();
         try {
-            $loan = Loan::where('id', $loan)->first();
+            $garment = Garment::where('id', $garment)->where('status', 'aprobado')->where('deleted_at', null)->first();
 
-            if($loan->status== 'entregado')
+            if(!$garment)
             {
-                return redirect()->route('loans.index')->with(['message' => 'El Prestamo ya fue entregado', 'alert-type' => 'error']);
+                return redirect()->route('garments.index')->with(['message' => 'El Prestamo ya fue entregado', 'alert-type' => 'error']);
             }
             // return $loan;
-            $loan->update(['cashier_id'=>$request->cashier_id,'delivered_userId'=>Auth::user()->id, 'delivered_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'entregado', 'delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
+            $garment->update(['cashier_id'=>$request->cashier_id,'delivered_userId'=>Auth::user()->id, 'delivered_agentType' => $this->agent(Auth::user()->id)->role, 'status'=>'entregado', 'delivered'=>'Si', 'dateDelivered'=>Carbon::now()]);
 
             $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->get();
+            // return $movement;
             $countM = $movement->count();
 
-            $amountLoan = $loan->amountLoan;
+            $balance = $movement->sum('balance');
+            if($garment->amountLoan > $balance)
+            {
+                return redirect()->route('garments.index')->with(['message' => 'Error', 'alert-type' => 'error']);
+            }
+            // return $balance;
+
+            $amountLoan = $garment->amountLoan;
 
             foreach($movement as $item)
             {
@@ -380,119 +394,76 @@ class GarmentController extends Controller
                     }
                 }
             }       
-            // $movement = CashierMovement::where('cashier_id', $request->cashier_id)->where('deleted_at', null)->first();
-            // $movement->decrement('balance', $loan->amountLoan);
 
             $user = Auth::user();
             $agent = $this->agent($user->id);
 
+            //Para saber cuantos dias quedan
+            $date = date("Y-m-d",strtotime($request->fechass));
+            $date = date("Y-m-d",strtotime(date("2023-01-29")));
 
-            $date = date("d-m-Y",strtotime(date('y-m-d h:i:s')."+ 1 days"));
-            $date = Carbon::parse($request->fechass);
-            $date = date("Y-m-d", strtotime($date));
-            $date = date("d-m-Y",strtotime($date."+ 1 days"));
 
-            // return $loan;
-         
-            if($loan->typeLoan == 'diario')
+
+            $diaInicio = date("d",strtotime($date));
+
+            $mesInicio = date("Y-m",strtotime($date));
+            $mesFin = date("Y-m-d",strtotime($mesInicio."+ 1 month"));
+            // return $mesInicio;
+
+
+            $anioActual = date("Y",strtotime($date));
+            $mesActual = date("m",strtotime($date));
+            $cantidadDias = cal_days_in_month(CAL_GREGORIAN, $mesActual, $anioActual);
+
+            $anioSig = date("Y",strtotime($mesFin));
+            $mesSig = date("m",strtotime($mesFin));
+            $cantidadDiasFin = cal_days_in_month(CAL_GREGORIAN, $mesSig, $anioSig);
+
+            if($diaInicio <= $cantidadDiasFin)
             {
-                // return 2;
-                for($i=1;$i<=$loan->day; $i++)
-                {
-                    $fecha = Carbon::parse($date);
-                    $fecha = $fecha->format("l");
-                    // return $fecha;
-                    if($fecha == 'Sunday' )
-                    {
-                        $date = date("Y-m-d", strtotime($date));
-                        $date = date("d-m-Y",strtotime($date."+ 1 days"));
-                    }
-                    $date = date("Y-m-d", strtotime($date));
-                    LoanDay::create([
-                        'loan_id' => $loan->id,
-                        'number' => $i,
-                        'debt' => $loan->amountTotal/$loan->day,
-                        'amount' => $loan->amountTotal/$loan->day,
-
-                        'register_userId' => $agent->id,
-                        'register_agentType' => $agent->role,
-
-                        'date' => $date
-                    ]);
-                    $date = date("d-m-Y",strtotime($date."+ 1 days"));
-
-                }
+                $fechaFin = $anioSig.'-'.$mesSig.'-'.$diaInicio;
             }
             else
             {
-                $loanDay = $loan->day;
-                $amount = $loan->amountTotal;
-                $amountDay = $amount/$loanDay;
-
-                $aux = intval($amountDay);
-
-                $dayT = $aux*($loanDay);
-                // return $aux;
-
-
-                $firstAux = $amount - $dayT;
-                // return $first;
-                $first = $aux + $firstAux;
-                // return $first;
-                // return $dayT+$firstAux;
-
-                if($amount != ($dayT+$firstAux))
-                {
-                    DB::rollBack();
-                    return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error en la distribucion.', 'alert-type' => 'error']);
-                }
-
-
-                for($i=1;$i<=$loanDay; $i++)
-                {
-                    $fecha = Carbon::parse($date);
-                    $fecha = $fecha->format("l");
-                    // return $fecha;
-                    if($fecha == 'Sunday' )
-                    {
-                        $date = date("Y-m-d", strtotime($date));
-                        $date = date("d-m-Y",strtotime($date."+ 1 days"));
-                    }
-                    $date = date("Y-m-d", strtotime($date));
-                    if($i==1)
-                    {
-                        $debA = $first;
-                    }
-                    else
-                    {
-                        $debA = $aux;
-                    }
-
-                    LoanDay::create([
-                        'loan_id' => $loan->id,
-                        'number' => $i,
-                        'debt' => $debA,
-                        'amount' => $debA,
-
-                        'register_userId' => $agent->id,
-                        'register_agentType' => $agent->role,
-
-                        'date' => $date
-                    ]);
-                    $date = date("d-m-Y",strtotime($date."+ 1 days"));
-
-                }
+                $fechaFin = $anioSig.'-'.$mesSig.'-'.$cantidadDiasFin;
             }
 
+            if($diaInicio == 31 && $cantidadDiasFin == 31)
+            {
+                $fechaFin = $anioSig.'-'.$mesSig.'-30';
+            }
+
+            GarmentsMonth::create([
+                'garment_id'=>$garment->id,
+                'start'=>$date,
+                'finish'=>$fechaFin,
+                'amount'=>$garment->amountPorcentage,
+                'status'=>'pendiente'
+            ]);
 
             DB::commit();
-            return redirect()->route('loans.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success', 'loan_id' => $loan->id,]);
+            return redirect()->route('garments.index')->with(['message' => 'Dinero entregado exitosamente.', 'alert-type' => 'success', 'garment_id' => $garment->id,]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            // return 0;
-            return redirect()->route('loans.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+            return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
 
+    }
+    public function printContracDaily($garment)
+    {
+        // return 1;
+        // return $garment;
+        $garment = Garment::with(['people'])->first();
+        if($garment->type == 'compacto')
+        {
+
+            return view('garment.contractCompact', compact('garment'));
+        }
+        else
+        {
+            return view('garment.contractPrivate', compact('garment'));
+        }
+      
     }
 
 

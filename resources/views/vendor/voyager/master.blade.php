@@ -164,15 +164,16 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 
 <script>
     //para que cada ves que cambie de pagina verfifique si hay prestamos con dias atrazados
-    $(function() {
-        // setInterval(            
-        //     function () 
-        //     {              
-                $.get('{{route('loans-loanDay.late')}}', function (data) {
+    $(function() {             
+        $.get('{{route('loans-loanDay.late')}}', function (data) {
                     // alert(2);
-                });
+        });
         //     }, 8000 //10000 en medio minuto se recargará solo la campana de notificación..
         // );
+
+        $.get('{{route('garments-month.late')}}', function (data) {
+                    // alert(2);
+        });
        
     });
 

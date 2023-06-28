@@ -31,7 +31,7 @@ class Garment extends Model
         'priceDollar',
         'amountPorcentage',
         'porcentage',
-        // 'amountTotal',
+        'amountTotal',
         'month',
         'monthCant',
         'observation',
@@ -71,6 +71,11 @@ class Garment extends Model
     public function image()
     {
         return $this->hasMany(GarmentsImage::class, 'garment_id');
+    }
+
+    public function months()
+    {
+        return $this->hasMany(GarmentsMonth::class, 'garment_id');
     }
 
 

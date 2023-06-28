@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
 use App\Models\Cashier;
 use App\Models\CashierMovement;
+use App\Models\Garment;
+use App\Models\GarmentsMonth;
 use Illuminate\Support\Facades\Auth;
 
 class AjaxController extends Controller
@@ -30,6 +32,72 @@ class AjaxController extends Controller
             $item->update(['late'=>1]);
         }
         return true;
+    }
+    public function lateGarment()
+    {
+        // $date = date("2024-04-05");
+        $date = date("Y-m-d");
+        $data = Garment::where('deleted_at', null)->where('status', 'entregado')->get();
+        foreach($data as $item)
+        {
+            $garment = Garment::where('id', $item->id)->first();
+            $month = GarmentsMonth::where('garment_id', $garment->id)->where('deleted_at', null)->get();
+
+
+            $monthMax = $month->max();
+
+            if($date > $monthMax->finish)
+            {
+                $monthFirst =$month->first();
+
+                $monthCant = $month->count()+1;
+
+                $date = date("Y-m-d",strtotime($monthFirst->start));
+
+                $diaInicio = date("d",strtotime($date));
+
+                $mesInicio = date("Y-m",strtotime($date));
+                $mesFin = date("Y-m-d",strtotime($mesInicio."+ ".$monthCant." month"));
+                // return $mesFin;
+
+
+                $anioSig = date("Y",strtotime($mesFin));
+                $mesSig = date("m",strtotime($mesFin));
+                $cantidadDiasFin = cal_days_in_month(CAL_GREGORIAN, $mesSig, $anioSig);
+
+                // return $cantidadDiasFin;
+                // return $diaInicio;
+
+                if($diaInicio <= $cantidadDiasFin)
+                {
+                    $fechaFin = $anioSig.'-'.$mesSig.'-'.$diaInicio;
+                }
+                else
+                {
+                    $fechaFin = $anioSig.'-'.$mesSig.'-'.$cantidadDiasFin;
+                }
+
+                if($diaInicio == 31 && $cantidadDiasFin == 31)
+                {
+                    $fechaFin = $anioSig.'-'.$mesSig.'-30';
+                }                
+
+                GarmentsMonth::create([
+                    'garment_id'=>$garment->id,
+                    'start'=>$monthMax->finish,
+                    'finish'=>$fechaFin,
+                    'amount'=>$garment->amountPorcentage,
+                    'status'=>'pendiente'
+                ]);
+                $garment->update(['amountTotal'=>$garment->amountTotal+$garment->amountPorcentage]);
+
+                $month = GarmentsMonth::where('garment_id', $garment->id)->where('deleted_at', null)->where('status', 'pendiente')->get();
+                // return $month->count();
+                $garment->update(['monthCant'=>$month->count()]);
+            }
+        }
+        return true;
+
     }
 
 

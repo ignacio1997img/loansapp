@@ -485,9 +485,9 @@
                     // footer: '<a href="">Why do I have this issue?</a>'
                 })
             }
-            if(amountTotal < balance && cashier_id!=0)
+            if(amountTotal <= balance && cashier_id!=0)
             {
-                
+                // alert(amountTotal)                
                 $('#btn-submit-delivered').css('display', 'block');
             }
         }
@@ -542,7 +542,7 @@
         });
 
 
-        function loan(id)
+        function garmentContract(id)
         {
             // alert(id);
             loanC = id;
@@ -551,7 +551,7 @@
 
         function printContract(){
             // window.open("https://trabajostop.com", "Recibo", `width=700, height=500`)
-            window.open("{{ url('admin/loans/contract/daily') }}/"+loanC, "Recibo", `width=700, height=500`)
+            window.open("{{ url('admin/garments/contract/daily') }}/"+loanC, "Recibo", `width=700, height=500`)
         }
 
 

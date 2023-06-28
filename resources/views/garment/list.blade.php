@@ -6,14 +6,17 @@
                     @if (auth()->user()->hasRole('admin'))
                         <th>ID</th>
                     @endif
-                    <th>Codigo</th>
-                    <th>Fecha Solicitud</th>
-                    <th>Nombre Cliente</th>                    
-                    <th>Tipo de Contrato</th>                    
-                    <th>Monto Prestado</th>                    
-                    <th>Interés a Cobrar</th>   
-                    <th>Total a Pagar</th>
-                    <th>Estado</th>                    
+                    <th style="text-align: center">Codigo</th>
+                    <th style="text-align: center">Fecha Solicitud</th>
+                    <th style="text-align: center">Nombre Cliente</th>                    
+                    <th style="text-align: center">Tipo de Contrato</th>                    
+                    <th style="text-align: center">Monto Prestado</th>                    
+                    <th style="text-align: center">Interés a Cobrar</th>   
+                    @if ($type == 'enpago')
+                        <th style="text-align: center">Total a Pagar</th>
+                    @endif
+                    
+                    <th style="text-align: center">Estado</th>                    
                     {{-- <th style="text-align: center">Estado</th> --}}
                     <th class="text-right">Acciones</th>
                 </tr>
@@ -55,8 +58,27 @@
                     </td>
                     <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
                     <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>
-                    <td style="text-align: right"> <small>Bs.</small> {{$item->amountTotal}}</td>
-                    {{-- <td style="text-align: right"> <small>Bs.</small> {{$item->debt}}</td> --}}
+                    @if ($type == 'enpago')
+                        <td style="text-align: left">
+                            <small>Total a pagar Bs.</small> {{ number_format($item->amountTotal,2, ',','.') }} 
+                            <br>
+                            <small>Cant. Meses Espera.</small> {{$item->month}}
+                            <br>
+                            <small>Meses Pendiente.</small> 
+                            @if ($item->monthCant > $item->month)
+                                <label class="label label-danger" style="font-size: 15px">{{$item->monthCant}}</label> 
+                            @endif
+                            @if ($item->monthCant <= $item->month)
+                                <label class="label label-warning" style="font-size: 15px">{{$item->monthCant}}</label>
+                            @endif
+                            @if ($item->monthCant == 0)
+                                <label class="label label-success" style="font-size: 15px">{{$item->monthCant}}</label>
+                            @endif                            
+                            
+                            
+                        </td>
+                    @endif
+                
                     <td style="text-align: right">
                         {{-- @if ($item->debt == 0)
                             <label class="label label-success">PAGADO</label>
@@ -69,6 +91,12 @@
                         @endif
                         @if ($item->status == 'aprobado')
                             <label class="label label-primary">APROBADO</label>                            
+                        @endif
+
+
+
+                        @if ($item->status == 'entregado')
+                            <label class="label label-success">En Pago</label>                            
                         @endif
                         {{-- @if ($item->status == 'verificado')
                             <label class="label label-warning">VERIFICADO</label>                            
@@ -96,7 +124,7 @@
                         @endif
 
 
-                        {{-- @if($item->status != 'rechazado')
+                        @if($item->status != 'rechazado' && $item->status != 'pendiente')
                             <div class="btn-group" style="margin-right: 3px">
                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                     Mas <span class="caret"></span>
@@ -105,15 +133,15 @@
                                     @if ($item->status == 'entregado' && $item->delivered == 'Si')
                                         <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" ><i class="fa-solid fa-money-bill-transfer"></i> Transacciones</a></li> 
                                     @endif
-                                    @if ($item->status != 'pendiente' && $item->status != 'verificado' && !auth()->user()->hasRole('cobrador'))
-                                        <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li> 
+                                    @if ($item->status != 'pendiente' && $item->status != 'rechazado')
+                                        {{-- <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li>  --}}
                                     
-                                        <li><a onclick="loan({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
-                                        <li><a onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li>
+                                        <li><a href="" onclick="garmentContract({{$item->id}})" class="btn-contrato"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
+                                        <li><a href="" onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li>
                                     @endif                      
                                 </ul>
                             </div>
-                        @endif --}}
+                        @endif
 
                          
 
