@@ -87,7 +87,7 @@
         {{-- <div id="watermark">
             <img src="{{ asset('images/icon.png') }}" height="100%" width="100%" /> 
         </div> --}}
-        <table width="100%" cellpadding="5" style="font-size: 20px">
+        <table width="100%" cellpadding="5" style="font-size: 18px">
             <tr>
                 <th style="text-align: right; width: 10%">
                     CODIGO:
@@ -95,7 +95,7 @@
                 <td>
                     {{ $garment->code }}
                 </td>
-                <td rowspan="3" style="text-align: right">
+                <td rowspan="4" style="text-align: right">
                     {!! QrCode::size(120)->generate('Codigo: '.$garment->code.', Fecha de Pago: '.Carbon\Carbon::parse($transaction->created_at)->format('d/m/Y H:i:s').', CI: '.$garment->people->ci.
                     ', Beneficiario: '.$garment->people->last_name1.' '.$garment->people->last_name2.' '.$garment->people->first_name.', Monto Total Pagado: '.$loanDayAgent->SUM('amount').
                     ', Atendido Por: '.$loanDayAgent[0]->agent->name.', Codigo de Transaccion: '.$transaction->transaction
@@ -104,6 +104,14 @@
                     {{-- {!!DNS1D::getBarcodeSVG('2', 'CODABAR' ,1,100);!!} --}}
                     {{-- {!! DNS1D::getBarcodeHTML('4445645656', 'C128C');!!} --}}
                     {{-- {!! DNS1D::getBarcodeSVG('4445645656', 'PHARMA2T',3,33); !!} --}}
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    PAGO:
+                </th>
+                <td>
+                    {{$transaction->type=='Efectivo'?'EFECTIVO':'QR'}}
                 </td>
             </tr>
             <tr>
@@ -130,8 +138,78 @@
                     {{$garment->people->last_name1}} {{$garment->people->last_name2}} {{$garment->people->first_name}}
                 </td>
             </tr>
+            {{-- <hr> --}}
+            <tr>
+                <td colspan="3">
+                    <hr>
+                </td>
+                {{-- <td colspan="2">
+                    {{$garment->article}}
+                </td> --}}
+            </tr>
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    ARTICULO:
+                </th>
+                <td colspan="2">
+                    {{$garment->article}}
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    MODELO:
+                </th>
+                <td colspan="2">
+                    {{$garment->modelGarment}}
+                </td>
+            </tr>   
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    MARCA:
+                </th>
+                <td colspan="2">
+                    {{$garment->brandGarment}}
+                </td>
+            </tr>  
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    DETALLE:
+                </th>
+                <td colspan="2">
+                    {!! $garment->articleDescription !!}
+                </td>
+            </tr>  
             
         </table>
+        {{-- <hr>
+
+        <table width="100%" cellpadding="5"  style="font-size: 18px">
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    ARTICULO:
+                </th>
+                <td colspan="2">
+                    {{$garment->article}}
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    MODELO:
+                </th>
+                <td colspan="2">
+                    {{$garment->modelGarment}}
+                </td>
+            </tr>   
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    MARCA:
+                </th>
+                <td colspan="2">
+                    {{$garment->brandGarment}}
+                </td>
+            </tr>            
+        </table> --}}
+        <hr>
         {{-- <hr> --}}
         <table width="100%">
             <tr>
@@ -140,7 +218,7 @@
                 </td>
             </tr>
         </table>
-        <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 20px">
+        <table width="100%" cellpadding="2" cellspacing="0" border="0" style="font-size: 18px">
             <tr style="text-align: center">
                 <th class="border" style="width: 75%">
                     DETALLES

@@ -350,6 +350,18 @@
         </div>
     </div>
 
+    <div id="popup-button">
+        <div class="col-md-12" style="padding-top: 5px">
+            <h4 class="text-muted">Desea imprimir el comprobante?</h4>
+        </div>
+        <div class="col-md-12 text-right">
+            <button onclick="javascript:$('#popup-button').fadeOut('fast')" class="btn btn-default">Cerrar</button>
+            <a id="btn-print" onclick="printDailyMoneys()"  title="Imprimir" class="btn btn-danger">Imprimir <i class="glyphicon glyphicon-print"></i></a>
+            {{-- <button type="submit" id="btn-print" title="Imprimir" class="btn btn-danger" onclick="printDailyMoney()" class="btn btn-primary">Imprimir <i class="glyphicon glyphicon-print"></i></button> --}}
+
+        </div>
+    </div>
+
     <div class="modal modal-dark fade" data-backdrop="static" tabindex="-1" id="modal-addmoney" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -385,7 +397,7 @@
                         <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar Pago..!</label>
                     </div>
 
-                    <input type="text" name="garment_id" value="{{$garment->id}}">
+                    <input type="hidden" name="garment_id" value="{{$garment->id}}">
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-dark pull-right delete-confirm" value="Sí, pagar">
@@ -401,7 +413,7 @@
 @stop
 @section('css')
 <style>
-    .alltables {
+    /* .alltables {
                 width: 100%;
             }
             .alltables td{
@@ -411,12 +423,65 @@
                 margin-top: 1mm;
                 border: 1px solid #000;
                 padding: 8px;
+            } */
+
+        /* .form-group{
+            margin-bottom: 10px !important;
+        }
+        .label-description{
+            cursor: pointer;
+        } */
+        #popup-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 100px;
+            background-color: white;
+            box-shadow: 5px 5px 15px grey;
+            z-index: 1000;
+
+            /* Mostrar/ocultar popup */
+            /* @if(session('garment_id')) */
+                animation: show-animation 1s;
+            /* @else */
+                right: -500px;
+            /* @endif */
+        }
+
+        @keyframes show-animation {
+            0% {
+                right: -500px;
             }
+            100% {
+                right: 20px;
+            }
+        }
 </style>
 @stop
 
 @section('javascript')
     <script>
+
+        let garment_id=0;
+        let transaction_id=0;
+        $(document).ready(function(){
+
+            @if(session('garment_id'))
+                garment_id = "{{ session('garment_id') }}";
+                // alert(garment_id)
+                transaction_id = "{{ session('transaction_id') }}";
+            @endif
+
+                // Ocultar popup de impresión
+            setTimeout(() => {
+                $('#popup-button').fadeOut('fast');
+            }, 8000);
+        });
+        function printDailyMoneys()
+        {
+            window.open("{{ url('admin/garments/payment/money/print') }}/"+garment_id+"/"+transaction_id, "Recibo", `width=700, height=700`)
+        }
        
        function successItem(url){
             $('#success_form').attr('action', url);

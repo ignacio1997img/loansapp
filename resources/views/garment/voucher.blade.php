@@ -228,7 +228,7 @@
         <table width="90%" style="font-size: 12px">
             <tr style="text-align: center">
                 <td>
-                        <small style="font-size: 10px; font-weight: 100">Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</small>
+                        <small><b>Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</b></small>
                         <br>
                     <small><b>LOANSAPP V1</b></small>
                 </td>

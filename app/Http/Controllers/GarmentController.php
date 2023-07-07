@@ -593,11 +593,11 @@ class GarmentController extends Controller
 
             // return 1;
             DB::commit();
-            return redirect()->route('garments.show', ['garment' => $request->garment_id])->with(['message' => 'Mes Pagado exitosamente.', 'alert-type' => 'success']);
+            return redirect()->route('garments.show', ['garment' => $request->garment_id])->with(['message' => 'Mes Pagado exitosamente.', 'alert-type' => 'success', 'garment_id' => $garment->id, 'transaction_id'=>$transaction->id]);
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 0;
+            // return 0;
             return redirect()->route('garments.show', ['garment' => $request->garment_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'error']);
         }
     }
