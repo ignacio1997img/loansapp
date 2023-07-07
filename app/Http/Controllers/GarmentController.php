@@ -356,6 +356,9 @@ class GarmentController extends Controller
                 'success_agentType' => $this->agent(Auth::user()->id)->role
             ]);
 
+            Http::get('https://api.whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝');
+
+
 
             DB::commit();
             return redirect()->route('garments.index')->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success']);

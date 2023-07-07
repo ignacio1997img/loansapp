@@ -95,6 +95,13 @@
                 <td>
                     {{ $loan->code }}
                 </td>
+                <td rowspan="3" style="text-align: right">
+                    {!! QrCode::size(120)->generate('Codigo: '.$loan->code.', Fecha de Pago: '.Carbon\Carbon::parse($transaction->created_at)->format('d/m/Y H:i:s').', CI: '.$loan->people->ci.
+                    ', Beneficiario: '.$loan->people->last_name1.' '.$loan->people->last_name2.' '.$loan->people->first_name.', Monto Total Pagado: '.$loanDayAgent->SUM('amount').
+                    ', Atendido Por: '.$loanDayAgent[0]->name.', Codigo de Transaccion: '.$transaction->transaction
+                    ); !!} <br>
+
+                </td>
             </tr>
             <tr>
                 <th style="text-align: right; width: 10%">
@@ -108,20 +115,21 @@
             </tr>
             <tr>
                 <th style="text-align: right; width: 10%">
-                    BENEFICIARIO:
-                </th>
-                <td>
-                    {{$loan->people->last_name1}} {{$loan->people->last_name2}} {{$loan->people->first_name}}
-                </td>
-            </tr>
-            <tr>
-                <th style="text-align: right; width: 10%">
                     CI:
                 </th>
                 <td>
                     {{$loan->people->ci}}
                 </td>
             </tr>
+            <tr>
+                <th style="text-align: right; width: 10%">
+                    BENEFICIARIO:
+                </th>
+                <td colspan="2">
+                    {{$loan->people->last_name1}} {{$loan->people->last_name2}} {{$loan->people->first_name}}
+                </td>
+            </tr>
+            
         </table>
         {{-- <hr> --}}
         <table width="100%">
