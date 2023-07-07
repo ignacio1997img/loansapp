@@ -102,7 +102,8 @@
                                 <div class="row">
                                     <div class="form-group col-md-2">
                                         <small>Monto a Prestar (Bs.)</small>
-                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        {{-- <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required> --}}
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Precio del Dolar ($)</small>
@@ -116,8 +117,8 @@
                                     </div>
                                     <div class="form-group col-md-2">
                                         <small>Interes Prestamos (%)</small>
-                                        <input type="number" id="porcentage" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" disabled class="form-control text" >
-                                        <input type="hidden" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" class="form-control text" required>
+                                        <input type="number" min="1" id="porcentage" name="porcentage" value="{{setting('configuracion.porcentageGarment')}}" onchange="subTotal()" onkeyup="subTotal()" style="text-align: right" class="form-control text" >
+                                        <input type="hidden" min="1" name="porcentage" id="porcentage1" value="{{setting('configuracion.porcentageGarment')}}" style="text-align: right" class="form-control text" required>
                                     </div>    
                                     <div class="form-group col-md-2">
                                         <small>Interes a Pagar (Bs.)</small>
@@ -222,7 +223,9 @@
             {
                 let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
                 let priceDollar = $(`#priceDollar`).val() ? parseFloat($(`#priceDollar`).val()) : 0;
+
                 let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
+                $(`#porcentage1`).val(porcentage);
 
                 porcentage = porcentage/100;
                 // priceDollar = priceDollar/100;
