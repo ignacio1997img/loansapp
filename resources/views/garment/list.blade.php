@@ -68,7 +68,7 @@
                             @if ($item->monthCant > $item->month)
                                 <label class="label label-danger" style="font-size: 15px">{{$item->monthCant}}</label> 
                             @endif
-                            @if ($item->monthCant <= $item->month)
+                            @if ($item->monthCant <= $item->month && $item->monthCant != 0)
                                 <label class="label label-warning" style="font-size: 15px">{{$item->monthCant}}</label>
                             @endif
                             @if ($item->monthCant == 0)
@@ -113,9 +113,9 @@
                     </td>
                     <td class="no-sort no-click bread-actions text-right">
                         @if ($item->status == 'aprobado')
-                            <a href="#" data-toggle="modal" data-target="#notificar-modal" data-name="{{ $item->people->first_name }} {{ $item->people->last_name1 }} {{ $item->people->last_name2 }}" data-phone="{{$item->people->cell_phone}}" title="Notificar al beneficiario" class="btn btn-sm">
+                            {{-- <a href="#" data-toggle="modal" data-target="#notificar-modal" data-name="{{ $item->people->first_name }} {{ $item->people->last_name1 }} {{ $item->people->last_name2 }}" data-phone="{{$item->people->cell_phone}}" title="Notificar al beneficiario" class="btn btn-sm">
                                 <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i>
-                            </a>
+                            </a> --}}
                             @if (auth()->user()->hasPermission('deliverMoney_garments'))
                                 <a title="Entregar dinero al Beneficiario" class="btn btn-sm btn-success" onclick="deliverItem('{{ route('garments-money.deliver', ['garment' => $item->id]) }}',{{$item->id}}, {{$item->amountLoan}})" data-toggle="modal" data-target="#deliver-modal" data-fechass="{{$item->date}}">
                                     <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Entregar</span>
@@ -130,14 +130,11 @@
                                     Mas <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu" style="left: -90px !important">
-                                    @if ($item->status == 'entregado' && $item->delivered == 'Si')
-                                        <li><a href="{{ route('loans-list.transaction', ['loan'=>$item->id])}}" class="btn-transaction"  data-toggle="modal" title="Imprimir Calendario" ><i class="fa-solid fa-money-bill-transfer"></i> Transacciones</a></li> 
-                                    @endif
                                     @if ($item->status != 'pendiente' && $item->status != 'rechazado')
                                         {{-- <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li>  --}}
                                     
                                         <li><a href="" onclick="garmentContract({{$item->id}})" class="btn-contrato"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
-                                        <li><a href="" onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li>
+                                        {{-- <li><a href="" onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li> --}}
                                     @endif                      
                                 </ul>
                             </div>
@@ -157,12 +154,6 @@
                                 </a>
                             @endif
 
-
-                            @if ($item->status == 'entregado' && $item->status != 'rechazado')
-                                <a href="{{ route('loans-daily.money', ['loan' => $item->id, 'cashier_id'=>$cashier_id]) }}" title="Abonar Pago"  class="btn btn-sm btn-success">
-                                    <i class="voyager-dollar"></i><span class="hidden-xs hidden-sm"> {{$item->debt == 0?'Ver':'Abonar'}}</span>
-                                </a>
-                            @endif
 
                             
 

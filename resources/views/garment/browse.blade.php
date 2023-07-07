@@ -257,7 +257,7 @@
                         @endif
                     <form action="#" id="deliver_form" method="POST">
                         {{ csrf_field() }}
-                            <input type="text" name="cashier_id" value="{{$cashier_id}}">
+                            <input type="hidden" name="cashier_id" value="{{$cashier_id}}">
 
                             <div class="text-center" style="text-transform:uppercase">
                                 <i class="fa-solid fa-money-check-dollar" style="color: rgb(68, 68, 68); font-size: 5em;"></i>
@@ -351,17 +351,17 @@
         //para inpresion cuando es entregado elñ prestamo para que imprima
         $(document).ready(function(){
 
-            @if(session('loan_id'))
-                loan_id = "{{ session('loan_id') }}";
-
-                window.open("{{ url('admin/loans/comprobante/print') }}/"+loan_id, "Recibo", `width=700, height=700`)
+            @if(session('garment_id'))
+                garment_id = "{{ session('garment_id') }}";
+            alert(1)
+                window.open("{{ url('admin/garments/voucher/print') }}/"+garment_id, "Recibo", `width=700, height=700`)
 
             @endif
 
         });
-        function comprobanteDelivered(loan_id)
+        function comprobanteDelivered(garment_id)
         {
-            window.open("{{ url('admin/loans/comprobante/print') }}/"+loan_id, "Recibo", `width=700, height=700`)
+            window.open("{{ url('admin/garments/voucher/print') }}/"+garment_id, "Recibo", `width=700, height=700`)
         }
 
     </script>

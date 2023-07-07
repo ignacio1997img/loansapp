@@ -16,4 +16,9 @@ class GarmentsMonth extends Model
     {
         return $this->belongsTo(Garment::class, 'garment_id');
     }
+
+    public function garmentMonth()
+    {
+        return $this->hasMany(GarmentsMonthAgent::class, 'garmentMonth_id');
+    }
 }

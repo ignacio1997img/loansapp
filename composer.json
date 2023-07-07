@@ -12,6 +12,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "maatwebsite/excel": "^3.1",
+        "milon/barcode": "^10.0",
         "orangehill/iseed": "^3.0",
         "simplesoftwareio/simple-qrcode": "~4",
         "tcg/voyager": "^1.6",

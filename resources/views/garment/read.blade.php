@@ -57,8 +57,8 @@
                                 @if ($garment->status == 'pendiente')
                                     <span class="label label-danger">Pendiente</span>
                                 @endif
-                                @if ($garment->status == 'poraprobar')
-                                    <span class="label label-dark">Por Aprobar</span>
+                                @if ($garment->status == 'aprobado')
+                                    <span class="label label-dark">Aprobado</span>
                                 @endif
                                 @if ($garment->status == 'enpago')
                                     <span class="label label-primary">En Pago</span>
@@ -227,7 +227,8 @@
 
                 {{-- Para mostrar los meses --}}
 
-                <div class="panel panel-bordered">                    
+                <div class="panel panel-bordered">       
+                    <h4 id="titleHead">Tiempo de la Prenda</h4>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
@@ -239,16 +240,22 @@
                                             <th class="text-center">Fecha Fin</th>                    
                                             <th class="text-center">Monto</th>   
                                             <th class="text-center">Estado</th>            
-                                            <th class="text-right">Acciones</th>
+                                            {{-- <th style="width: 50px" class="text-right">Acciones</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $i = 0;
+                                            $x= 0;
                                         @endphp
                                         @forelse ($garment->months as $item)
                                             @php
                                                 $i = $i+1;
+                                                if ($item->status=='pendiente')
+                                                {
+                                                    $x = $x+1;
+                                                }
+
                                             @endphp
                                             <tr>
                                                 <td class="text-center"><small>{{ $i }}</small></td>
@@ -263,13 +270,20 @@
                                                     @if ($item->status == 'pagado')
                                                         <label class="label label-success">PAGADO</label>                            
                                                     @endif
+                                                    <br>
+                                                    @if ($item->status=='pendiente')
+                                                        @if ($x==1)
+                                                            <a data-toggle="modal" data-target="#modal-addmoney" data-money="{{$item->amount}}" onclick="successItem('{{ route('garments-payment-month.add', ['month' => $item->id]) }}')" title="Pagar Mes"  class="btn btn-success">
+                                                                <i class="fa-solid fa-money-bill"></i>
+                                                            </a>
+                                                        @endif
+                                                    @endif
                                                 </td>
-                                                
                                                 
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td style="text-align: center" valign="top" colspan="10" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                                <td style="text-align: center" valign="top" colspan="5" class="dataTables_empty">No hay datos disponibles en la tabla</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -278,6 +292,105 @@
                         </div>
                     
                     </div>
+                   
+                </div>
+                @if ($garment->status != 'pendiente')                    
+                <div class="panel panel-bordered">         
+                    <h4 id="titleHead">Transacciones / Pagos Realizados</h4>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table id="dataStyle" class="table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center; width:12%">N&deg; Transacción</th>
+                                            <th style="text-align: center">Monto</th>
+                                            <th style="text-align: center">Fecha</th>
+                                            <th style="text-align: center">Atendido Por</th>
+                                            <th style="text-align: right">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($transaction as $item)
+                                            <tr>
+                                                {{-- <td style="text-align: center">{{$item->id}}</td> --}}
+                                                <td style="text-align: center">{{$item->transaction_id}}</td>
+                                                <td style="text-align: center">
+                                                    @if ($item->deleted_at)
+                                                        <del>BS. {{$item->amount}} <br></del>
+                                                        <label class="label label-danger">Anulado por {{$item->eliminado}}</label>
+                                                    @else
+                                                    BS. {{$item->amount}}
+                                                    @endif
+                                                </td>
+                                                <td style="text-align: center">
+                                                    {{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}
+                                                </td>
+                                                <td style="text-align: center">{{$item->agentType}} <br> {{$item->name}}</td>
+                                                <td class="no-sort no-click bread-actions text-right">
+                                                    @if(!$item->deleted_at)
+                                                        <a onclick="printDailyMoney({{$item->garment}}, {{$item->transaction_id}})" title="Imprimir"  class="btn btn-danger">
+                                                            <i class="glyphicon glyphicon-print"></i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach                                                                               
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                @endif
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-dark fade" data-backdrop="static" tabindex="-1" id="modal-addmoney" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><i class="fa-solid fa-money-check-dollar"></i> Pagar Mes</h4>
+                </div>
+                <form action="#" id="success_form" method="POST">
+                {{ csrf_field() }}
+                <div class="modal-body">
+                    <div class="text-center" style="text-transform:uppercase">
+                        <i class="fa-solid fa-money-check-dollar" style="color: rgb(68, 68, 68); font-size: 5em;"></i>
+                        <br>
+                        
+                        <p><b>Desea Pagar?</b></p>
+                    </div>
+                    <div class="text-center" style="text-transform:uppercase">
+                        
+                        <small style="font-size: 35px" id="money_text"></small>
+                    </div>
+                    <div class="text-center">
+                        {{-- <div class="col-md-12">                            --}}                                
+                            <div class="form-group">
+                                <input type="radio" id="html" name="qr" value="Efectivo" checked>
+                                <label for="html"><small style="font-size: 15px">Efectivo</small></label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio" id="css" name="qr" value="Qr">
+                                <label for="css"><small style="font-size: 15px">QR</small></label>
+                            </div>
+                        {{-- </div> --}}
+                    </div>
+                    <div>
+                        <label class="checkbox-inline"><input type="checkbox" value="1" required>Confirmar Pago..!</label>
+                    </div>
+
+                    <input type="text" name="garment_id" value="{{$garment->id}}">
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark pull-right delete-confirm" value="Sí, pagar">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -305,7 +418,24 @@
 @section('javascript')
     <script>
        
+       function successItem(url){
+            $('#success_form').attr('action', url);
+        }
 
+        $('#modal-addmoney').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) 
+            var money = button.data('money')
+            // alert(data)
+            var modal = $(this)
+            modal.find('.modal-body #money_text').text('Bs. '+money)
+        });
+
+
+        function printDailyMoney(garment_id, transaction_id)
+            {
+                // alert(transaction_id);
+                window.open("{{ url('admin/garments/payment/money/print') }}/"+garment_id+"/"+transaction_id, "Recibo", `width=320, height=700`)
+            }
             
     </script>
 @stop

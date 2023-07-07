@@ -57,6 +57,11 @@ class Garment extends Model
         'deleted_at'
     ];
 
+    //para ver que persona es la que entrega el prestamo al beneficiario
+    public function agentDelivered()
+    {
+        return $this->belongsTo(User::class, 'delivered_userId');
+    }
 
     public function people()
     {
