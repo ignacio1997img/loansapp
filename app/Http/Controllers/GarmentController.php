@@ -536,8 +536,10 @@ class GarmentController extends Controller
                 return redirect()->route('garments.show', ['garment' => $request->garment_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'error']);
             }
 
-            CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first()->increment('balance', $month->amount);
-
+            if($request->qr!='Qr')
+            {
+                CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first()->increment('balance', $month->amount);
+            }            
             $code = Transaction::all()->max('id');
             $code = $code?$code:0;
             $transaction = Transaction::create(['type'=>$request->qr, 'transaction'=>$code+1]);

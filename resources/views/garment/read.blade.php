@@ -400,7 +400,8 @@
                     <input type="hidden" name="garment_id" value="{{$garment->id}}">
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-dark pull-right delete-confirm" value="Sí, pagar">
+                    <button type="submit" id="btn_submit" class="btn btn-dark pull-right delete-confirm">Sí, pagar</button>
+
                     </form>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancelar</button>
                 </div>
@@ -413,24 +414,6 @@
 @stop
 @section('css')
 <style>
-    /* .alltables {
-                width: 100%;
-            }
-            .alltables td{
-                padding: 2px;
-            }
-            .box-section {
-                margin-top: 1mm;
-                border: 1px solid #000;
-                padding: 8px;
-            } */
-
-        /* .form-group{
-            margin-bottom: 10px !important;
-        }
-        .label-description{
-            cursor: pointer;
-        } */
         #popup-button {
             position: fixed;
             bottom: 20px;
@@ -477,6 +460,12 @@
             setTimeout(() => {
                 $('#popup-button').fadeOut('fast');
             }, 8000);
+
+            $('#success_form').submit(function(e){
+                    $('#btn_submit').text('Pagando...');
+                    $('#btn_submit').attr('disabled', true);
+
+            });
         });
         function printDailyMoneys()
         {
