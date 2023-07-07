@@ -60,7 +60,7 @@
                                 @if ($garment->status == 'aprobado')
                                     <span class="label label-dark">Aprobado</span>
                                 @endif
-                                @if ($garment->status == 'enpago')
+                                @if ($garment->status == 'entregado')
                                     <span class="label label-primary">En Pago</span>
                                 @endif
                                 @if ($garment->status == 'finalizado')
@@ -105,7 +105,25 @@
                                 <p><small>Bs. {{$garment->amountPorcentage}}</small></p>
                             </div>
                             <hr style="margin:0;">
-                        </div>          
+                        </div>    
+                        <div class="col-md-3">
+                            <div class="panel-heading" style="border-bottom:0;">
+                                <h3 class="panel-title">Tipo de Contrato</h3>
+                            </div>
+                            <div class="panel-body" style="padding-top:0;">
+                                <p><small>{{$garment->type =='compacto'?'Minuta de Compacto de Rescate':'Contrato Privado'}}</small></p>
+                            </div>
+                            <hr style="margin:0;">
+                        </div>     
+                        <div class="col-md-3">
+                            <div class="panel-heading" style="border-bottom:0;">
+                                <h3 class="panel-title">Cantidad de Mes de Espera</h3>
+                            </div>
+                            <div class="panel-body" style="padding-top:0;">
+                                <p><small> {{$garment->monthCant}}</small></p>
+                            </div>
+                            <hr style="margin:0;">
+                        </div>     
                     </div>
                 </div>
                 <div class="panel panel-bordered">                    

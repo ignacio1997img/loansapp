@@ -35,6 +35,12 @@ class PermissionRoleTableSeeder extends Seeder
 
                                             table_name = "user" or
 
+                                            table_name = "category_garments" or
+                                            table_name = "brand_garments" or
+                                            table_name = "model_garments" or
+                                            table_name = "articles" or
+                                            table_name = "garments" or
+
                                             `key` = "browse_loans" or 
                                             `key` = "delete_loans" or
 
