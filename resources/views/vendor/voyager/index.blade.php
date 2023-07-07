@@ -24,8 +24,11 @@
                     
                     @php
                         $data = App\Models\Loan::where('deleted_at', NULL)->get();
-                        // dd($data);
+                        $date = date('Y-m-d');
                     @endphp
+                    <div class="col-md-12">
+                        <h2 id="h2">Cartera Prestamos Diarios</h2>
+                    </div>
                     <div class="col-md-3">
                         <div class="panel panel-bordered" style="border-left: 5px solid #52BE80">
                             <div class="panel-body" style="height: 100px;padding: 15px 20px">
@@ -83,35 +86,13 @@
                     </div>
 
 
+
                     <div class="col-md-4">
-                        <div class="panel">
-                            <div class="panel-body" style="height: 250px">
-                                <small><h4>Cobros del Día (Bs.)</h4></small>
-                                @php
-                                    $date = date('Y-m-d');
-                                    $bart_cobro = App\Models\LoanDayAgent::with(['agent'])->where('deleted_at', NULL)->whereDate('created_at', $date)->select( DB::raw('SUM(amount)as amount'), 'agent_id')->groupBy('agent_id')->get();
-                                    // dd($moneyRecaudado)
-
-                                @endphp
-
-                                <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-
-                            </div>
-                        </div>
+                      
                     </div>
 
                     <div class="col-md-4">
                         @php
-                            // $foodDay = App\Models\EgresMenu::WhereHas('egres', function($query) {
-                            //             $query->where('sale',1);
-                            //         })->with('food')->where('deleted_at', null)->whereDate('created_at', '=', date('Y-m-d'))
-                            // ->selectRaw('COUNT(food_id) as count,SUM(amount) as total, food_id, egre_id')
-                            // ->groupBy('food_id')->orderBy('total', 'DESC')->get();
-
-
-                            // $moneyRecaudado = App\Models\LoanDayAgent::where('deleted_at', NULL)->whereDate('created_at', $date)->get();
-                            //         $moneyRecaudado = $moneyRecaudado->SUM('amount');
-
                             $incomePerson = App\Models\LoanDayAgent::with(['agent'])
                                 ->where('deleted_at', null)->whereDate('created_at', $date)
                                 ->select('agent_id', DB::raw('SUM(amount) as amount'))
@@ -120,14 +101,14 @@
                             // dd($incomePerson);
                         @endphp
                         <div class="panel">
-                            <div class="panel-body" style="height: 250px">
+                            <div class="panel-body" style="height: 350px">
                                 <canvas id="income-chart"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="panel">
-                            <div class="panel-body" style="height: 300px">
+                            <div class="panel-body" style="height: 350px">
                                 <small><h4>Egreso & Ingreso del Día (Bs.)</h4></small>
                                 @php
                                     $date = date('Y-m-d');
@@ -141,6 +122,55 @@
                                     
                                 @endphp
                                 <canvas id="doughnut-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- ::::::::::::::::::::::::::::::::::: PARA PRENDARIOS :::::::::::::::::::::::::::::::::: --}}
+                    <div class="col-md-12">
+                        <h2 id="h2">Cartera Prendario</h2>
+                    </div>
+                    @php
+                        $garment = App\Models\Garment::where('deleted_at', NULL)->get();
+                        $garmentVigente = App\Models\Garment::where('deleted_at', NULL)->where('status', 'entregado')->whereRaw('(monthCant <= month)')->get();
+                        $garmentRiesgo = App\Models\Garment::where('deleted_at', NULL)->where('status', 'entregado')->whereRaw('(monthCant > month)')->get();
+                    @endphp
+                    <div class="col-md-3">
+                        <div class="panel panel-bordered" style="border-left: 5px solid #52BE80">
+                            <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                                <div class="col-md-9">
+                                    <h5>Prendas en pagos</h5>
+                                    <h2>{{count($garment->where('status', 'entregado'))}}</h2>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <i class="icon fa-solid fa-money-bill" style="color: #52BE80"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-bordered" style="border-left: 5px solid #0026ff">
+                            <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                                <div class="col-md-9">
+                                    <h5>Prendas vigentes</h5>
+                                    <h2>{{count($garmentVigente)}}</h2>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <i class="icon fa-solid fa-money-bill" style="color: #0026ff"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="panel panel-bordered" style="border-left: 5px solid #e62222">
+                            <div class="panel-body" style="height: 100px;padding: 15px 20px">
+                                <div class="col-md-9">
+                                    <h5>Prendas en riesgos</h5>
+                                    <h2>{{count($garmentRiesgo)}}</h2>
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <i class="icon fa-solid fa-triangle-exclamation" style="color: #e62222"></i>
+                                    {{-- <i class="fa-solid fa-triangle-exclamation"></i> --}}
+                                </div>
                             </div>
                         </div>
                     </div>
