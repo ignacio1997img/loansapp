@@ -353,7 +353,7 @@
 
             @if(session('garment_id'))
                 garment_id = "{{ session('garment_id') }}";
-            alert(1)
+            // alert(1)
                 window.open("{{ url('admin/garments/voucher/print') }}/"+garment_id, "Recibo", `width=700, height=700`)
 
             @endif
