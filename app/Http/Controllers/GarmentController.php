@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
 use App\Models\CashierMovement;
 use App\Models\GarmentsMonth;
 use App\Models\GarmentsMonthAgent;
+use App\Models\Ticket;
 use App\Models\Transaction;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Month;
 use ReturnTypeWillChange;
@@ -486,12 +487,23 @@ class GarmentController extends Controller
 
 
     // Funcion  para imprimir el comprobante de pago al momento que se le entrega el prestamo al cliente o beneficiario
-    public function printLoanVoucher($garment_)
+    public function printLoanVoucher($garment_id)
     {
         $garment = Garment::with(['people'])
-        ->where('id', $garment_)->first();
+        ->where('id', $garment_id)->first();
         // return $garment;
         return view('garment.voucher', compact('garment')) ;
+    }
+
+    public function printGarmentTickets($garment_id)
+    {
+        $garment = Garment::with(['people'])
+        ->where('id', $garment_id)->first();
+
+        $ticket = Ticket::create(['foreing'=>$garment->id,'type'=>'garment', 'registerUser_id'=>Auth::user()->id]);
+        $ticket->update(['number'=>str_pad($ticket->id, 6, "0", STR_PAD_LEFT)]);
+        // return $garment;
+        return view('garment.tickets', compact('garment', 'ticket')) ;
     }
 
 

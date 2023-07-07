@@ -142,6 +142,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('garments/contract/daily/{garment?}', [GarmentController::class, 'printContracDaily']);//Para imprimir contrato privado
     Route::post('garments/payment/month/{month?}/add', [GarmentController::class, 'paymentMonth'])->name('garments-payment-month.add');//Para imprimir contrato privado
     Route::get('garments/voucher/print/{garment_id?}', [GarmentController::class, 'printLoanVoucher']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
+    Route::get('garments/tickets/print/{garment_id?}', [GarmentController::class, 'printGarmentTickets']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
     Route::get('garments/payment/money/print/{garment_id}/{transaction_id?}', [GarmentController::class, 'printDailyMoney']);//imprimir los meses diarios de pago de la premda
 
 

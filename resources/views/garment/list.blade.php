@@ -133,6 +133,8 @@
                                     @if ($item->status != 'pendiente' && $item->status != 'rechazado')
                                         {{-- <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li>  --}}
                                     
+                                        <li><a href="" onclick="printTickets({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Tickets" ><i class="fa-solid fa-ticket"></i> Imprimir Tickets</a></li>
+
                                         <li><a href="" onclick="garmentContract({{$item->id}})" class="btn-contrato"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
                                         <li><a href="" onclick="comprobanteDelivered({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Comprobante de Entrega de Prestamos" ><i class="fa-solid fa-print"></i> Imprimir Comprobante Entrega</a></li>
                                     @endif                      

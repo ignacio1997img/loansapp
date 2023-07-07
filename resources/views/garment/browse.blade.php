@@ -364,6 +364,11 @@
             window.open("{{ url('admin/garments/voucher/print') }}/"+garment_id, "Recibo", `width=700, height=700`)
         }
 
+        function printTickets(garment_id)
+        {
+            window.open("{{ url('admin/garments/tickets/print') }}/"+garment_id, "Recibo", `width=700, height=700`)
+        }
+
     </script>
     <script>
 
