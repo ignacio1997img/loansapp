@@ -324,7 +324,7 @@
                 if(articleVal != 0)
                 {   fila = '';
                     $.get('{{route('articles-developer.ajax')}}/'+articleVal, function (data) {
-                    fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" style="text-align: center">Detalle del Artículo / Producto</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
+                    fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" class="title-'+id+'" style="text-align: center">Detalle del Artículo / Producto</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
                                 '<div class="row" id="div-'+id+'">';
                                     for (i = 0; i < data.length; i++) {
                     fila+=              '<div class="form-group col-md-4">'+
@@ -433,6 +433,7 @@
                 $(`#div-foot-${id}`).remove();
                 $(`#btn-${id}`).remove();
                 $(`#hr-${id}`).remove();
+                $(`.title-${id}`).remove();
                 // $('#select_producto').val("").trigger("change");
                 // setNumber();
                 getTotal();
