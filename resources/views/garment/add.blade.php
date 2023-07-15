@@ -374,13 +374,20 @@
                                 '<div class="row" id="div-foot-'+id+'">'+
                                     '<h4 id="titleHead" style="text-align: center"><i class="fa-solid fa-money-bill"></i> Monto por este Artículo / Prenda</h4>'+
                                     '<div class="form-group col-md-2">'+
-                                        '<small>Monto a prestar (Bs.)</small>'+
-                                        '<input type="number" name="amountLoan[]" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="0" min="1" step=".01" class="form-control text" required>'+       
-                                    '</div>'+
+                                        '<small>Monto a prestar (Bs.)</small>';
+                                        if(auxJoya == 'joya_list')
+                                        {
+                    fila+=                  '<input type="hidden" name="amountLoan[]" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="1" min="1" step=".01" class=" text" required>'+  
+                                            '<input type="number" disabled id="amount-'+id+'" style="text-align: right" value="1" min="1" step=".01" class="form-control text" required>';
+                                        }
+                                        else
+                                        {
+                    fila+=                  '<input type="number" name="amountLoan[]" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="0" min="1" step=".01" class="form-control text" required>';
+                                        }   
+                    fila+=          '</div>'+
                                     '<div class="form-group col-md-2" '; if(auxJoya != 'joya_list'){fila+='style="visibility:hidden"';   } fila+='  >'+
-                                        '<small>Precio</small>'+
-                                        '<input type="number" disabled id="pric-'+id+'" style="text-align: right" value="1" min="1" step=".01" class="form-control text" required>'+      
-                                        '<input type="hidden" id="price-'+id+'" name="price[]" value="1" required>'+
+                                        '<small>Cantidad de Gramo</small>'+
+                                        '<input type="number" id="price-'+id+'" class="form-control text" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" name="price[]" value="1" required>'+
                                     '</div>'+
                                     '<div class="form-group col-md-6">'+
                                         
@@ -419,13 +426,12 @@
                     $('#quilate-'+id).append(quilates_list);
                 }); 
                 $('#price-'+id).val(1);
-                $('#pric-'+id).val(1);
             }
 
             function mostrarprice(cadena,id) {
                 let priceG = $('#'+cadena+' option:selected').data('price');
-                $('#price-'+id).val(priceG);
-                $('#pric-'+id).val(priceG);
+                $('#amountLoan-'+id).val(priceG);
+                $('#amount-'+id).val(priceG);
                 subTotal(id);
             }
             function removeDiv(id){
