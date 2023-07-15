@@ -57,11 +57,11 @@
                             </button>
                         @endif
 
-                        @if (auth()->user()->hasPermission('input_articles'))
+                        {{-- @if (auth()->user()->hasPermission('input_articles')) --}}
                             <a href="{{ route('articles.developer', ['article_id' => $item->id]) }}" title="Codigo" class="btn btn-sm btn-dark dark" data-toggle="modal">
                                 <i class="fa-solid fa-code"></i> <span class="hidden-xs hidden-sm">Estructura</span>
                             </a>
-                        @endif
+                        {{-- @endif --}}
                     </td>
                 </tr>
                 @empty
