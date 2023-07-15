@@ -10,13 +10,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\FileController;
 use App\Models\Article;
+use App\Models\BrandGarment;
 use App\Models\GarmentsDoc;
 use App\Models\GarmentsImage;
 use PhpParser\Node\Expr\FuncCall;
 use Illuminate\Support\Carbon;
 use App\Models\CashierMovement;
+use App\Models\CategoryGarment;
 use App\Models\GarmentsMonth;
 use App\Models\GarmentsMonthAgent;
+use App\Models\Jewel;
+use App\Models\ModelGarment;
+use App\Models\Quilate;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Month;
@@ -178,7 +183,21 @@ class GarmentController extends Controller
         ->where('status', 'abierta')
         ->where('deleted_at', NULL)->first();
 
-        return view('garment.add', compact('cashier'));
+        $category = CategoryGarment::with('article')->where('deleted_at', null)->get();
+
+        $modelo = ModelGarment::where('deleted_at', null)->get();
+        $marca = BrandGarment::where('deleted_at', null)->get();
+        $joya = Jewel::with(['quilate'=>function($q){$q->where('deleted_at', null)->where('status', 1);}])->where('deleted_at', null)->get();
+        $quilate = Quilate::where('status', 1)->where('deleted_at', null)->get();
+        // return $joya;
+
+        return view('garment.add', compact('cashier', 'category', 'modelo', 'marca', 'joya', 'quilate'));
+    }
+
+
+    public function ajaxQuilate($id)
+    {
+        return Quilate::where('deleted_at', null)->where('jewel_id', $id)->get();
     }
 
     public function show($id)
@@ -628,6 +647,15 @@ class GarmentController extends Controller
         $transaction = Transaction::find($transaction_id);
         
         return view('garment.transaction.print-dailyMoneyCash', compact('garment', 'transaction', 'loanDayAgent'));
+    }
+
+    public function ajaxListMonthDebt($garment_id)
+    {
+        $garment = Garment::with(['months'=>function($q){
+                $q->where('status', 'pendiente');
+            }])
+            ->where('id', $garment_id)->first();
+        return $garment;
     }
 
 

@@ -83,6 +83,9 @@
                                                 <input type="checkbox" class="select_all">
                                             </th>
                                         @endif --}}
+                                        @php
+                                            $cell = count($dataType->browseRows)+1;
+                                        @endphp
                                         @foreach($dataType->browseRows as $row)
                                         <th>
                                             @if ($isServerSide && in_array($row->field, $sortableColumns))
@@ -105,7 +108,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($dataTypeContent as $data)
+                                    @forelse($dataTypeContent as $data)
                                     <tr>
                                         {{-- @if($showCheckboxColumn)
                                             <td>
@@ -260,7 +263,11 @@
                                             @endforeach
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr style="text-align: center">
+                                            <td colspan="{{$cell}}" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -302,6 +309,13 @@
                     <form action="#" id="delete_form" method="POST">
                         {{ method_field('DELETE') }}
                         {{ csrf_field() }}
+
+                        <div class="text-center" style="text-transform:uppercase">
+                            <i class="voyager-trash" style="color: red; font-size: 5em;"></i>
+                            <br>
+                            
+                            <p><b>Desea eliminar el siguiente registro?</b></p>
+                        </div>
                         <input type="submit" class="btn btn-danger pull-right delete-confirm" value="{{ __('voyager::generic.delete_confirm') }}">
                     </form>
                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>

@@ -48,7 +48,25 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('category_garments');
         Permission::generateFor('brand_garments');
         Permission::generateFor('model_garments');
-        Permission::generateFor('articles');
+        Permission::generateFor('quilates');
+
+
+        $keys = [
+            'browse_articles',
+            'add_articles',
+            'edit_articles',
+            'read_articles',
+            'delete_articles',
+            'input_articles',
+            
+        ];
+
+        foreach ($keys as $key) {
+            Permission::firstOrCreate([
+                'key'        => $key,
+                'table_name' => 'articles',
+            ]);
+        }
 
 
         

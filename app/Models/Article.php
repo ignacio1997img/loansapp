@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    protected $dates = ['deleted_at'];
 
     protected $fillable =[
         'modelGarment_id',
@@ -27,6 +30,10 @@ class Article extends Model
     public function category()
     {
         return $this->belongsTo(CategoryGarment::class, 'categoryGarment_id');
+    }
+    public function developer()
+    {
+        return $this->hasMany(ArticlesDeveloper::class, 'article_id');
     }
 
     public function marca()

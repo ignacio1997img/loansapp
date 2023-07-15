@@ -6,21 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CategoryGarment extends Model
+class Quilate extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $dates = ['deleted_at'];
-    protected $fillable = [
+
+    protected $fillable =[
         'name',
-        'description',
+        'price',
         'deleted_at',
-        'status'
+        'status',
+        'jewel_id'
     ];
-
-    public function article()
-    {
-        return $this->hasMany(Article::class, 'categoryGarment_id');
-    }
-
 }

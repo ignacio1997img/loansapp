@@ -54,6 +54,16 @@ Route::get('/development', [DevelopmentController::class , 'development'])->name
 Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Voyager::routes();
 
+    Route::get('articles', [ArticleController::class, 'index'])->name('voyager.articles.index');
+    Route::get('articles/ajax/list/{search?}', [ArticleController::class, 'list']);
+    Route::get('articles/{article_id?}/developer', [ArticleController::class, 'developer'])->name('articles.developer');
+    Route::post('articles/{article_id?}/developer/store', [ArticleController::class, 'developerStore'])->name('articles-developer.store');
+    Route::delete('articles/{article_id?}/developer/{detail_id?}/destroy', [ArticleController::class, 'developerDestroy'])->name('articles-developer.destroy');
+    Route::get('articles/developer/ajax/{id?}', [ArticleController::class, 'ajaxDeveloper'])->name('articles-developer.ajax');//para obtener las herramientas para genarrar los reqiisitos
+
+
+
+
     // Route::resources('people', PeopleController::class);
     Route::get('people', [PeopleController::class, 'index'])->name('voyager.people.index');
     Route::get('people/ajax/list/{search?}', [PeopleController::class, 'list']);
@@ -135,12 +145,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
     Route::resource('garments', GarmentController::class);
     Route::get('garments/article/ajax', [ArticleController::class, 'ajaxArticle']);//para obtener los articulo para realizar la prenda
+    Route::get('garments/model/ajax', [ArticleController::class, 'ajaxModel'])->name('garments-model.ajax');//para obtener los articulo para realizar la prenda
+    Route::get('garments/marca/ajax', [ArticleController::class, 'ajaxMarca'])->name('garments-marca.ajax');//para obtener los articulo para realizar la prenda
+    Route::get('garments/quilate/ajax/{id?}', [GarmentController::class, 'ajaxQuilate'])->name('garments-quilate.ajax');//para obtener los articulo para realizar la prenda
     Route::get('garments/ajax/list/{cashier_id}/{type}/{search?}', [GarmentController::class, 'list']);//Para generar la lista en el index
     Route::get('garments/{garment?}/rechazar', [GarmentController::class, 'rechazar'])->name('garments.rechazar'); //para rechazar  los prendfarios ante de prestar
     Route::get('garments/{garment?}/success', [GarmentController::class, 'successLoan'])->name('garments.success');
     Route::post('garments/{garment?}/money/deliver', [GarmentController::class, 'moneyDeliver'])->name('garments-money.deliver');
     Route::get('garments/contract/daily/{garment?}', [GarmentController::class, 'printContracDaily']);//Para imprimir contrato privado
-    Route::post('garments/payment/month/{month?}/add', [GarmentController::class, 'paymentMonth'])->name('garments-payment-month.add');//Para imprimir contrato privado
+    Route::post('garments/payment/month/{month?}/add', [GarmentController::class, 'paymentMonth'])->name('garments-payment-month.add');//Para abonar o pagar cada mes
+    Route::get('garments/payment/month/{garment_id?}/add/all', [GarmentController::class, 'paymentMonthAll'])->name('garments-payment-month-add.all');//Para extraer todos los meses que se deben mas el total que se pagara
+    Route::get('garments/list/month/debt/all/{garment_id?}', [GarmentController::class, 'ajaxListMonthDebt'])->name('garments-list-month-debt.all');//Para recoger la prenda y pagar los meses
     Route::get('garments/voucher/print/{garment_id?}', [GarmentController::class, 'printLoanVoucher']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
     Route::get('garments/tickets/print/{garment_id?}', [GarmentController::class, 'printGarmentTickets']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
     Route::get('garments/payment/money/print/{garment_id}/{transaction_id?}', [GarmentController::class, 'printDailyMoney']);//imprimir los meses diarios de pago de la premda

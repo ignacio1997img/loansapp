@@ -12,6 +12,9 @@
             <i class="fa-solid fa-rotate-left"></i> <span>Volver</span>
         </a> --}}
     @stop
+    @php
+        $joya_id =0;
+    @endphp
 
     @section('content')
         <div class="page-content edit-add container-fluid">    
@@ -49,35 +52,6 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <h5>Detalle de la Prenda</h5>
-
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <small for="customer_id">Artículo</small>
-                                        <select name="article_id" class="form-control" id="select_article_id" required></select>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <small for="customer_id">Prenda (Fotografía)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="filePrenda[]" id="filePrenda" class="form-control text imageLength">
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <small for="customer_id">Documento Respaldo (Documento)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="docPrenda[]" id="docPrenda" class="form-control text imageLength">
-                                    </div>
-                                    {{-- <div class="form-group col-md-2">
-                                        <small>Fojas Doc. (Cant)</small>
-                                        <input type="number" name="fojaCant" id="fojaCant" style="text-align: right" value="0" min="0" step="1" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
-                                    </div> --}}
-                                    
-                                    <div class="form-group col-md-12">
-                                        <small for="customer_id">Detalle/Descripcion de la Prenda</small>
-                                        <textarea name="articleDescription" id="articleDescription" class="richTextBox"></textarea>
-                                        {{-- <textarea class="form-control richTextBox" id="bloquear" name="detalles"></textarea> --}}
-                                    </div>
-                                    
-                                </div>
-
-                                <hr>
                                 <h5>Detalle del Contrato</h5>
 
                                 <div class="row">
@@ -98,11 +72,94 @@
                                         </select>
                                     </div>                                 
                                 </div>
+                                <hr>
+                                <h5>Detalle de la Prenda</h5>
+
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <small>Categoria</small>
+                                        <select name="category_id" id="category_id" class="form-control select2" required>
+                                            <option value="" disabled selected>--Selecciona una opción--</option>
+                                            @foreach ($category as $item)
+                                                <option value="{{$item->id}}" data-articles="{{ $item->article }}">{{$item->name}}</option>                                                
+                                            @endforeach
+                                        </select>
+                                    </div>    
+                                    <div class="form-group col-md-4">
+                                        <small>Articulo</small>
+                                        <select name="article_id" id="article_id" class="form-control select2" required>
+                                            
+                                        </select>
+                                    </div>    
+                                    
+                                    
+                                    <div class="form-group col-md-4">
+                                        {{-- <button type="button" id="bt_add" class="btn btn-success"><i class="voyager-basket"></i> Agregar Artículo</button> --}}
+                                        <div class="form-line">
+                                            <button type="button" style="height:50px; padding-center: 30px;" id="bt_add" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div> 
+                                </div>
+
+
+                                {{-- <div class="form-group">
+                                    <label>Habitaciones</label>
+                                    <select name="room_id" id="sasa" class="form-control select2" required>
+                                        <option value="aa">aaa</option>
+                                        <option value="aa">b</option>
+                                    </select>
+                                </div> --}}
+                                
+                                <div id="garment_detail">
+                                    <div class="row">
+                                       
+                                    </div>
+                                </div>
+                                <hr style="border: 5px solid #22a7f0; border-radius: 10px;">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                {{-- <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <small for="customer_id">Artículo</small>
+                                        <select name="article_id" class="form-control" id="select_article_id" required></select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <small for="customer_id">Prenda (Fotografía)</small>
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="filePrenda[]" id="filePrenda" class="form-control text imageLength">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <small for="customer_id">Documento Respaldo (Documento)</small>
+                                        <input type="file" accept="image/jpeg,image/jpg,image/png" multiple name="docPrenda[]" id="docPrenda" class="form-control text imageLength">
+                                    </div>
+                                    
+                                    <div class="form-group col-md-12">
+                                        <small for="customer_id">Detalle/Descripcion de la Prenda</small>
+                                        <textarea name="articleDescription" id="articleDescription" class="richTextBox"></textarea>
+                                    </div>
+                                    
+                                </div> --}}
+
+                                <hr>
+                                {{-- <h5>Detalle del Contrato</h5> --}}
+
+                               
 
                                 <div class="row">
                                     <div class="form-group col-md-2">
-                                        <small>Monto a Prestar (Bs.)</small>
-                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required>
+                                        {{-- <small>Monto a Prestar (Bs.)</small>
+                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required> --}}
                                         {{-- <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required> --}}
                                     </div>
                                     <div class="form-group col-md-2">
@@ -124,6 +181,13 @@
                                         <small>Interes a Pagar (Bs.)</small>
                                         <input type="number" id="amountPorcentage" value="0" step="any" style="text-align: right" disabled class="form-control text">
                                         <input type="hidden" id="amountPorcentage1" name="amountPorcentage" value="0" step="any" style="text-align: right" class="form-control text" required>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <small>Total Dinero a Prestar (Bs.)</small>
+                                        <input type="number" disabled id="amountTotal1" value="0" style="text-align: right" class="form-control text" required>
+                                        <input type="hidden" name="amountTotal" id="amountTotal" value="0" style="text-align: right" class="form-control text" required>
+                                        
                                     </div>
                                     
                                 </div>
@@ -156,15 +220,23 @@
 
     @section('css')
         <style>
-
+            .select2{
+                width: 100% !important;
+            }
+            
         </style>
-    @endsection
+    @stop
 
     @section('javascript')
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script> --}}
         <script>
 
             $(document).ready(function(){
+
+                $('#bt_add').click(function() {
+                    agregar();
+                });
+
 
                 var additionalConfig = {
                     selector: 'textarea.richTextBox[name="articleDescription"]',
@@ -194,22 +266,6 @@
                 });
 
 
-                // tinymce.init({
-                //     selector: 'textarea#basic-example',
-                //     height: 300,
-                //     menubar: false,
-                //     plugins: [
-                //         'advlist autolink lists link image charmap print preview anchor',
-                //         'searchreplace visualblocks code fullscreen',
-                //         'insertdatetime media table paste code help wordcount'
-                //     ],
-                //     toolbar: 'undo redo | formatselect | ' +
-                //     'bold italic backcolor | alignleft aligncenter ' +
-                //     'alignright alignjustify | bullist numlist outdent indent | ' +
-                //     'removeformat | help',
-                //     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                // });
-
 
 
 
@@ -219,9 +275,199 @@
 
             })
 
-            function subTotal()
+            var id=0;
+            let fila = '';
+            function agregar()
             {
-                let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
+                // let modelos = '{{$modelo}}';
+                let modelos = @json($modelo);
+                let marcas = @json($marca);
+                let joyas = @json($joya);
+
+
+                // alert(joyas[0].quilate)
+
+
+                let modelo_list = '<option value="" disabled selected>--Seleccione una opción--</option>';
+                let marca_list = '<option value="" disabled selected>--Seleccione una opción--</option>';
+                let joya_list = '<option value="" disabled selected>--Seleccione una opción--</option>';
+ 
+                modelos.map(
+                    item => {
+                        modelo_list += `<option value="${item.id}">${item.name}</option>`;
+                    }
+                );
+
+                marcas.map(
+                    item => {
+                        marca_list += `<option value="${item.id}">${item.name}</option>`;
+                    }
+                );
+
+                joyas.map(
+                    item => {
+                        joya_list += `<option value="${item.id}" data-quilate="${item.quilate}">${item.name}</option>`;
+                        // alert(item.quilate)
+                    }
+                );
+
+                // $('#room_id').html(marca_list);
+
+
+                categoryText=$("#category_id option:selected").text();
+                categoryVal =$("#category_id").val();
+                articleText=$("#article_id option:selected").text();
+                articleVal =$("#article_id").val()??0;
+                id++;
+                auxJoya ='';
+                // alert(articleVal)
+                if(articleVal != 0)
+                {   fila = '';
+                    $.get('{{route('articles-developer.ajax')}}/'+articleVal, function (data) {
+                    fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" style="text-align: center">Detalle del Artículo / Producto</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
+                                '<div class="row" id="div-'+id+'">';
+                                    for (i = 0; i < data.length; i++) {
+                    fila+=              '<div class="form-group col-md-4">'+
+                                            '<small>'+data[i].title+'</small>';
+
+                                            // Para los input
+                                            if(data[i].tool == 'input'){
+                    fila+=                  '<input type="'+data[i].type+'" name="valores[]" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>'+
+                                            '<input type="hidden" name="title[]" value="'+data[i].title+'">';
+                                            }
+
+                                            let aux = "'"+data[i].detail+'-'+id+"'";
+                                            if(data[i].tool == 'select'){
+                    // fila+=                  '<input type="'+data[i].type+'" name="amountLoan" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>';
+                    fila+=                      '<select name="valores[]" id="'+data[i].detail+'-'+id+'" onchange="mostrarprecio('+aux+','+id+');" class="form-control select2" '+data[i].required+'>';
+                                                    if(data[i].concatenar == 'modelo_list')
+                                                    {
+                    fila+=                              modelo_list;
+                                                    }
+                                                    if(data[i].concatenar == 'marca_list')
+                                                    {
+                    fila+=                              marca_list;
+                                                    }
+                                                    if(data[i].concatenar == 'joya_list')
+                                                    {
+                                                        auxJoya = 'joya_list';
+                    fila+=                              joya_list;
+                                                    }
+                    fila+=                      '</select>'+
+                                                '<input type="hidden" name="title[]" value="'+data[i].title+'">';                                            
+                                            }
+                    fila+=              '</div>';                    
+
+                                        if(data[i].concatenar == 'joya_list')
+                                        {
+                                            let auxprice = "'quilate-"+id+"'";
+                    fila+=                  '<div class="form-group col-md-4">'+
+                                                '<small>Quilate</small>'+
+                                                '<select name="valores[]" id="quilate-'+id+'" onchange="mostrarprice('+auxprice+','+id+');"  class="form-control select2" '+data[i].required+'>';
+
+                    fila+=                      '</select> <input type="hidden" name="title[]" value="Quilate">'+
+                                            '</div>';
+                                        }
+
+                                    }     
+                    fila+=      '</div>'+
+                                '<div class="row" id="div-foot-'+id+'">'+
+                                    '<h4 id="titleHead" style="text-align: center"><i class="fa-solid fa-money-bill"></i> Monto por este Artículo / Prenda</h4>'+
+                                    '<div class="form-group col-md-2">'+
+                                        '<small>Monto a prestar (Bs.)</small>'+
+                                        '<input type="number" name="amountLoan[]" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="0" min="1" step=".01" class="form-control text" required>'+       
+                                    '</div>'+
+                                    '<div class="form-group col-md-2" '; if(auxJoya != 'joya_list'){fila+='style="visibility:hidden"';   } fila+='  >'+
+                                        '<small>Precio</small>'+
+                                        '<input type="number" disabled id="pric-'+id+'" style="text-align: right" value="1" min="1" step=".01" class="form-control text" required>'+      
+                                        '<input type="hidden" id="price-'+id+'" name="price[]" value="1" required>'+
+                                    '</div>'+
+                                    '<div class="form-group col-md-6">'+
+                                        
+                                    '</div>'+
+                                    '<div class="form-group col-md-2">'+
+                                        '<small>Monto (Bs.)</small>'+
+                                        '<input type="number" id="subAmount-'+id+'" disabled style="text-align: right" value="0" min="1" step=".01" class="form-control text">'+
+                                        '<input type="hidden" id="subAmountLoan-'+id+'" name="subAmountLoan[]" value="0" class="form-control text-subtotal" required>'+
+
+                                            
+                                    '</div>'+
+                                '</div>';
+                        $('#garment_detail').append(fila);
+                        toastr.success('Prenda agregada exitosamente..', 'Información');
+
+                    });     
+                }
+                else
+                {
+                    toastr.warning('Seleccione un artículo..', 'Información');
+                }
+                $('#garment_detail').append(fila);
+            }
+
+            function mostrarprecio(cadena,id) {
+                let joya_id = $('#'+cadena+' option:selected').val();
+                let quilates_list = '';
+                $('#quilate-'+id).empty();
+                $.get('{{route('garments-quilate.ajax')}}/'+joya_id, function (data) {
+                    quilates_list = '<option value="" disabled selected>--Seleccione una opción--</option>';
+
+                    for(i=0; i<data.length; i++)
+                    {
+                        quilates_list+= '<option value="'+data[i].id+'" data-price="'+data[i].price+'">Tipo de Kilate:'+data[i].name+',    Precio Por Gramo: '+data[i].price+'</option>';
+                    }
+                    $('#quilate-'+id).append(quilates_list);
+                }); 
+                $('#price-'+id).val(1);
+                $('#pric-'+id).val(1);
+            }
+
+            function mostrarprice(cadena,id) {
+                let priceG = $('#'+cadena+' option:selected').data('price');
+                $('#price-'+id).val(priceG);
+                $('#pric-'+id).val(priceG);
+                subTotal(id);
+            }
+            function removeDiv(id){
+                $(`#div-${id}`).remove();
+                $(`#div-foot-${id}`).remove();
+                $(`#btn-${id}`).remove();
+                $(`#hr-${id}`).remove();
+                // $('#select_producto').val("").trigger("change");
+                // setNumber();
+                getTotal();
+            }
+
+
+
+
+
+
+
+            function subTotal(id)
+            {
+                let amountLoan = $(`#amountLoan-${id}`).val() ? parseFloat($(`#amountLoan-${id}`).val()) : 0;
+                let price = $(`#price-${id}`).val() ? parseFloat($(`#price-${id}`).val()) : 0;
+
+                let total = amountLoan*price;
+                $(`#subAmount-${id}`).val(total.toFixed(2));
+                $(`#subAmountLoan-${id}`).val(total.toFixed(2));
+
+                getTotal();                
+            }
+
+            function getTotal(){
+                let total = 0;
+                $(".text-subtotal").each(function(index) {
+                    total += parseFloat($(this).val());
+                });
+
+
+
+                $('#amountTotal1').val(total.toFixed(2));
+                $('#amountTotal').val(total.toFixed(2));
+
+
                 let priceDollar = $(`#priceDollar`).val() ? parseFloat($(`#priceDollar`).val()) : 0;
 
                 let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
@@ -231,8 +477,8 @@
                 // priceDollar = priceDollar/100;
                 
 
-                let amountPorcentage = amountLoan*porcentage;
-                let amountLoanDollar = amountLoan/priceDollar;
+                let amountPorcentage = total*porcentage;
+                let amountLoanDollar = total/priceDollar;
 
                 
 
@@ -240,8 +486,31 @@
                 $(`#amountLoanDollar`).val(amountLoanDollar.toFixed(2));
                 $(`#amountPorcentage1`).val(amountPorcentage.toFixed(2));
                 $(`#amountLoanDollar1`).val(amountLoanDollar.toFixed(2));
-                
+
             }
+            // function subTotal()
+            // {
+            //     let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
+            //     let priceDollar = $(`#priceDollar`).val() ? parseFloat($(`#priceDollar`).val()) : 0;
+
+            //     let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
+            //     $(`#porcentage1`).val(porcentage);
+
+            //     porcentage = porcentage/100;
+            //     // priceDollar = priceDollar/100;
+                
+
+            //     let amountPorcentage = amountLoan*porcentage;
+            //     let amountLoanDollar = amountLoan/priceDollar;
+
+                
+
+            //     $(`#amountPorcentage`).val(amountPorcentage.toFixed(2));
+            //     $(`#amountLoanDollar`).val(amountLoanDollar.toFixed(2));
+            //     $(`#amountPorcentage1`).val(amountPorcentage.toFixed(2));
+            //     $(`#amountLoanDollar1`).val(amountLoanDollar.toFixed(2));
+                
+            // }
 
 
 
@@ -421,6 +690,26 @@
                             </div>`);
             }
 
+
+
+
+                var articles_country = [];
+
+                $('#category_id').change(function(){
+                    let articles = $('#category_id option:selected').data('articles');
+                    let articles_list = '<option value="" disabled selected>--Selecciona un articulo--</option>';
+                    // alert(articles[name])
+                    if(articles.length){
+                        // articles_country = articles; 
+                        articles.map(articles => {
+                            articles_list += `<option value="${articles.id}">${articles.name}</option>`;
+                        });
+                    }
+                    // else{
+                    //     articles_list += `<option value="">Ninguna</option>`;
+                    // }
+                    $('#article_id').html(articles_list);
+                });
         </script>
     @stop
 

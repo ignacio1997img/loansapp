@@ -124,6 +124,7 @@
                             </div>
                             <hr style="margin:0;">
                         </div>     
+                        {{-- <input type="text" name="amount[]" value="" class="form-control"> --}}
                     </div>
                 </div>
                 <div class="panel panel-bordered">                    
@@ -133,7 +134,10 @@
                                 <h3 class="panel-title">Articulo</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{$garment->article}} </small></p>
+                                <p><small>{{$garment->article}} </small></p>{!!$garment->article!!}
+                                @php
+                                    echo($garment->article)
+                                @endphp
                             </div>
                             <hr style="margin:0;">
                         </div>
@@ -247,8 +251,12 @@
 
                 <div class="panel panel-bordered">       
                     <h4 id="titleHead">Tiempo de la Prenda</h4>
+                    
                     <div class="row">
                         <div class="col-md-12">
+                            <a data-toggle="modal" data-target="#modal_finish" data-money="" title="Pagar"  class="btn btn-success">
+                                <i class="fa-solid fa-money-bill"></i> Recoger Prenda
+                            </a>
                             <div class="table-responsive">
                                 <table id="dataStyle" class="table table-bordered table-hover">
                                     <thead>
@@ -380,6 +388,80 @@
         </div>
     </div>
 
+
+    {{-- Para finalizar el hopedaje --}}
+    <form lass="form-submit" id="menu-form" action="{{route('garments-payment-month-add.all', ['garment_id'=>$garment->id])}}" method="post">
+        @csrf
+        <div class="modal fade" id="modal_finish" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content modal-success">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="fa-solid fa-hourglass-end"></i> Recoger Prenda</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="room_id" id="room_id">
+                        <input type="hidden" name="planta_id" id="planta_id">
+                        <input type="hidden" name="amountFinish" id="amountFinish">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table id="dataStyle" class="tables tablesMenu table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px">N&deg;</th>
+                                            <th style="text-align: center">Fecha Inicio</th>  
+                                            <th style="text-align: center">Fecha Fin</th>  
+                                            <th style="text-align: center; width: 120px">Monto</th>  
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-bodyFinish">
+                                        <tr id="tr-emptyMenuFinish">
+                                            <td colspan="4" style="height: 30px">
+                                                <h4 class="text-center text-muted" style="margin-top: 5px">
+                                                    <i class="fa-solid fa-list" style="font-size: 20px"></i> <br>
+                                                    Lista de meses con deuda vacía
+                                                </h4>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tr>
+                                        <td colspan="3" style="text-align: right">
+                                            Total <small>Bs.</small>
+                                        </td>
+                                        <td style="text-align: right">
+                                            <small><b id="label-totalDetailFinish" class="label-totalDetailFinish">0.00</b></small>
+                                            <input type="hidden" id="subTotalDetalle" name="subTotalDetalle">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12">                            
+                            
+                            <div class="form-group">
+                                <input type="radio" id="html" name="qr" value="0" checked>
+                                <label for="html"><small style="font-size: 15px">Efectivo</small></label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="radio" id="css" name="qr" value="1">
+                                <label for="css"><small style="font-size: 15px">QR</small></label><br>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <input type="submit" class="btn btn-success btn-submit" value="Finalizar">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <div class="modal modal-dark fade" data-backdrop="static" tabindex="-1" id="modal-addmoney" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -504,10 +586,115 @@
 
 
         function printDailyMoney(garment_id, transaction_id)
-            {
+        {
                 // alert(transaction_id);
                 window.open("{{ url('admin/garments/payment/money/print') }}/"+garment_id+"/"+transaction_id, "Recibo", `width=320, height=700`)
-            }
+        }
+
+        $('#modal_finish').on('show.bs.modal', function (event)
+        {
+            var button = $(event.relatedTarget);
+
+            var id = '{{$garment->id}}';
+
+            $.get('{{route('garments-list-month-debt.all')}}/'+id, function (data) {
+                // alert(data.months[0].id);
+                
+                detailTotal=0;
+                for (i = 0; i < data.months.length; i++) {
+                    if(i==0)
+                    {
+                        $('#table-bodyFinish').empty();
+                    }
+                    if(i+1 <= data.month)
+                    {
+                        $('#table-bodyFinish').append(`   
+                            <tr class="tr-item">
+                                <td class="td-itemMenu">
+                                    ${i+1}
+                                    <input type="hidden" min="0" name="months[]" value="${data.months[i].id}" class="form-control">
+                                </td>
+                                <td style="text-align: center">
+                                    <small>${moment(data.months[i].start).format('DD-MM-YYYY')}</small>
+                                </td>
+                                <td style="text-align: center">
+                                    <small>${moment(data.months[i].finish).format('DD-MM-YYYY')}</small>
+                                </td>
+                                <td style="text-align: right">
+                                    <small>${data.months[i].amount}</small>
+                                    <input type="hidden" id="select-cant-${data.months[i].id}" onkeyup="getTotal()" onchange="getTotal()" min="0" name="amount[]" style="text-align: right" value="${data.months[i].amount}" class="form-control label-subtotal">
+                                </td>
+
+                            </tr>`
+                        );
+                    }
+                    else
+                    {
+                        $('#table-bodyFinish').append(`   
+                            <tr class="tr-item">
+                                <td class="td-itemMenu">
+                                    ${i+1}
+                                    <input type="hidden" min="0" name="months[]" value="${data.months[i].id}" class="form-control">
+                                </td>
+                                <td style="text-align: center">
+                                    <small>${moment(data.months[i].start).format('DD-MM-YYYY')}</small>
+                                </td>
+                                <td style="text-align: center">
+                                    <small>${moment(data.months[i].finish).format('DD-MM-YYYY')}</small>
+                                </td>
+                                <td style="text-align: right">
+                                
+                                    <input type="number" id="select-cant-${data.months[i].id}" onkeyup="getTotal()" onchange="getTotal()" min="0" name="amount[]" style="text-align: right" value="${data.months[i].amount}" class="form-control label-subtotal" required>
+                                </td>
+
+                            </tr>`
+                        );
+                    }                    
+                    detailTotal = parseFloat(detailTotal) + parseFloat(data.months[i].amount);
+
+                }     
+                $('#table-bodyFinish').append(`   
+                    <tr class="tr-item">
+                        <td colspan="3" style="text-align: center">
+                            <small>Monto prestado por la prenda</small>                            
+                        </td>
+                        <td style="text-align: right">
+                            <small>${data.amountLoan}</small>
+                            <input type="hidden" min="0" id="amountLoan" name="amountLoan" style="text-align: right" value="${data.amountLoan}" class="form-control label-subtotal">
+                        </td>
+
+                    </tr>`
+                );  
+                detailTotal = parseFloat(detailTotal) + parseFloat(data.amountLoan);
+
+
+                $('#label-totalDetailFinish').text(detailTotal);
+                $('#subTotalDetalle').val(detailTotal);
+
+            });
+
+
+            // alert(parseFloat(totalArticle+totalMenu+TotalHosp))
+            
+            
+            
+        })
+
+        function getSubtotal(id){
+                // let price = $(`#select-price-${id}`).val() ? parseFloat($(`#select-price-${id}`).val()) : 0;
+                // let quantity = $(`#select-cant-${id}`).val() ? parseFloat($(`#select-cant-${id}`).val()) : 0;
+                // $(`#label-subtotal-${id}`).text((price * quantity).toFixed(2));
+                getTotal();
+        }
+
+        function getTotal(){
+                let total = 0;
+                $(".label-subtotal").each(function(index) {
+                    total += $(this).val()?parseFloat($(this).val()):0;
+                });
+                $('#label-totalDetailFinish').text(total.toFixed(2));
+                $('#subTotalDetalle').val(total.toFixed(2));
+        }
             
     </script>
 @stop
