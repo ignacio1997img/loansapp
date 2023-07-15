@@ -224,7 +224,7 @@ class GarmentController extends Controller
 
     public function store(Request $request)
     {
-        // return $request;
+        return $request;
         DB::beginTransaction();
         try {
             $imageObj = new FileController;

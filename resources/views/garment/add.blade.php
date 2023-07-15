@@ -294,13 +294,13 @@
  
                 modelos.map(
                     item => {
-                        modelo_list += `<option value="${item.id}">${item.name}</option>`;
+                        modelo_list += `<option value="${item.name}">${item.name}</option>`;
                     }
                 );
 
                 marcas.map(
                     item => {
-                        marca_list += `<option value="${item.id}">${item.name}</option>`;
+                        marca_list += `<option value="${item.name}">${item.name}</option>`;
                     }
                 );
 
@@ -324,10 +324,11 @@
                 if(articleVal != 0)
                 {   fila = '';
                     $.get('{{route('articles-developer.ajax')}}/'+articleVal, function (data) {
-                    fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" class="title-'+id+'" style="text-align: center">Detalle del Artículo / Producto</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
+                    fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" class="title-'+id+'" style="text-align: center">'+articleText+'</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
                                 '<div class="row" id="div-'+id+'">';
-                                    for (i = 0; i < data.length; i++) {
-                    fila+=              '<div class="form-group col-md-4">'+
+                                    for (i = 0; i < data.length; i++) 
+                                    {
+                    fila+=              '<div class="form-group col-md-4"><input type="hidden" name="article[]" value="'+articleVal+'"><input type="hidden" name="group[]" value="'+id+'">'+
                                             '<small>'+data[i].title+'</small>';
 
                                             // Para los input
@@ -361,7 +362,7 @@
                                         if(data[i].concatenar == 'joya_list')
                                         {
                                             let auxprice = "'quilate-"+id+"'";
-                    fila+=                  '<div class="form-group col-md-4">'+
+                    fila+=                  '<div class="form-group col-md-4"><input type="hidden" name="article[]" value="'+articleVal+'"><input type="hidden" name="group[]" value="'+id+'">'+
                                                 '<small>Quilate</small>'+
                                                 '<select name="valores[]" id="quilate-'+id+'" onchange="mostrarprice('+auxprice+','+id+');"  class="form-control select2" '+data[i].required+'>';
 
