@@ -42,14 +42,14 @@
                                 @endif
                                 <h5>Datos Personales</h5>
                                 <div class="row">
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-12">
                                         <small for="customer_id">Beneficiario del Prestamo</small>
                                         <select name="people_id" class="form-control" id="select_people_id" required></select>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    {{-- <div class="form-group col-md-4">
                                         <small for="customer_id">Fotocopia CI/NIT (Fotografía)</small>
                                         <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="fileCi" id="fileCi" class="form-control text imageLength">
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <hr>
                                 <h5>Detalle del Contrato</h5>
