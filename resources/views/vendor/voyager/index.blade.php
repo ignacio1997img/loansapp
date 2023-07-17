@@ -129,7 +129,7 @@
                     <div class="col-md-12">
                         <h2 id="h2">Cartera Prendario</h2>
                     </div>
-                    @php
+                    {{-- @php
                         $garment = App\Models\Garment::where('deleted_at', NULL)->get();
                         $garmentVigente = App\Models\Garment::where('deleted_at', NULL)->where('status', 'entregado')->whereRaw('(monthCant <= month)')->get();
                         $garmentRiesgo = App\Models\Garment::where('deleted_at', NULL)->where('status', 'entregado')->whereRaw('(monthCant > month)')->get();
@@ -169,11 +169,10 @@
                                 </div>
                                 <div class="col-md-3 text-right">
                                     <i class="icon fa-solid fa-triangle-exclamation" style="color: #e62222"></i>
-                                    {{-- <i class="fa-solid fa-triangle-exclamation"></i> --}}
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             @endif
         

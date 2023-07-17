@@ -12,50 +12,36 @@ class Garment extends Model
     protected $fillable = [
         'code',
         'people_id',
-        'article_id',
-        'categoryGarment_id',
-        'brandGarment_id',
-        'modelGarment_id',
-        'fileCi',
-        'article',
-        'categoryGarment',
-        'brandGarment',
-        'modelGarment',
-        'articleDescription',
         'cashier_id',
         'type',
+        'month',
+        'monthCant',
         'date',
-
         'amountLoan',
-        'amountLoanDollar',
         'priceDollar',
+        'amountLoanDollar',
         'amountPorcentage',
         'porcentage',
         'amountTotal',
-        'month',
-        'monthCant',
         'observation',
         'status',
-
         'delivered',
         'dateDelivered',
         'delivered_userId',
         'delivered_agentType',
-
         'success_userId',
         'success_agentType',
-
         'cashierRegister_id',
         'register_userId',
         'register_agentType',
-        
         'deleted_userId',
         'deleted_agentType',
         'deleteObservation',
         'deletedKey',
-
         'deleted_at'
     ];
+
+
 
     //para ver que persona es la que entrega el prestamo al beneficiario
     public function agentDelivered()
@@ -68,15 +54,7 @@ class Garment extends Model
         return $this->belongsTo(People::class, 'people_id');
     }
 
-    public function doc()
-    {
-        return $this->hasMany(GarmentsDoc::class, 'garment_id');
-    }
 
-    public function image()
-    {
-        return $this->hasMany(GarmentsImage::class, 'garment_id');
-    }
 
     public function months()
     {

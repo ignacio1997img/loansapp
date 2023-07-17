@@ -162,10 +162,7 @@
 
                                 <div class="row">
                                     <div class="form-group col-md-2">
-                                        {{-- <small>Monto a Prestar (Bs.)</small>
-                                        <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required> --}}
-                                        {{-- <input type="number" name="amountLoan" id="amountLoan" style="text-align: right" value="0" min="1" step=".01" onkeypress="return filterFloat(event,this);" onchange="subTotal()" onkeyup="subTotal()" class="form-control text" required> --}}
-                                    </div>
+                                  </div>
                                     <div class="form-group col-md-2">
                                         <small>Precio del Dolar ($)</small>
                                         <input type="number" id="priceDollar" value="{{setting('configuracion.dollar')}}" style="text-align: right" disabled class="form-control text">
@@ -329,22 +326,23 @@
                 {   fila = '';
                     $.get('{{route('articles-developer.ajax')}}/'+articleVal, function (data) {
                     fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" class="title-'+id+'" style="text-align: center">'+articleText+'</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
+                                '<input type="hidden" name="article[]" value="'+articleVal+'">'+
                                 '<div class="row" id="div-'+id+'">';
                                     for (i = 0; i < data.length; i++) 
                                     {
-                    fila+=              '<div class="form-group col-md-4"><input type="hidden" name="article[]" value="'+articleVal+'"><input type="hidden" name="group[]" value="'+id+'">'+
+                    fila+=              '<div class="form-group col-md-4"><input type="hidden" name="group[]" value="'+id+'">'+
                                             '<small>'+data[i].title+'</small>';
 
                                             // Para los input
                                             if(data[i].tool == 'input'){
-                    fila+=                  '<input type="'+data[i].type+'" name="valores[]" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>'+
+                    fila+=                  '<input type="'+data[i].type+'" name="'+id+'[]" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>'+
                                             '<input type="hidden" name="title[]" value="'+data[i].title+'">';
                                             }
 
                                             let aux = "'"+data[i].detail+'-'+id+"'";
                                             if(data[i].tool == 'select'){
                     // fila+=                  '<input type="'+data[i].type+'" name="amountLoan" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>';
-                    fila+=                      '<select name="valores[]" id="'+data[i].detail+'-'+id+'" onchange="mostrarprecio('+aux+','+id+');" class="form-control select2" '+data[i].required+'>';
+                    fila+=                      '<select name="'+id+'[]" id="'+data[i].detail+'-'+id+'" onchange="mostrarprecio('+aux+','+id+');" class="form-control select2" '+data[i].required+'>';
                                                     if(data[i].concatenar == 'modelo_list')
                                                     {
                     fila+=                              modelo_list;
@@ -366,9 +364,9 @@
                                         if(data[i].concatenar == 'joya_list')
                                         {
                                             let auxprice = "'quilate-"+id+"'";
-                    fila+=                  '<div class="form-group col-md-4"><input type="hidden" name="article[]" value="'+articleVal+'"><input type="hidden" name="group[]" value="'+id+'">'+
+                    fila+=                  '<div class="form-group col-md-4"><input type="hidden" name="group[]" value="'+id+'">'+
                                                 '<small>Quilate</small>'+
-                                                '<select name="valores[]" id="quilate-'+id+'" onchange="mostrarprice('+auxprice+','+id+');"  class="form-control select2" '+data[i].required+'>';
+                                                '<select name="'+id+'[]" id="quilate-'+id+'" onchange="mostrarprice('+auxprice+','+id+');"  class="form-control select2" '+data[i].required+'>';
 
                     fila+=                      '</select> <input type="hidden" name="title[]" value="Quilate">'+
                                             '</div>';
