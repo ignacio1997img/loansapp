@@ -19,6 +19,9 @@ class CreateGarmentsMonthAgentsTable extends Migration
             $table->foreignId('transaction_id')->nullable()->constrained('transactions');
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
 
+            $table->foreignId('garment_id')->nullable()->constrained('garments');
+            $table->string('type')->nullable();
+
             
             $table->decimal('amount',11, 2)->nullable();
             $table->foreignId('agent_id')->nullable()->constrained('users');
@@ -33,6 +36,9 @@ class CreateGarmentsMonthAgentsTable extends Migration
             $table->string('deleted_agentType')->nullable();
             $table->text('deleteObservation')->nullable();
             $table->string('deletedKey')->nullable();
+
+
+            
         });
     }
 

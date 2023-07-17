@@ -94,12 +94,16 @@
                                     
                                     
                                     <div class="form-group col-md-4">
-                                        {{-- <button type="button" id="bt_add" class="btn btn-success"><i class="voyager-basket"></i> Agregar Artículo</button> --}}
                                         <div class="form-line">
-                                            <button type="button" style="height:50px; padding-center: 30px;" id="bt_add" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+                                            <button type="button" style='width:50px; height:50px' id="bt_add" class="btn btn-success btn-lg"><i class="fa-solid fa-cart-shopping" style="font-size: 20px" ></i></button>
                                         </div>
                                     </div> 
                                 </div>
+
+                                {{-- <i class="fa-solid fa-cart-shopping"></i> --}}
+
+
+                            
 
 
                                 {{-- <div class="form-group">

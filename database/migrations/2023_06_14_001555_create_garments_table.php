@@ -17,25 +17,25 @@ class CreateGarmentsTable extends Migration
             $table->id();
             $table->string('code')->nullable();
             $table->foreignId('people_id')->nullable()->constrained('people');
-            $table->foreignId('article_id')->nullable()->constrained('articles');
-            $table->foreignId('categoryGarment_id')->nullable()->constrained('category_garments');
-            $table->foreignId('brandGarment_id')->nullable()->constrained('brand_garments');
-            $table->foreignId('modelGarment_id')->nullable()->constrained('model_garments');
+            // $table->foreignId('article_id')->nullable()->constrained('articles');
+            // $table->foreignId('categoryGarment_id')->nullable()->constrained('category_garments');
+            // $table->foreignId('brandGarment_id')->nullable()->constrained('brand_garments');
+            // $table->foreignId('modelGarment_id')->nullable()->constrained('model_garments');
 
-            $table->text('fileCi')->nullable();
+            // $table->text('fileCi')->nullable();
 
-            $table->string('article')->nullable();
-            $table->string('categoryGarment')->nullable();
-            $table->string('brandGarment')->nullable();
-            $table->string('modelGarment')->nullable();
+            // $table->string('article')->nullable();
+            // $table->string('categoryGarment')->nullable();
+            // $table->string('brandGarment')->nullable();
+            // $table->string('modelGarment')->nullable();
 
             // $table->smallInteger('fojaCant')->nullable();
 
-            $table->text('articleDescription')->nullable();
+            // $table->text('articleDescription')->nullable();
             
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
 
-            $table->string('type')->nullable();
+            $table->string('type')->nullable(); //Para definir el tipo de contrato
             $table->integer('month')->nullable();
             $table->integer('monthCant')->nullable();
 
@@ -53,7 +53,7 @@ class CreateGarmentsTable extends Migration
 
             
 
-            $table->text('observation')->nullable();//Para las observacones en general
+            // $table->text('observation')->nullable();//Para las observacones en general
             $table->string('status')->nullable('pendiente');
 
             // Para saber quien lo entrega el dinero o el prendario
