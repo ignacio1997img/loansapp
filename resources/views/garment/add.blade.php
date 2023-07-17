@@ -106,13 +106,13 @@
                             
 
 
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Habitaciones</label>
                                     <select name="room_id" id="sasa" class="form-control select2" required>
                                         <option value="aa">aaa</option>
                                         <option value="aa">b</option>
                                     </select>
-                                </div>
+                                </div> --}}
                                 
                                 <div id="garment_detail">
                                     <div class="row">
