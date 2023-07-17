@@ -75,7 +75,7 @@
                                 <h3 class="panel-title">Monto Prestado (Bs)</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>Bs. {{ number_format($garment->amountTotal,2, ',','.') }}</small></p>
+                                <p><small>Bs. {{ number_format($garment->amountLoan,2, ',','.') }}</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div>     
@@ -120,7 +120,7 @@
                                 <h3 class="panel-title">Cantidad de Mes de Espera</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small> {{$garment->monthCant}}</small></p>
+                                <p><small> {{$garment->month==1?'1 mes':'3 meses'}}</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div>     

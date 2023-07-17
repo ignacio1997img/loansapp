@@ -118,7 +118,7 @@
                 </td>
             </tr>
         </table>
-        <hr>
+        {{-- <hr>
         <table width="90%">
             <tr>
                 <td colspan="2" style="text-align: center">
@@ -152,7 +152,7 @@
                     {{$garment->brandGarment}}
                 </td>
             </tr>            
-        </table>
+        </table> --}}
         <hr>
         <table width="90%" cellpadding="2" cellspacing="0" border="0" style="font-size: 15px">
             <tr style="text-align: center">

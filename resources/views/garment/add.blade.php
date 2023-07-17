@@ -192,13 +192,12 @@
                                     </div>
                                     
                                 </div>
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="form-group col-md-12">
-                                        {{-- <label for="observation"></label> --}}
                                         <small>Observación</small>
                                         <textarea name="observation" id="observation" class="form-control text" cols="30" rows="5"></textarea>
                                     </div>                                  
-                                </div>
+                                </div> --}}
                                 @if ($cashier)    
                                     @if ($cashier->status == 'abierta')
 
@@ -366,10 +365,10 @@
                                         {
                                             let auxprice = "'quilate-"+id+"'";
                     fila+=                  '<div class="form-group col-md-4">'+
-                                                '<small>Quilate</small>'+
+                                                '<small>Tipo</small>'+
                                                 '<select name="name'+id+'[]" id="quilate-'+id+'" onchange="mostrarprice('+auxprice+','+id+');"  class="form-control select2" '+data[i].required+'>';
 
-                    fila+=                      '</select> <input type="hidden" name="title'+id+'[]" value="Quilate">'+
+                    fila+=                      '</select> <input type="hidden" name="title'+id+'[]" value="Tipo">'+
                                                 '<input type="hidden" name="value'+id+'[]" value="quilate">'+
                                                 '<input type="hidden" name="developer'+id+'[]" value="">'+
                                             '</div>';
@@ -413,7 +412,7 @@
                 }
                 else
                 {
-                    toastr.warning('Seleccione un artículo..', 'Información');
+                    toastr.error('Seleccione un artículo..', 'Información');
                 }
                 $('#garment_detail').append(fila);
             }
@@ -449,21 +448,23 @@
                 // $('#select_producto').val("").trigger("change");
                 // setNumber();
                 getTotal();
+                toastr.warning('Detalle Eliminado..', 'Información');
+
             }
 
 
 
-            function selectInput(id)
-            {
-                let amountLoan = $(`#amountLoan-${id}`).val() ? parseFloat($(`#amountLoan-${id}`).val()) : 0;
-                let price = $(`#price-${id}`).val() ? parseFloat($(`#price-${id}`).val()) : 0;
+            // function selectInput(id)
+            // {
+            //     let amountLoan = $(`#amountLoan-${id}`).val() ? parseFloat($(`#amountLoan-${id}`).val()) : 0;
+            //     let price = $(`#price-${id}`).val() ? parseFloat($(`#price-${id}`).val()) : 0;
 
-                let total = amountLoan*price;
-                $(`#subAmount-${id}`).val(total.toFixed(2));
-                $(`#subAmountLoan-${id}`).val(total.toFixed(2));
+            //     let total = amountLoan*price;
+            //     $(`#subAmount-${id}`).val(total.toFixed(2));
+            //     $(`#subAmountLoan-${id}`).val(total.toFixed(2));
 
-                getTotal();                
-            }
+            //     getTotal();                
+            // }
 
 
 
@@ -511,29 +512,6 @@
                 $(`#amountLoanDollar1`).val(amountLoanDollar.toFixed(2));
 
             }
-            // function subTotal()
-            // {
-            //     let amountLoan = $(`#amountLoan`).val() ? parseFloat($(`#amountLoan`).val()) : 0;
-            //     let priceDollar = $(`#priceDollar`).val() ? parseFloat($(`#priceDollar`).val()) : 0;
-
-            //     let porcentage = $(`#porcentage`).val() ? parseFloat($(`#porcentage`).val()) : 0;
-            //     $(`#porcentage1`).val(porcentage);
-
-            //     porcentage = porcentage/100;
-            //     // priceDollar = priceDollar/100;
-                
-
-            //     let amountPorcentage = amountLoan*porcentage;
-            //     let amountLoanDollar = amountLoan/priceDollar;
-
-                
-
-            //     $(`#amountPorcentage`).val(amountPorcentage.toFixed(2));
-            //     $(`#amountLoanDollar`).val(amountLoanDollar.toFixed(2));
-            //     $(`#amountPorcentage1`).val(amountPorcentage.toFixed(2));
-            //     $(`#amountLoanDollar1`).val(amountLoanDollar.toFixed(2));
-                
-            // }
 
 
 

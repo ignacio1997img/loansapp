@@ -230,6 +230,10 @@ class GarmentController extends Controller
     {
         // return $request['value1'];
         // return $request;
+        if($request->amountTotal<=0)
+        {
+            return redirect()->route('garments.create')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+        }
         
         DB::beginTransaction();
         try {
@@ -251,8 +255,9 @@ class GarmentController extends Controller
                 'month'=>$request->month,
                 'monthCant'=>1,
 
-                // 'amountLoan'=>$request->amountLoan,
-                'amountTotal'=>$request->amountTotal,
+                'amountLoan'=>$request->amountTotal,
+                'amountTotal'=>$request->amountTotal+$request->amountPorcentage,
+
                 'priceDollar'=>$request->priceDollar,
                 'amountLoanDollar'=>$request->amountLoanDollar,
                 'porcentage'=>$request->porcentage,
@@ -374,7 +379,7 @@ class GarmentController extends Controller
             return redirect()->route('garments.index')->with(['message' => 'Registrado exitosamente exitosamente.', 'alert-type' => 'success']);            
         } catch (\Throwable $th) {
             DB::rollBack();
-            return 0;
+            // return 0;
             return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
     }
@@ -557,7 +562,7 @@ class GarmentController extends Controller
     {
         // return 1;
         // return $garment;
-        $garment = Garment::with(['people'])->where('id', $garment)->first();
+        $garment = Garment::with(['people', 'garmentArticle', 'garmentArticle.garmentArticleDetail'])->where('id', $garment)->first();
         if($garment->type == 'compacto')
         {
 

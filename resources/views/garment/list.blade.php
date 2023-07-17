@@ -56,8 +56,8 @@
                             Contrato Privado
                         @endif
                     </td>
-                    <td style="text-align: right"> <small>Bs.</small> {{$item->amountLoan}}</td>
-                    <td style="text-align: right"> <small>Bs.</small> {{$item->amountPorcentage}}</td>
+                    <td style="text-align: right"> <small>Bs.</small> {{ number_format($item->amountLoan,2, ',','.') }}</td>
+                    <td style="text-align: right"> <small>Bs.</small>{{ number_format($item->amountPorcentage,2, ',','.') }}</td>
                     @if ($type == 'enpago')
                         <td style="text-align: left">
                             <small>Total a pagar Bs.</small> {{ number_format($item->amountTotal,2, ',','.') }} 
