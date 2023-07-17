@@ -16,7 +16,7 @@ class CreateGarmentsArticlesTable extends Migration
         Schema::create('garments_articles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('garment_id')->nullable()->constrained('garments');
-            $table->foreignId('article_id')->nullable()->constrained('article');
+            $table->foreignId('article_id')->nullable()->constrained('articles');
 
             $table->string('article')->nullable();
 

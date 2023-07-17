@@ -17,6 +17,8 @@ use PhpParser\Node\Expr\FuncCall;
 use Illuminate\Support\Carbon;
 use App\Models\CashierMovement;
 use App\Models\CategoryGarment;
+use App\Models\GarmentsArticle;
+use App\Models\GarmentsArticlesDetail;
 use App\Models\GarmentsMonth;
 use App\Models\GarmentsMonthAgent;
 use App\Models\Jewel;
@@ -27,6 +29,8 @@ use App\Models\Transaction;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Month;
 use ReturnTypeWillChange;
 use Illuminate\Support\Facades\Http;
+
+use function PHPUnit\Framework\returnSelf;
 
 class GarmentController extends Controller
 {
@@ -203,7 +207,7 @@ class GarmentController extends Controller
     public function show($id)
     {
         // return $id;
-        $garment = Garment::with(['people', 'doc', 'months', 'image'])->where('id', $id)->first();
+        $garment = Garment::with(['people', 'months', 'garmentArticle', 'garmentArticle.garmentArticleDetail'])->where('id', $id)->first();
 
         $transaction = DB::table('garments as g')
             ->join('garments_month_agents as gma', 'gma.garment_id', 'g.id')
@@ -224,8 +228,8 @@ class GarmentController extends Controller
 
     public function store(Request $request)
     {
-        return $request['title'];
-        return $request;
+        // return $request['value1'];
+        // return $request;
         
         DB::beginTransaction();
         try {
@@ -233,33 +237,29 @@ class GarmentController extends Controller
             $user = Auth::user();
             $agent = $this->agent($user->id);
 
-            $article = Article::with(['model', 'category', 'marca'])->where('id', $request->article_id)->where('deleted_at', null)->first();
+            // $article = Article::with(['model', 'category', 'marca'])->where('id', $request->article_id)->where('deleted_at', null)->first();
             // return $article;
+
+
+            $auxTotal = 0;
 
             
             $garment = Garment::create([
                 'people_id'=> $request->people_id,
-                'article_id'=>$request->article_id,
-                'categoryGarment_id'=>$article->categoryGarment_id,
-                'brandGarment_id'=>$article->brandGarment_id,
-                'modelGarment_id'=>$article->modelGarment_id,
 
-                'article'=>$article->name,
-                'categoryGarment' =>$article->category->name,
-                'brandGarment' =>$article->marca->name,
-                'modelGarment' =>$article->model->name,
-
-                'articleDescription'=>$request->articleDescription,
                 'type'=>$request->type,
                 'month'=>$request->month,
                 'monthCant'=>1,
-                'amountLoan'=>$request->amountLoan,
-                'amountTotal'=>$request->amountLoan+$request->amountPorcentage,
+
+                // 'amountLoan'=>$request->amountLoan,
+                'amountTotal'=>$request->amountTotal,
                 'priceDollar'=>$request->priceDollar,
                 'amountLoanDollar'=>$request->amountLoanDollar,
                 'porcentage'=>$request->porcentage,
                 'amountPorcentage'=>$request->amountPorcentage,
-                'observation'=>$request->observation,
+
+
+                // 'observation'=>$request->observation,
                 'cashierRegister_id'=>$request->cashierRegister_id,
                 'status'=>'pendiente',
                 'date'=>date('Y-m-d'),
@@ -270,39 +270,103 @@ class GarmentController extends Controller
 
             $garment->update(['code'=>'P-'.str_pad($garment->id, 5, "0", STR_PAD_LEFT)]);
 
-            $file = $request->file('fileCi');
-            if($file)
-            {                 
-                $fileCi = $imageObj->file($file, $garment->id, "Garment/ci"); 
-                $garment->update(['fileCi' => $fileCi]);
-            }
+            // return max($request->group);
+            
+            // return count($request->group);
+
+            for ($i=0; $i < count($request->group); $i++) { 
+
+                $art = Article::where('id', $request->article[$i])->first();
+                // return $art;
+                $article = GarmentsArticle::create([
+                    'garment_id'=>$garment->id,
+                    'article_id'=>$art->id,
+                    'article'=>$art->name,
+                    'amountLoan'=>$request['amountLoan'.$request->group[$i]],
+                    'amountCant'=>$request['price'.$request->group[$i]],
+                    'amountSubTotal'=>$request['subAmountLoan'.$request->group[$i]],
+
+                ]);
+
+                $auxTotal = $auxTotal + $request['subAmountLoan'.$request->group[$i]];
+
+                $countDetail = count($request['name'.$request->group[$i]]);
+
+                // return $request['name'.$request->group[$i]][0];
+                // return $request['value1'.$request->group[$i]][0];
+                // return $request['developer'.$request->group[$i][$x]];
+
+                for($x = 0; $x < $countDetail; $x++)
+                {
+
+                    $auxName = $request['name'.$request->group[$i]][$x];
+                    // return $auxName;
+                    if($request['value'.$request->group[$i]][$x] == 'modelo_list')
+                    {
+                        $auxName = ModelGarment::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
+                    }
+                    if($request['value'.$request->group[$i]][$x] == 'marca_list')
+                    {
+                        $auxName = BrandGarment::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
+                    }
+
+                    if($request['value'.$request->group[$i]][$x] == 'joya_list')
+                    {
+                        $auxName = Jewel::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
+                    }
+
+                    if($request['value'.$request->group[$i]][$x] == 'quilate')
+                    {
+                        $auxName = Quilate::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
+                    }
+
+                    GarmentsArticlesDetail::create([
+                        'garmentArticle_id'=>$article->id,
+                        'articleDeveloper_id' => $request['developer'.$request->group[$i]][$x],
+                        'value' => $auxName,
+                        'title' => $request['title'.$request->group[$i]][$x],
+
+                        'foreign_id' => $request['value'.$request->group[$i]][$x]?$request['name'.$request->group[$i]][$x]:null,
+                        'typeForeign' => $request['value'.$request->group[$i]][$x],
 
 
-            $file = $request->file('filePrenda');
-            if ($file) {
-                for ($i=0; $i < count($file); $i++) { 
-                    $filePrenda = $imageObj->image($file[$i], $garment->id, "Garment/filePrenda"); 
-                    GarmentsImage::create([
-                        'garment_id'=>$garment->id,
-                        'image' => $filePrenda,
-                        'register_userId' => $agent->id,
-                        'register_agentType' => $agent->role,
                     ]);
                 }
             }
+            // return 1;
+            // $file = $request->file('fileCi');
+            // if($file)
+            // {                 
+            //     $fileCi = $imageObj->file($file, $garment->id, "Garment/ci"); 
+            //     $garment->update(['fileCi' => $fileCi]);
+            // }
 
-            $file = $request->file('docPrenda');
-            if ($file) {
-                for ($i=0; $i < count($file); $i++) { 
-                    $docPrenda = $imageObj->image($file[$i], $garment->id, "Garment/docPrenda"); 
-                    GarmentsImage::create([
-                        'garment_id'=>$garment->id,
-                        'image' => $docPrenda,
-                        'register_userId' => $agent->id,
-                        'register_agentType' => $agent->role->name
-                    ]);
-                }
-            }
+
+            // $file = $request->file('filePrenda');
+            // if ($file) {
+            //     for ($i=0; $i < count($file); $i++) { 
+            //         $filePrenda = $imageObj->image($file[$i], $garment->id, "Garment/filePrenda"); 
+            //         GarmentsImage::create([
+            //             'garment_id'=>$garment->id,
+            //             'image' => $filePrenda,
+            //             'register_userId' => $agent->id,
+            //             'register_agentType' => $agent->role,
+            //         ]);
+            //     }
+            // }
+
+            // $file = $request->file('docPrenda');
+            // if ($file) {
+            //     for ($i=0; $i < count($file); $i++) { 
+            //         $docPrenda = $imageObj->image($file[$i], $garment->id, "Garment/docPrenda"); 
+            //         GarmentsImage::create([
+            //             'garment_id'=>$garment->id,
+            //             'image' => $docPrenda,
+            //             'register_userId' => $agent->id,
+            //             'register_agentType' => $agent->role->name
+            //         ]);
+            //     }
+            // }
 
 
             // return 1;
@@ -310,7 +374,7 @@ class GarmentController extends Controller
             return redirect()->route('garments.index')->with(['message' => 'Registrado exitosamente exitosamente.', 'alert-type' => 'success']);            
         } catch (\Throwable $th) {
             DB::rollBack();
-            // return 0;
+            return 0;
             return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
     }

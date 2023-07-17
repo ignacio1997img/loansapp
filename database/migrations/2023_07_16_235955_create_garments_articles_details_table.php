@@ -22,16 +22,11 @@ class CreateGarmentsArticlesDetailsTable extends Migration
             $table->string('developer')->nullable();
 
             $table->string('foreign_id')->nullable();
-            $table->string('typeForeign')->nullable();
-
-
-            
+            $table->string('typeForeign')->nullable();           
 
 
             $table->string('title')->nullable();
             $table->string('value')->nullable();
-
-
 
             $table->timestamps();
             $table->softDeletes();

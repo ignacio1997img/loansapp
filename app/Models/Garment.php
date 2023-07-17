@@ -41,6 +41,11 @@ class Garment extends Model
         'deleted_at'
     ];
 
+    public function garmentArticle()
+    {
+        return $this->hasMany(GarmentsArticle::class, 'garment_id');
+    }
+
 
 
     //para ver que persona es la que entrega el prestamo al beneficiario

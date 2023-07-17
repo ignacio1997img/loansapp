@@ -75,7 +75,7 @@
                                 <h3 class="panel-title">Monto Prestado (Bs)</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>Bs. {{$garment->amountLoan}}</small></p>
+                                <p><small>Bs. {{ number_format($garment->amountTotal,2, ',','.') }}</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div>     
@@ -84,7 +84,7 @@
                                 <h3 class="panel-title">Monto Prestado ($)</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>$. {{$garment->amountLoanDollar}}</small></p>
+                                <p><small>$ {{ number_format($garment->amountLoanDollar,2, ',','.') }}</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div>    
@@ -93,7 +93,7 @@
                                 <h3 class="panel-title">Interes Prestamos (%)</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{$garment->porcentage}} %</small></p>
+                                <p><small>{{ number_format($garment->porcentage,2, ',','.') }} %</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div> 
@@ -102,7 +102,7 @@
                                 <h3 class="panel-title">Interes a Pagar (Bs.)</h3>
                             </div>
                             <div class="panel-body" style="padding-top:0;">
-                                <p><small>Bs. {{$garment->amountPorcentage}}</small></p>
+                                <p><small>Bs. {{ number_format($garment->amountPorcentage,2, ',','.') }}</small></p>
                             </div>
                             <hr style="margin:0;">
                         </div>    
@@ -127,60 +127,67 @@
                         {{-- <input type="text" name="amount[]" value="" class="form-control"> --}}
                     </div>
                 </div>
-                <div class="panel panel-bordered">                    
+                
+                <div class="panel panel-bordered">            
+                    {{-- <hr style="border: 5px solid #22a7f0; border-radius: 10px;">     --}}
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Articulo</h3>
+                        @forelse ($garment->garmentArticle as $item)
+                            <div class="col-md-12">
+                                <hr style="border: 5px solid #22a7f0; border-radius: 10px;"> 
+                                <h2 id="titleHead" style="text-align: center">{{$item->article}}</h2>
                             </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{$garment->article}} </small></p>{!!$garment->article!!}
-                                @php
-                                    echo($garment->article)
-                                @endphp
-                            </div>
-                            <hr style="margin:0;">
-                        </div>
-                        <div class="col-md-3">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Modelo</h3>
-                            </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{$garment->modelGarment}}</small></p>
-                            </div>
-                            <hr style="margin:0;">
-                        </div>
-                        <div class="col-md-3">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Marca</h3>
-                            </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{$garment->brandGarment}}</small></p>
-                            </div>
-                            <hr style="margin:0;">
-                        </div>
+                            
+                            @foreach ($item->garmentArticleDetail as $itm)
+                                <div class="col-md-3">
+                                    <div class="panel-heading" style="border-bottom:0;">
+                                        <h3 class="panel-title">{{$itm->title}}</h3>
+                                    </div>
+                                    <div class="panel-body" style="padding-top:0;">
+                                        <p><small>{{$itm->value}}</small></p>
+                                    </div>
+                                    <hr style="margin:0;">
+                                </div>
+                            @endforeach
 
-                        <div class="col-md-3">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Categoría</h3>
+                            <div class="col-md-12">
+                                <h4 id="titleHead" style="text-align: center"><i class="fa-solid fa-money-bill"></i> Monto por este Artículo / Prenda</h4>
                             </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p><small>{{ $garment->categoryGarment}}</small></p>
-                            </div>
-                            <hr style="margin:0;">
-                        </div>
 
+                            <div class="col-md-3">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <h3 class="panel-title">Monto por la prenda</h3>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p><small>{{ number_format($item->amountLoan,2, ',','.') }}</small></p>
+                                </div>
+                                <hr style="margin:0;">
+                            </div> <div class="col-md-3">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <h3 class="panel-title">Cantidad</h3>
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p><small>{{ number_format($item->amountCant,2, ',','.') }}</small></p>
+                                </div>
+                                <hr style="margin:0;">
+                            </div> <div class="col-md-3">
+                                <div class="panel-heading" style="border-bottom:0;">
+                                    <h3 class="panel-title">Sub Total
+                                </div>
+                                <div class="panel-body" style="padding-top:0;">
+                                    <p><small>{{ number_format($item->amountSubTotal,2, ',','.') }}</small></p>
+                                </div>
+                                <hr style="margin:0;">
+                            </div> 
+                            
+                        @empty
+                        {{-- <tr>
+                            <td style="text-align: center" valign="top" colspan="5" class="dataTables_empty">No hay datos disponibles en la tabla</td>
+                        </tr> --}}
+                        @endforelse
+                        
+                    
+                        
 
-                         
-                        <div class="col-md-12">
-                            <div class="panel-heading" style="border-bottom:0;">
-                                <h3 class="panel-title">Detalle de la Prenda</h3>
-                            </div>
-                            <div class="panel-body" style="padding-top:0;">
-                                <p style="padding: 0px">{!! $garment->articleDescription !!}</p>
-                            </div>
-                            <hr style="margin:0;">
-                        </div>             
                     </div>
                 </div>
                 <div class="panel panel-bordered">

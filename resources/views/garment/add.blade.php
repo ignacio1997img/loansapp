@@ -295,13 +295,13 @@
  
                 modelos.map(
                     item => {
-                        modelo_list += `<option value="${item.name}">${item.name}</option>`;
+                        modelo_list += `<option value="${item.id}">${item.name}</option>`;
                     }
                 );
 
                 marcas.map(
                     item => {
-                        marca_list += `<option value="${item.name}">${item.name}</option>`;
+                        marca_list += `<option value="${item.id}">${item.name}</option>`;
                     }
                 );
 
@@ -326,23 +326,24 @@
                 {   fila = '';
                     $.get('{{route('articles-developer.ajax')}}/'+articleVal, function (data) {
                     fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" class="title-'+id+'" style="text-align: center">'+articleText+'</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
-                                '<input type="hidden" name="article[]" value="'+articleVal+'">'+
-                                '<div class="row" id="div-'+id+'">';
+                                '<div class="row" id="div-'+id+'"> <input type="hidden" name="article[]" value="'+articleVal+'"><input type="hidden" name="group[]" value="'+id+'">';
                                     for (i = 0; i < data.length; i++) 
                                     {
-                    fila+=              '<div class="form-group col-md-4"><input type="hidden" name="group[]" value="'+id+'">'+
-                                            '<small>'+data[i].title+'</small>';
+                    fila+=              '<div class="form-group col-md-4">'+
+                                            '<small>'+data[i].title+'</small>'+
+                                            '<input type="hidden" name="developer'+id+'[]" value="'+data[i].id+'">'+
+                                            '<input type="hidden" name="title'+id+'[]" value="'+data[i].title+'">';
 
                                             // Para los input
                                             if(data[i].tool == 'input'){
-                    fila+=                  '<input type="'+data[i].type+'" name="'+id+'[]" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>'+
-                                            '<input type="hidden" name="title[]" value="'+data[i].title+'">';
+                    fila+=                  '<input type="'+data[i].type+'" name="name'+id+'[]" id="'+data[i].detail+'-'+id+'"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>'+
+                                            '<input type="hidden" name="value'+id+'[]" value="">';
                                             }
 
                                             let aux = "'"+data[i].detail+'-'+id+"'";
                                             if(data[i].tool == 'select'){
                     // fila+=                  '<input type="'+data[i].type+'" name="amountLoan" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>';
-                    fila+=                      '<select name="'+id+'[]" id="'+data[i].detail+'-'+id+'" onchange="mostrarprecio('+aux+','+id+');" class="form-control select2" '+data[i].required+'>';
+                    fila+=                      '<select name="name'+id+'[]" id="'+data[i].detail+'-'+id+'" onchange="mostrarprecio('+aux+','+id+');" class="form-control select2" '+data[i].required+'>';
                                                     if(data[i].concatenar == 'modelo_list')
                                                     {
                     fila+=                              modelo_list;
@@ -356,19 +357,21 @@
                                                         auxJoya = 'joya_list';
                     fila+=                              joya_list;
                                                     }
-                    fila+=                      '</select>'+
-                                                '<input type="hidden" name="title[]" value="'+data[i].title+'">';                                            
+                    fila+=                      '</select>'+        
+                                                '<input type="hidden" name="value'+id+'[]" value="'+data[i].concatenar+'">';                                    
                                             }
                     fila+=              '</div>';                    
 
                                         if(data[i].concatenar == 'joya_list')
                                         {
                                             let auxprice = "'quilate-"+id+"'";
-                    fila+=                  '<div class="form-group col-md-4"><input type="hidden" name="group[]" value="'+id+'">'+
+                    fila+=                  '<div class="form-group col-md-4">'+
                                                 '<small>Quilate</small>'+
-                                                '<select name="'+id+'[]" id="quilate-'+id+'" onchange="mostrarprice('+auxprice+','+id+');"  class="form-control select2" '+data[i].required+'>';
+                                                '<select name="name'+id+'[]" id="quilate-'+id+'" onchange="mostrarprice('+auxprice+','+id+');"  class="form-control select2" '+data[i].required+'>';
 
-                    fila+=                      '</select> <input type="hidden" name="title[]" value="Quilate">'+
+                    fila+=                      '</select> <input type="hidden" name="title'+id+'[]" value="Quilate">'+
+                                                '<input type="hidden" name="value'+id+'[]" value="quilate">'+
+                                                '<input type="hidden" name="developer'+id+'[]" value="">'+
                                             '</div>';
                                         }
 
@@ -380,17 +383,17 @@
                                         '<small>Monto a prestar (Bs.)</small>';
                                         if(auxJoya == 'joya_list')
                                         {
-                    fila+=                  '<input type="hidden" name="amountLoan[]" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="1" min="1" step=".01" class=" text" required>'+  
+                    fila+=                  '<input type="hidden" name="amountLoan'+id+'" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="1" min="1" step=".01" class=" text" required>'+  
                                             '<input type="number" disabled id="amount-'+id+'" style="text-align: right" value="1" min="1" step=".01" class="form-control text" required>';
                                         }
                                         else
                                         {
-                    fila+=                  '<input type="number" name="amountLoan[]" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="0" min="1" step=".01" class="form-control text" required>';
+                    fila+=                  '<input type="number" name="amountLoan'+id+'" id="amountLoan-'+id+'" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" style="text-align: right" value="0" min="1" step=".01" class="form-control text" required>';
                                         }   
                     fila+=          '</div>'+
                                     '<div class="form-group col-md-2" '; if(auxJoya != 'joya_list'){fila+='style="visibility:hidden"';   } fila+='  >'+
                                         '<small>Cantidad de Gramo</small>'+
-                                        '<input type="number" id="price-'+id+'" class="form-control text" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" name="price[]" value="1" required>'+
+                                        '<input type="number" id="price-'+id+'" class="form-control text" onchange="subTotal('+id+')" onkeyup="subTotal('+id+')" name="price'+id+'" value="1" required>'+
                                     '</div>'+
                                     '<div class="form-group col-md-6">'+
                                         
@@ -398,7 +401,7 @@
                                     '<div class="form-group col-md-2">'+
                                         '<small>Monto (Bs.)</small>'+
                                         '<input type="number" id="subAmount-'+id+'" disabled style="text-align: right" value="0" min="1" step=".01" class="form-control text">'+
-                                        '<input type="hidden" id="subAmountLoan-'+id+'" name="subAmountLoan[]" value="0" class="form-control text-subtotal" required>'+
+                                        '<input type="hidden" id="subAmountLoan-'+id+'" name="subAmountLoan'+id+'" value="0" class="form-control text-subtotal" required>'+
 
                                             
                                     '</div>'+
@@ -450,7 +453,17 @@
 
 
 
+            function selectInput(id)
+            {
+                let amountLoan = $(`#amountLoan-${id}`).val() ? parseFloat($(`#amountLoan-${id}`).val()) : 0;
+                let price = $(`#price-${id}`).val() ? parseFloat($(`#price-${id}`).val()) : 0;
 
+                let total = amountLoan*price;
+                $(`#subAmount-${id}`).val(total.toFixed(2));
+                $(`#subAmountLoan-${id}`).val(total.toFixed(2));
+
+                getTotal();                
+            }
 
 
 

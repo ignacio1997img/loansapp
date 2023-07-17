@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class GarmentsArticlesDetail extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'garmentArticle_id',
+        'articleDeveloper_id',
+        'developer',
+        'foreign_id',
+        'typeForeign',
+        'title',
+        'value',
+        'deleted_at'
+    ];
 }
