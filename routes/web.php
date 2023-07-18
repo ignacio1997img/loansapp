@@ -154,7 +154,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('garments/{garment?}/money/deliver', [GarmentController::class, 'moneyDeliver'])->name('garments-money.deliver');
     Route::get('garments/contract/daily/{garment?}', [GarmentController::class, 'printContracDaily']);//Para imprimir contrato privado
     Route::post('garments/payment/month/{month?}/add', [GarmentController::class, 'paymentMonth'])->name('garments-payment-month.add');//Para abonar o pagar cada mes
-    Route::get('garments/payment/month/{garment_id?}/add/all', [GarmentController::class, 'paymentMonthAll'])->name('garments-payment-month-add.all');//Para extraer todos los meses que se deben mas el total que se pagara
+    Route::post('garments/payment/month/{garment_id?}/add/all', [GarmentController::class, 'paymentMonthAll'])->name('garments-payment-month-add.all');//Para extraer todos los meses que se deben mas el total que se pagara
     Route::get('garments/list/month/debt/all/{garment_id?}', [GarmentController::class, 'ajaxListMonthDebt'])->name('garments-list-month-debt.all');//Para recoger la prenda y pagar los meses
     Route::get('garments/voucher/print/{garment_id?}', [GarmentController::class, 'printLoanVoucher']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
     Route::get('garments/tickets/print/{garment_id?}', [GarmentController::class, 'printGarmentTickets']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente

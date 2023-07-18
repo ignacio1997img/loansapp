@@ -2,7 +2,8 @@
 
 @section('page_title', 'Crear Input')
 
-{{-- @if (auth()->user()->hasPermission('input_articles')) --}}
+@if (auth()->user()->hasRole('admin'))
+
 
     @section('page_header')
         <h1 id="titleHead" class="page-title">
@@ -247,4 +248,4 @@
         </script>
     @stop
 
-{{-- @endif --}}
+@endif

@@ -62,7 +62,7 @@
                                     <option value="porentregar">Por Entregar Prestamo</option>
 
                                     <option value="concluida">Prenda Concluida</option>
-                                    <option value="entregada">Prenda Entregada</option>
+                                    <option value="recogido">Prenda Recogidas</option>
                                     <option value="rechazado">Rechazado</option>
                                     <option value="eliminado">Eliminado</option>
                                 </select>

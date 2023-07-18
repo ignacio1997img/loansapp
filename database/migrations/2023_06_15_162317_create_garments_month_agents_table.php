@@ -20,6 +20,10 @@ class CreateGarmentsMonthAgentsTable extends Migration
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
 
             $table->foreignId('garment_id')->nullable()->constrained('garments');
+            $table->string('typeGarment')->nullable();
+
+
+
             $table->string('type')->nullable();
 
             

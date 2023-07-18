@@ -45,7 +45,7 @@
     </div>
     
 
-        <table width="90%">
+        <table width="100%">
             <tr>
                 <td colspan="2" style="text-align: center">
                     <h3 style="margin-bottom: 0px; margin-top: 50px; font-size: 18px"><small>TICKETS Nº {{$ticket->number}}</small> </h3>
@@ -56,29 +56,36 @@
         {{-- <div id="watermark">
             <img src="{{ asset('images/icon.png') }}" height="100%" width="100%" /> 
         </div> --}}
-        <table width="90%" cellpadding="5" style="font-size: 20px">
+        <table width="100%" cellpadding="5" style="font-size: 20px">
             <tr>
                 <td style="text-align: center">
-                    {!! QrCode::size(300)->generate($garment->code
-                    ); !!} <br>
+                    {!! QrCode::size(300)->generate($garment->code); !!}<br>
+                    <br><br>
+
+                    {!! DNS1D::getBarcodeSVG($garment->code, 'C128',2.7,120, true); !!} 
+                    {{-- {!! DNS1D::getBarcodeHTML($garment->code, 'C128',3,120); !!}  --}}
+                    {{-- {!! DNS1D::getBarcodeSVG($garment->code, 'CODABAR'); !!}  --}}
+
+
+                    {{-- {!!   !!} --}}
+                    {{-- {!!QrCode::geo(-14.830299, -64.974075);!!} --}}
                     {{-- {!!!!} --}}
                 </td>
             </tr>
-                
-            {{-- <tr>
-                <td><hr></td>
-            </tr> --}}
 
-            <tr>
+            
+
+
+            {{-- <tr>
                 <td style="text-align: center; font-size: 35px">
                     {{$garment->code}}
                 </td>
-            </tr>
+            </tr> --}}
 
         </table>
         {{-- <hr> --}}
  
-        <table width="90%" style="font-size: 12px">
+        <table width="100%" style="font-size: 12px">
             <tr style="text-align: center">
                 <td>
                         <small><b>Impreso por: {{ Auth::user()->name }} <br> {{ date('d/m/Y H:i:s') }}</b></small>

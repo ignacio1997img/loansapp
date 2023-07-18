@@ -24,6 +24,7 @@ class GarmentsMonthAgent extends Model
         'deletedKey',
 
         'garment_id',
+        'typeGarment',
         'type'
     ];
 

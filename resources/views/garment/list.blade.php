@@ -80,12 +80,6 @@
                     @endif
                 
                     <td style="text-align: right">
-                        {{-- @if ($item->debt == 0)
-                            <label class="label label-success">PAGADO</label>
-                        @else
-                            <label class="label label-danger"><small>Bs.</small> {{$item->debt}}</label>
-                        @endif
-                        <br> --}}
                         @if ($item->status == 'pendiente')
                             <label class="label label-danger">PENDIENTE</label>                            
                         @endif
@@ -98,24 +92,14 @@
                         @if ($item->status == 'entregado')
                             <label class="label label-success">En Pago</label>                            
                         @endif
-                        {{-- @if ($item->status == 'verificado')
-                            <label class="label label-warning">VERIFICADO</label>                            
+
+                        @if ($item->status == 'recogido')
+                            <label class="label label-success">Artículo/Producto Recogido</label>                            
                         @endif
-                        @if ($item->status == 'aprobado')
-                            <label class="label label-primary">APROBADO</label>                            
-                        @endif
-                        @if ($item->status == 'entregado')
-                            <label class="label label-success">ACTIVO</label>                            
-                        @endif
-                        @if ($item->status == 'rechazado')
-                            <label class="label label-danger">RECHAZADO</label>                            
-                        @endif        --}}
+                       
                     </td>
                     <td class="no-sort no-click bread-actions text-right">
                         @if ($item->status == 'aprobado')
-                            {{-- <a href="#" data-toggle="modal" data-target="#notificar-modal" data-name="{{ $item->people->first_name }} {{ $item->people->last_name1 }} {{ $item->people->last_name2 }}" data-phone="{{$item->people->cell_phone}}" title="Notificar al beneficiario" class="btn btn-sm">
-                                <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i>
-                            </a> --}}
                             @if (auth()->user()->hasPermission('deliverMoney_garments'))
                                 <a title="Entregar dinero al Beneficiario" class="btn btn-sm btn-success" onclick="deliverItem('{{ route('garments-money.deliver', ['garment' => $item->id]) }}',{{$item->id}}, {{$item->amountLoan}})" data-toggle="modal" data-target="#deliver-modal" data-fechass="{{$item->date}}">
                                     <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Entregar</span>
@@ -131,8 +115,6 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu" style="left: -90px !important">
                                     @if ($item->status != 'pendiente' && $item->status != 'rechazado')
-                                        {{-- <li><a href="{{ route('loans-print.calendar', ['loan'=>$item->id])}}" class="btn-rotation"  data-toggle="modal" target="_blank" title="Imprimir Calendario" ><i class="fa-solid fa-print"></i> Imprimir Calendario</a></li>  --}}
-                                    
                                         <li><a href="" onclick="printTickets({{$item->id}})" class="btn-rotation"  data-toggle="modal" title="Imprimir Tickets" ><i class="fa-solid fa-ticket"></i> Imprimir Tickets</a></li>
 
                                         <li><a href="" onclick="garmentContract({{$item->id}})" class="btn-contrato"  data-toggle="modal" title="Imprimir Contrato" ><i class="fa-solid fa-print"></i> Imprimir Contrato</a></li>
@@ -144,17 +126,17 @@
 
                          
 
-                            @if($item->status != 'rechazado')
-                                <a href="{{ route('garments.show', ['garment' => $item->id]) }}" title="Ver Detalle" class="btn btn-sm btn-warning">
-                                    <i class="voyager-eye"></i><span class="hidden-xs hidden-sm"> Ver</span>
-                                </a>
-                            @endif
+                        @if($item->status != 'rechazado')
+                            <a href="{{ route('garments.show', ['garment' => $item->id]) }}" title="Ver Detalle" class="btn btn-sm btn-warning">
+                                <i class="voyager-eye"></i><span class="hidden-xs hidden-sm"> Ver</span>
+                            </a>
+                        @endif
                             
-                            @if ($item->status=='pendiente' && auth()->user()->hasPermission('successLoan_garments'))
-                                <a title="Aprobar prestamo de prendario" class="btn btn-sm btn-dark" onclick="successItem('{{ route('garments.success', ['garment' => $item->id]) }}')" data-toggle="modal" data-target="#success-modal">
-                                    <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Aprobar</span>
-                                </a>
-                            @endif
+                        @if ($item->status=='pendiente' && auth()->user()->hasPermission('successLoan_garments'))
+                            <a title="Aprobar prestamo de prendario" class="btn btn-sm btn-dark" onclick="successItem('{{ route('garments.success', ['garment' => $item->id]) }}')" data-toggle="modal" data-target="#success-modal">
+                                <i class="fa-solid fa-money-check-dollar"></i><span class="hidden-xs hidden-sm"> Aprobar</span>
+                            </a>
+                        @endif
 
 
                             
@@ -174,7 +156,7 @@
 
 
                         @if (auth()->user()->hasPermission('delete_garments'))
-                            @if ($item->status != 'rechazado' && $item->status != 'entregado' && $item->deleted_at ==null)
+                            @if ($item->status != 'rechazado' && $item->status != 'entregado'&& $item->status != 'recogido' && $item->deleted_at ==null)
                                 <button title="Rechazar" class="btn btn-sm btn-dark" onclick="rechazarItem('{{ route('garments.rechazar', ['garment' => $item->id]) }}')" data-toggle="modal" data-target="#rechazar-modal">
                                     <i class="fa-solid fa-thumbs-down"></i> <span class="hidden-xs hidden-sm">Rechazar</span>
                                 </button>

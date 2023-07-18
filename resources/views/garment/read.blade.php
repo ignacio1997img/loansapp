@@ -261,9 +261,12 @@
                     
                     <div class="row">
                         <div class="col-md-12">
-                            <a data-toggle="modal" data-target="#modal_finish" data-money="" title="Pagar"  class="btn btn-success">
-                                <i class="fa-solid fa-money-bill"></i> Recoger Prenda
-                            </a>
+                            @if ($garment->status == 'entregado' && $garment->deleted_at == null)
+                                <a data-toggle="modal" data-target="#modal_finish" data-money="" title="Pagar"  class="btn btn-success">
+                                    <i class="fa-solid fa-money-bill"></i> Recoger Prenda
+                                </a>
+                            @endif
+                            
                             <div class="table-responsive">
                                 <table id="dataStyle" class="table table-bordered table-hover">
                                     <thead>
@@ -407,9 +410,7 @@
                         <h4 class="modal-title"><i class="fa-solid fa-hourglass-end"></i> Recoger Prenda</h4>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="room_id" id="room_id">
-                        <input type="hidden" name="planta_id" id="planta_id">
-                        <input type="hidden" name="amountFinish" id="amountFinish">
+                        {{-- <input type="hidden" name="room_id" id="room_id"> --}}
                         <div class="form-group">
                             <div class="table-responsive">
                                 <table id="dataStyle" class="tables tablesMenu table-bordered table-hover">

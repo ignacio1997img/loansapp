@@ -139,15 +139,12 @@
                 </td>
             </tr>
             {{-- <hr> --}}
-            <tr>
+            {{-- <tr>
                 <td colspan="3">
                     <hr>
                 </td>
-                {{-- <td colspan="2">
-                    {{$garment->article}}
-                </td> --}}
-            </tr>
-            <tr>
+            </tr> --}}
+            {{-- <tr>
                 <th style="text-align: right; width: 10%">
                     ARTICULO:
                 </th>
@@ -178,7 +175,7 @@
                 <td colspan="2">
                     {!! $garment->articleDescription !!}
                 </td>
-            </tr>  
+            </tr>   --}}
             
         </table>
         {{-- <hr>
@@ -233,7 +230,11 @@
             @foreach ($loanDayAgent as $item)
                 <tr>
                     <td style="text-align: center">
-                        {{Carbon\Carbon::parse($item->garmentMonth->start)->format('d/m/Y')}} - {{Carbon\Carbon::parse($item->garmentMonth->finish)->format('d/m/Y')}}
+                        @if($item->garmentMonth_id)                        
+                            {{Carbon\Carbon::parse($item->garmentMonth->start)->format('d/m/Y')}} - {{Carbon\Carbon::parse($item->garmentMonth->finish)->format('d/m/Y')}}
+                        @else
+                            Recojo del Artículo/Prenda
+                        @endif
                     </td>                    
                     <td style="text-align: right">
                         {{number_format($item->amount, 2 , ',', '.')}}
@@ -328,6 +329,7 @@
                 </td>
             </tr>
         </table>
+        
 
     <style>
         .border{

@@ -29,6 +29,8 @@ use App\Models\Transaction;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Month;
 use ReturnTypeWillChange;
 use Illuminate\Support\Facades\Http;
+use Psy\TabCompletion\Matcher\FunctionsMatcher;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -117,48 +119,23 @@ class GarmentController extends Controller
                     // dump($data);
                 return view('garment.list', compact('data', 'cashier_id', 'type'));
                 break;
-            case 'aprobado':
-                    $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
-                        ->where(function($query) use ($search){
-                            if($search){
-                                $query->OrwhereHas('people', function($query) use($search){
-                                    $query->whereRaw("(ci like '%$search%' or first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
-                                })
-                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
-                                ->OrWhereRaw($search ? "code like '%$search%'" : 1);
-                            }
-                        })
-                        ->where('deleted_at', NULL)->where('status', 'aprobado')->orderBy('date', 'DESC')->paginate($paginate);
-                    return view('loans.list', compact('data', 'cashier_id'));
-                    break;
-            case 'pagado':
-                $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
+
+            case 'recogido':
+                $data = Garment::with(['people'])
                     ->where(function($query) use ($search){
                         if($search){
                             $query->OrwhereHas('people', function($query) use($search){
                                 $query->whereRaw("(ci like '%$search%' or first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
                             })
-                            ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
+                            // ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
                             ->OrWhereRaw($search ? "code like '%$search%'" : 1);
                         }
                     })
-                    ->where('deleted_at', NULL)->where('debt', 0)->orderBy('date', 'DESC')->paginate($paginate);
-                return view('loans.list', compact('data', 'cashier_id'));
+                    ->where('deleted_at', NULL)->where('status', 'recogido')->orderBy('id', 'DESC')->paginate($paginate);
+                    // dump($data);
+                return view('garment.list', compact('data', 'cashier_id', 'type'));
                 break;
-            case 'rechazado':
-                    $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
-                        ->where(function($query) use ($search){
-                            if($search){
-                                $query->OrwhereHas('people', function($query) use($search){
-                                    $query->whereRaw("(ci like '%$search%' or first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
-                                })
-                                ->OrWhereRaw($search ? "typeLoan like '%$search%'" : 1)
-                                ->OrWhereRaw($search ? "code like '%$search%'" : 1);
-                            }
-                        })
-                        ->where('deleted_at', NULL)->where('status', 'rechazado')->orderBy('date', 'DESC')->paginate($paginate);
-                    return view('loans.list', compact('data', 'cashier_id'));
-                    break;
+            
             case 'todo':
                     $data = Loan::with(['loanDay', 'loanRoute', 'loanRequirement', 'people'])
                         ->where(function($query) use ($search){
@@ -643,7 +620,7 @@ class GarmentController extends Controller
                 'amount' => $month->amount,
                 'agent_id' => $user->id,
                 'agentType' => $this->agent($user->id)->role,
-                'type'=>'month',
+                'typeGarment'=>'month',
                 'garment_id'=>$garment->id
             ]);
 
@@ -665,7 +642,7 @@ class GarmentController extends Controller
             $i=1;
             foreach($loanDayAgent as $item)
             {
-                $cadena=$cadena.'    '.Carbon::parse($item->garmentMonth->start)->format('d/m/Y').' - '.Carbon::parse($item->garmentMonth->finish)->format('d/m/Y').'      '.$item->amount.($i!=$cant?'%0A':'');
+                $cadena=$cadena.'    '.Carbon::parse($item->garmentMonth->start)->format('d/m/Y').' - '.Carbon::parse($item->garmentMonth->finish)->format('d/m/Y').'     '.$item->amount.($i!=$cant?'%0A':'');
                 $i++;
             }
 
@@ -703,6 +680,165 @@ class GarmentController extends Controller
             DB::rollBack();
             // return 0;
             return redirect()->route('garments.show', ['garment' => $request->garment_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'error']);
+        }
+    }
+
+
+    // public function paymentMonthAll()
+    public function paymentMonthAll(Request $request, $garment_id)
+    {
+        // return $request;    
+        // return $garment_id;
+        DB::beginTransaction();
+        try {
+
+            $user = Auth::user();
+            $garment = Garment::where('id', $garment_id)->where('status', 'entregado')->where('deleted_at', null)->first();
+            // return $garment;
+
+            $cantMonth = count($request->months);
+            for($i=0; $i<$cantMonth;$i++)
+            {
+                $month = GarmentsMonth::where('garment_id', $garment_id)->where('id', $request->months[$i])->where('status', 'pendiente')->first();
+                // return $month;
+                if(!$month)
+                {
+                    return redirect()->route('garments.show', ['garment' => $garment_id])->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
+                }
+            }
+
+
+            $cashier = Cashier::with(['movements' => function($q){
+                $q->where('deleted_at', NULL);
+                }])
+                ->where('user_id', $user->id)
+                ->where('status', 'abierta')
+                ->where('deleted_at', NULL)->first();
+
+            if(!$cashier)
+            {
+                return redirect()->route('garments.show', ['garment' => $garment_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'error']);
+            }
+            // return $request;
+
+
+            $monto =0;
+            $code = Transaction::all()->max('id');
+            $code = $code?$code:0;
+            $transaction = Transaction::create(['type'=>$request->qr, 'transaction'=>$code+1]);
+
+            for($i=0; $i<$cantMonth;$i++)
+            {
+                $monto = $monto + $request->amount[$i];
+                
+                
+                if($request->qr!='Qr')
+                {
+                    CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first()->increment('balance', $request->amount[$i]);
+                }
+
+                $month = GarmentsMonth::where('garment_id', $garment_id)->where('id', $request->months[$i])->where('status', 'pendiente')->first();
+
+
+                GarmentsMonthAgent::create([
+                    'garmentMonth_id' => $request->months[$i],
+                    'cashier_id' => $cashier->id, 
+                    'type'=>$request->qr,
+                    'transaction_id'=>$transaction->id,
+                    'amount' => $request->amount[$i],
+                    'agent_id' => $user->id,
+                    'agentType' => $this->agent($user->id)->role,
+                    'typeGarment'=>'month',
+                    'garment_id'=>$garment->id
+                ]);
+
+                $month->update(['status'=>'pagado']);
+                
+            }
+
+            if($request->qr!='Qr')
+            {
+                CashierMovement::where('cashier_id', $cashier->id)->where('deleted_at', null)->first()->increment('balance', $request->amountLoan);
+            }
+
+            GarmentsMonthAgent::create([
+                // 'garmentMonth_id' => $request->months[$i],
+                'cashier_id' => $cashier->id, 
+                'type'=>$request->qr,
+                'transaction_id'=>$transaction->id,
+                'amount' => $request->amountLoan,
+                'agent_id' => $user->id,
+                'agentType' => $this->agent($user->id)->role,
+                'typeGarment'=>'garment',
+                'garment_id'=>$garment->id
+            ]);
+
+            $monthCant = GarmentsMonth::where('garment_id', $garment->id)->where('deleted_at', null)->where('status', 'pendiente')->get();
+            // return $monthCant;
+
+            $garment->update(['monthCant'=>$monthCant->count(), 'status'=>'recogido']);
+            
+
+
+            $loanDayAgent = GarmentsMonthAgent::with(['transaction', 'garment', 'garmentMonth', 'agent'])
+            ->where('garment_id', $garment->id)
+            ->where('transaction_id', $transaction->id)
+            ->get();
+            // return 1;
+            // return $loanDayAgent;
+        
+            
+            $cadena = '';
+            
+            $cant = count($loanDayAgent);
+            $i=1;
+            foreach($loanDayAgent as $item)
+            {
+                if($item->garmentMonth_id)
+                {
+                    $cadena=$cadena.'    '.Carbon::parse($item->garmentMonth->start)->format('d/m/Y').' - '.Carbon::parse($item->garmentMonth->finish)->format('d/m/Y').'     '.$item->amount.($i!=$cant?'%0A':'');
+                }
+                else
+                {
+                    $cadena=$cadena.'    Recojo del Artículo/Prenda   '.$item->amount.($i!=$cant?'%0A':'');
+                }         
+                $i++;
+            }
+
+
+            Http::get('https://api.whatsapp.capresi.net/?number=59167285914&message=
+            *COMPROBANTE DE PAGO*
+    
+    CODIGO: '.$garment->code.'
+    FECHA: '.Carbon::parse($transaction->created_at)->format('d/m/Y H:i:s').'
+    CI: '.$garment->people->ci.'
+    BENEFICIARIO: '.$garment->people->last_name1.' '.$garment->people->last_name2.' '.$garment->people->first_name.'
+    
+                  *DETALLE DEL PAGO*
+    *DETALLES*                                | *TOTAL*
+    ____________________________________%0A'.
+        $cadena.'
+    ____________________________________
+    TOTAL (BS)                              | '.number_format($loanDayAgent->SUM('amount'),2).'
+                
+                    *ATENDIDO POR*
+    '.strtoupper($loanDayAgent[0]->agentType).':        '.strtoupper($loanDayAgent[0]->agent->name).'
+    COD TRANS:      '.$transaction->id.'
+    
+                
+    LOANSAPP V1');
+
+
+            // return $month;
+
+            // return 1;
+            DB::commit();
+            return redirect()->route('garments.show', ['garment' => $garment_id])->with(['message' => 'Pagado exitosamente.', 'alert-type' => 'success', 'garment_id' => $garment->id, 'transaction_id'=>$transaction->id]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return 0;
+            return redirect()->route('garments.show', ['garment' => $garment_id])->with(['message' => 'Error, La caja no se encuentra abierta.', 'alert-type' => 'error']);
         }
     }
 
