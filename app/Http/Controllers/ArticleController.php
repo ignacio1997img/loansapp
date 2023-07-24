@@ -90,16 +90,7 @@ class ArticleController extends Controller
 
 
     //para la realizacion  de prestamos
-    public function ajaxArticle()
-    {
-        $q = request('q');
-        $data = Article::with(['model', 'category','marca'])
-            ->whereRaw($q ? '(name like "%'.$q.'%" )' : 1)
-            ->where('status', 1)
-            ->where('deleted_at', null)->get();
-
-        return response()->json($data);
-    }
+    
 
     public function ajaxModel()
     {

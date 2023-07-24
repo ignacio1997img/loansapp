@@ -12,13 +12,13 @@ class GarmentsArticle extends Model
 
     protected $fillable = [
         'garment_id',
-        'article_id',
-        'article',
-        'amountLoan',
-        'amountCant',
+        'category_id',
+        'category',
         'amountSubTotal',
         'deleted_at'
     ];
+
+
 
     public function garmentArticleDetail()
     {

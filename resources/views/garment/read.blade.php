@@ -17,7 +17,15 @@
     <div class="page-content read container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-bordered">                    
+                <div class="panel panel-bordered">  
+                    @if ($garment->status == 'recogido')
+                        <div class="alert alert-success">
+                            <strong>Aviso:</strong>
+                            <p>Este Artículo / Producto ya se encuentra pagado y recogido.</p>
+                        </div>
+                    @endif
+                    
+
                     <div class="row">
                         <div class="col-md-3">
                             <div class="panel-heading" style="border-bottom:0;">

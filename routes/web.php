@@ -144,7 +144,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     // ##################################################################################################################################
 
     Route::resource('garments', GarmentController::class);
-    Route::get('garments/article/ajax', [ArticleController::class, 'ajaxArticle']);//para obtener los articulo para realizar la prenda
+    Route::get('garments/category/ajax', [GarmentController::class, 'ajaxCategory']);//para obtener los articulo para realizar la prenda
     Route::get('garments/model/ajax', [ArticleController::class, 'ajaxModel'])->name('garments-model.ajax');//para obtener los articulo para realizar la prenda
     Route::get('garments/marca/ajax', [ArticleController::class, 'ajaxMarca'])->name('garments-marca.ajax');//para obtener los articulo para realizar la prenda
     Route::get('garments/quilate/ajax/{id?}', [GarmentController::class, 'ajaxQuilate'])->name('garments-quilate.ajax');//para obtener los articulo para realizar la prenda

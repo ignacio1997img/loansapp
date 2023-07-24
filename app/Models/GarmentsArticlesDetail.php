@@ -11,12 +11,12 @@ class GarmentsArticlesDetail extends Model
 
     protected $fillable = [
         'garmentArticle_id',
-        'articleDeveloper_id',
-        'developer',
+
         'foreign_id',
         'typeForeign',
         'title',
         'value',
         'deleted_at'
     ];
+
 }

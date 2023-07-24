@@ -17,10 +17,6 @@ class CreateGarmentsArticlesDetailsTable extends Migration
             $table->id();
             $table->foreignId('garmentArticle_id')->nullable()->constrained('garments_articles');
 
-            $table->foreignId('articleDeveloper_id')->nullable()->constrained('articles_developers');
-
-            $table->string('developer')->nullable();
-
             $table->string('foreign_id')->nullable();
             $table->string('typeForeign')->nullable();           
 

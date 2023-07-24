@@ -39,6 +39,8 @@ class PermissionRoleTableSeeder extends Seeder
                                             table_name = "brand_garments" or
                                             table_name = "model_garments" or
                                             table_name = "articles" or
+                                            table_name = "jewels" or
+                                            table_name = "quilates" or
                                             table_name = "garments" or
 
                                             `key` = "browse_loans" or 

@@ -13,16 +13,13 @@ class CreateGarmentsArticlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('garments_articles', function (Blueprint $table) {
+        Schema::create('garments_articles', function (Blueprint $table) {               
             $table->id();
             $table->foreignId('garment_id')->nullable()->constrained('garments');
-            $table->foreignId('article_id')->nullable()->constrained('articles');
 
-            $table->string('article')->nullable();
-
-            $table->decimal('amountLoan',11,2)->nullable();
-
-            $table->decimal('amountCant',11,2)->nullable();
+            $table->foreignId('category_id')->nullable()->constrained('category_garments');
+            $table->string('category')->nullable();
+            
 
             $table->decimal('amountSubTotal',11,2)->nullable();
 
