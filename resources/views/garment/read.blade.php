@@ -156,28 +156,7 @@
                                     <hr style="margin:0;">
                                 </div>
                             @endforeach
-
-                            <div class="col-md-12">
-                                <h4 id="titleHead" style="text-align: center"><i class="fa-solid fa-money-bill"></i> Monto por este Artículo / Prenda</h4>
-                            </div>
-
                             <div class="col-md-3">
-                                <div class="panel-heading" style="border-bottom:0;">
-                                    <h3 class="panel-title">Monto por la prenda</h3>
-                                </div>
-                                <div class="panel-body" style="padding-top:0;">
-                                    <p><small>{{ number_format($item->amountLoan,2, ',','.') }}</small></p>
-                                </div>
-                                <hr style="margin:0;">
-                            </div> <div class="col-md-3">
-                                <div class="panel-heading" style="border-bottom:0;">
-                                    <h3 class="panel-title">Cantidad</h3>
-                                </div>
-                                <div class="panel-body" style="padding-top:0;">
-                                    <p><small>{{ number_format($item->amountCant,2, ',','.') }}</small></p>
-                                </div>
-                                <hr style="margin:0;">
-                            </div> <div class="col-md-3">
                                 <div class="panel-heading" style="border-bottom:0;">
                                     <h3 class="panel-title">Sub Total
                                 </div>

@@ -294,6 +294,17 @@ class GarmentController extends Controller
                         'typeForeign' => 'articles',
                     ]);
 
+                    $jewel = Jewel::where('id', $request['kilate'.$category][$a])->first();
+
+                    GarmentsArticlesDetail::create([
+                        'garmentArticle_id'=>$article->id,
+                        'value' => $jewel->name,
+                        'title' => 'Tipo',
+
+                        'foreign_id' => $request['typeMetal'.$category][$a],
+                        'typeForeign' => 'TipoMaterial',
+                    ]);
+
 
                     $kilate = Quilate::where('id', $request['kilate'.$category][$a])->first();
 

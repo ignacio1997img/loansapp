@@ -23,33 +23,32 @@
     <div class="content" style="text-align: justify">
         <h2 class="text-center" style="font-size: 18px">CONTRATO PRIVADO</h2>
         <p><em>Conste por el presente documento privado del préstamo que a solo reconocimiento de firmas tendrá calidad de instrumento público, que el señor <strong>CHRISTIAN MERCADO PERICON</strong></em><em>, con</em><em><strong> C.I.1919784 BE, </strong>, que para fines del contrato en adelante en adelante se denominará como el <strong>ACREEDOR</strong>, por una parte, y el (la) señor (a) <strong>{{$garment->people->first_name}} {{$garment->people->last_name1}} {{$garment->people->last_name2}} mayor de edad, habil por derecho con CI. {{ $garment->people->ci }} con domicilio <b>{{$garment->people->zone}} {{$garment->people->street}}, {{$garment->people->home}}</b> </strong> que para fines del presente contrato en adelante se denominara como <strong>EL DEUDOR</strong>, por la otra parte, suscriben el presente contrato al tenor de las siguiente cláusula: </em></p>
-        <p><em><span style="text-decoration: underline;"><strong>PRIMERA.- EL DEUDOR</strong></span></em><em> declara ser legítimo propietario de un:</p>
-        {{-- @php
-            $ok = false;
-        @endphp --}}
+        <p><em><span style="text-decoration: underline;"><strong>PRIMERA.- EL DEUDOR</strong></span></em><em> declara ser legítimo propietario de un: 
         @foreach ($garment->garmentArticle as $item)
-            <p><em><strong>{{$item->article}} </strong></em><br>
-                @php
+            <em><strong>{{$item->article}} </strong></em>
+                {{-- @php
                     $ok = false;
-                @endphp
+                @endphp --}}
                 @foreach ($item->garmentArticleDetail as $itm)
-                    @if ($itm->typeForeign == 'joya_list')
-                        @php
-                            $ok=true;
-                        @endphp
+                    <strong>{{$itm->title}}: </strong>
+                    @if (is_numeric($itm->value))
+                        {{ number_format($itm->value,2, ',','.') }}
+                    @else
+                        {{$itm->value}}
                     @endif
-                    <strong>{{$itm->title}}: </strong>{{$itm->value}} <br>
+                    , 
                 @endforeach
-                @if ($ok)
+                {{-- @if ($ok)
                     <strong>Cantidad de Gramo: </strong>{{ number_format($item->amountCant,2, ',','.') }}<br>
                     <strong>Monto Prestado por Gramo: </strong>{{ number_format($item->amountLoan,2, ',','.') }} <br>
-                @endif
+                @endif --}}
                 
                 <strong>Monto Total Prestado por esta prenda: </strong>Bs. {{ number_format($item->amountSubTotal,2, ',','.') }} <br>
 
 
-            </p>
+         
         @endforeach
+        </p>
         
      
         <p><em><span style="text-decoration: underline;"><strong>SEGUNDA.- EL DEUDOR</strong></span></em><em> en la presente fecha, de su libre y espontanea libertad, por así convenir a sus interés, sin que medie presión violencia, dolor o vicio en el consentimiento, entrega todo lo anteriormente mensionado en la primer cláusula, en calidad de garantía prendaria, con opción a transferencia o venta definitiva, en favor de <strong>EL ACREEDOR</strong>, por la suma libremente convenida de <strong>$ {{NumerosEnLetras::convertir($garment->amountLoanDollar,'Dolares Americanos',true)}}</strong> cantidad de dinero que <strong>EL DEUDOR</strong> declara haber recibido a su entera y absoluta conformidad, sin lugar a reclamos posterior alguno de su parte. Así mismo garantiza la evicción y saneamiento de ley de lo otorgado en garantía.</em></p>
