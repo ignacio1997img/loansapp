@@ -43,8 +43,12 @@
                 <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
                     <i class="voyager-bell text-info" style="width: 50px; font-size: 1.8em;"></i>
                 </a>
-                <div class="dropdown-menu">
-                    
+                <div class="dropdown-menu dropdown-menu-animated">
+                    <table>
+                        <tr>
+                            <td>En desarrollo</td>
+                        </tr>
+                    </table>
                     
                 </div>
             </li>
