@@ -39,7 +39,7 @@
         </div>
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
             <li class="dropdown profile">
-                <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"> <i style="font-size: 150%" style="color: black" class="fa-solid fa-inbox"></i></a>
+                <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"> <i style="font-size: 25px" class="fa-regular fa-bell"></i></a>
                 <ul class="dropdown-menu dropdown-menu-animated">
                     <li class="profile-img">
                         <img src="{{ $user_avatar }}" class="profile-img">
@@ -79,7 +79,7 @@
             </li>
             <li class="dropdown profile">
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"
-                   aria-expanded="false"><img src="{{ $user_avatar }}" class="profile-img"> <i style="font-size: 150%" style="color: black" class="fa-solid fa-inbox"></i> <span
+                   aria-expanded="false"><img src="{{ $user_avatar }}" class="profile-img"> <span
                             class="caret"></span></a>
                 <ul class="dropdown-menu dropdown-menu-animated">
                     <li class="profile-img">
