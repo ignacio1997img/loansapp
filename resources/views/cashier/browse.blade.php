@@ -273,7 +273,23 @@
          
         })
 
+        $(document).ready(function(){
+            // socket.emit(`reload score`, {id: 1, user: 1});
+            // alert("{{App\Models\User::where('id',  1)->first()}}")
+            // let prueba = "{{App\Models\User::where('id',  1)->first()}}";
+            // alert(prueba)
+            
 
+
+            @if(session('cashier_id'))
+                // let users = "{{ session('user') }}";
+                let users =@json(session('user'))
+          
+                let cashier_id = "{{ session('cashier_id') }}";
+
+                socket.emit(`reload score`, {id: cashier_id, user: users});
+            @endif
+        });
 
 
         var countPage = 10, order = 'id', typeOrder = 'desc';

@@ -19,6 +19,7 @@ use App\Models\Loan;
 use App\Models\LoanDay;
 use App\Models\LoanDayAgent;
 use App\Models\Transaction;
+use App\Models\User;
 
 class CashierController extends Controller
 {
@@ -51,6 +52,8 @@ class CashierController extends Controller
 
     public function store(Request $request)
     {
+
+        // socket.emit(`reload score`, {id: text});
         // return $request;
         $cashier = Cashier::where('user_id', $request->user_id)->where('status', '!=', 'cerrada')->where('deleted_at', NULL)->first();
 
@@ -105,14 +108,13 @@ class CashierController extends Controller
                         // }
                     }
                 }
+                $user = User::where('id',  $request->user_id)->first();
 
                 DB::commit();
     
-                return redirect()->route('cashiers.index')->with(['message' => 'Registro guardado exitosamente.', 'alert-type' => 'success', 'id_cashier_open' => $cashier->id]);
+                return redirect()->route('cashiers.index')->with(['message' => 'Registro guardado exitosamente.', 'alert-type' => 'success', 'cashier_id'=>$cashier->id, 'user'=>$user]);
             } catch (\Throwable $th) {
                 DB::rollback();
-                // return $th;
-                //throw $th;
                 return redirect()->route('cashiers.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
             }
         }else{
@@ -251,7 +253,8 @@ class CashierController extends Controller
             if($request->status == 'abierta'){
                 $message = 'Caja aceptada exitosamente.';
                 Cashier::where('id', $id)->update([
-                    'status' => $request->status
+                    'status' => $request->status,
+                    'view' => Carbon::now()
                 ]);
             }else{
                 $cashier = Cashier::with(['vault_details.cash' => function($q){

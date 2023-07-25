@@ -794,7 +794,7 @@
                 $(`#pesopiedra-${id}-${subid}`).attr("max", bruto);
 
                 
-                $(`#subtotal-${id}-${subid}`).attr("min", min);
+                // $(`#subtotal-${id}-${subid}`).attr("min", min);
                 $(`#subtotal-${id}-${subid}`).attr("max", max);
 
 

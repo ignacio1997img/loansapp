@@ -28,6 +28,7 @@
                         </div>
                     </div>
                 </div>
+                <input type="text" class="form-control" id="input">
 
                 <div class="row">
                     <div class="col-md-12" style="margin-bottom: 10px">
@@ -48,7 +49,6 @@
                                                     <th>Nombre</th>
                                                 </tr>
                                             </thead>
-                                            <input type="text" class="form-control" id="input">
                                             </tbody>
                                         </table>
                                     </div>
@@ -97,22 +97,25 @@
 @endsection
 
 @section('javascript')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
     
 
     <script>
-        const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
+        // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
         $(document).ready(function () {
 
-            // socket.emit(`reload score`, {id: "Hola"});
+        //     socket.emit(`reload score`, {id: "Hola"});
+        // alert(2)
+
 
             
         });
 
         input.oninput = function() {
             text = input.value;
+            // alert(text)
             socket.emit(`reload score`, {id: text});
 
         };
-      </script>
+    </script>
 @stop

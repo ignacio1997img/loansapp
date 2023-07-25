@@ -20,6 +20,8 @@ class CreateCashiersTable extends Migration
             $table->string('title')->nullable();
             $table->text('observations')->nullable();
             $table->string('status')->nullable();
+            $table->dateTime('view')->nullable(); 
+
             $table->timestamps();
             $table->datetime('closed_at')->nullable();
             $table->foreignId('closeUser_id')->nullable()->constrained('users');

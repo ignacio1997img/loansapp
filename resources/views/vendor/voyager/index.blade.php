@@ -412,7 +412,7 @@
                             </div>  
                         @endif                  
                     @else
-                        <div class="row">
+                        <div class="row" id="rowCashierOpen">
                             <div class="col-md-12">
                                 <div class="panel panel-bordered">
                                     <div class="panel-body">
@@ -572,6 +572,7 @@
                         </div>
                     </div>
                 </div>
+                
             @endif
 
         

@@ -94,6 +94,7 @@
 
 <body class="voyager @if(isset($dataType) && isset($dataType->slug)){{ $dataType->slug }}@endif">
 
+
 <div id="voyager-loader">
     <?php $admin_loader_img = Voyager::setting('admin.loader', ''); ?>
     @if($admin_loader_img == '')
@@ -174,8 +175,21 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
         $.get('{{route('garments-month.late')}}', function (data) {
                     // alert(2);
         });
+
+        // toastr.success('Detalle agregado', 'Exito')
+        // toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Tiene una Caja Pendiente Asignada</a>', 'Notificación',
+        //     {   "positionClass" : "toast-bottom-right",
+        //         "href" : "admins"
+        //     }
+        // );
+
        
     });
+
+
+
+
+    
 
 </script>
 
@@ -207,7 +221,69 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="{{ asset('vendor/momentjs/moment-with-locales.min.js') }}"></script>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
+    <script>       
+        $(function() {
 
+            // setInterval(            
+                // function () 
+                // {     
+                    // alert(1)
+                    let count = 0;
+                    $.get('{{route('notification.cashierOpen')}}', function (data) {    
+                        count = 1;
+                        // alert(count)                     
+                        if(data)
+                        {
+                            var luz = '<span class="badge badge-warning navbar-badge" id="bandeja">'+count+'</span>';
+                            $('#countNotification').html(luz)        
+                            $('#notificationInbox').append(`
+                                <a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Tiene una Caja Pendiente Asignada</a>
+                                `);
+                        }
+                        else
+                        {
+                            $('#countNotification').html('')
+                        }                     
+
+
+
+                    });
+                // }, 800 //en medio minuto se recargará solo la campana de notificación..
+            // );
+           
+        });
+
+        // function si()
+        // {
+        //     var luz = '<i class="voyager-bell text-primary" style="width: 20px; font-size: 1.5em;"></i>'
+        //                         luz+= '<span class="badge badge-warning navbar-badge" id="bandeja"></span>'
+        //     $('#not').html(luz)
+        // }
+
+    </script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
+
+        // alert(@json('Auth::user();'));
+        socket.on(`change score`, data => {
+
+            // $('#label_prueba').text(data.id);
+            // alert(data.user);
+
+            toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Hola '+data.user.name+', Tiene una Caja Pendiente Asignada</a>', 'Notificación',
+                {   "positionClass" : "toast-bottom-right",
+                    "href" : "admins"
+                }
+            );
+            
+        });
+    </script>
+
+    {{-- ########################################################################### --}}
 
 @include('voyager::media.manager')
 

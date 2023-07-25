@@ -39,18 +39,14 @@
         </div>
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
             
-            <li class="nav-item dropdown" >
+            <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
                     <i class="voyager-bell text-info" style="width: 50px; font-size: 1.8em;"></i>
+                    <small id="countNotification"></small>
                 </a>
-                <div class="dropdown-menu dropdown-menu-animated">
-                    <table>
-                        <tr>
-                            <td>En desarrollo</td>
-                        </tr>
-                    </table>
-                    
-                </div>
+                <ul class="dropdown-menu dropdown-menu-animated" id="notificationInbox" style="background-color: #f2f2fa" >                
+                      {{--Para concatenar el detalle de la notificacion  --}}
+                </ul>
             </li>
 
 
