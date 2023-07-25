@@ -38,46 +38,23 @@
             @show
         </div>
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
-            <li class="dropdown profile">
-                <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"> <i style="font-size: 25px" class="fa-regular fa-bell"></i></a>
-                <ul class="dropdown-menu dropdown-menu-animated">
-                    <li class="profile-img">
-                        <img src="{{ $user_avatar }}" class="profile-img">
-                        <div class="profile-body">
-                            <h5>{{ Auth::user()->name }}</h5>
-                            <h6>{{ Auth::user()->email }}</h6>
-                        </div>
-                    </li>
-                    <li class="divider"></li>
-                    <?php $nav_items = config('voyager.dashboard.navbar_items'); ?>
-                    @if(is_array($nav_items) && !empty($nav_items))
-                    @foreach($nav_items as $name => $item)
-                    <li {!! isset($item['classes']) && !empty($item['classes']) ? 'class="'.$item['classes'].'"' : '' !!}>
-                        @if(isset($item['route']) && $item['route'] == 'voyager.logout')
-                        
-                        <form action="{{ route('voyager.logout') }}" method="POST">
-                            {{ csrf_field() }}
-                            <button type="submit" class="btn btn-danger btn-block">
-                                @if(isset($item['icon_class']) && !empty($item['icon_class']))
-                                <i class="{!! $item['icon_class'] !!}"></i>
-                                @endif
-                                {{__($name)}}
-                            </button>
-                        </form>
-                        @else
-                        <a href="{{ isset($item['route']) && Route::has($item['route']) ? route($item['route']) : (isset($item['route']) ? $item['route'] : '#') }}" {!! isset($item['target_blank']) && $item['target_blank'] ? 'target="_blank"' : '' !!}>
-                            @if(isset($item['icon_class']) && !empty($item['icon_class']))
-                            <i class="{!! $item['icon_class'] !!}"></i>
-                            @endif
-                            {{__($name)}}
-                        </a>
-                        @endif
-                    </li>
-                    @endforeach
-                    @endif
-                </ul>
+            
+            <li class="nav-item dropdown" >
+                <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
+                <!-- <span class="voyager-power spinner-grow-sm" id="luz" style="background: #16ff16"></span> -->
+                    <!-- <i class="voyager-bell" style="width: 20px; font-size: 1.5em;"></i> -->
+                    <!-- <span class="badge badge-warning navbar-badge" id="bandeja"></span> -->
+                </a>
+                <div class="dropdown-menu">
+                    <span class="dropdown-item dropdown-header bg-danger text-danger" id="listadoc"></span>
+                    <div id="notificaciones">
+
+                    </div>
+                    <!-- <div class="dropdown-divider"></div> -->
+                    <a href="#">Ir a Ingresos de Donaciones</a>
+                </div>
             </li>
-            <li class="dropdown profile">
+            <li class="dropdown profile">      
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"
                    aria-expanded="false"><img src="{{ $user_avatar }}" class="profile-img"> <span
                             class="caret"></span></a>

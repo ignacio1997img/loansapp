@@ -600,7 +600,7 @@
                                                                 <input type="hidden" name="pesoneto${product.id}[]" min="0" step="0.01" value="0" id="pesoneto-${product.id}-1" style="text-align: right" class="form-control" required>
                                                             </td>
                                                             <td class="text-center">
-                                                                <b id="possibility-${product.id}-1">0.00 - 0.00</b>
+                                                                <b id="possibility-${product.id}-1">0.00  -  0.00</b>
                                                             </td>
                                                             <td>
                                                                 <input type="number" name="subtotal${product.id}[]" min="0" step="0.1" value="0" id="subtotal-${product.id}-1" onkeyup="getTotal()" onchange="getTotal()" style="text-align: right" class="form-control text-subtotal" required>
@@ -751,7 +751,7 @@
                             <input type="hidden" name="pesoneto${id}[]" min="0" step="0.01" value="0" id="pesoneto-${id}-${subid}" style="text-align: right" class="form-control" required>
                         </td>
                         <td class="text-center">
-                            <b id="possibility-${id}-${subid}">0.00-0.00</b>
+                            <b id="possibility-${id}-${subid}">0.00  -  0.00</b>
                         </td>
                         <td>
                             <input type="number" name="subtotal${id}[]" min="0" step="0.1" value="0" id="subtotal-${id}-${subid}" onkeyup="getTotal()" onchange="getTotal()" style="text-align: right" class="form-control text-subtotal" required>
@@ -802,7 +802,7 @@
                 $(`#pesonetod-${id}-${subid}`).val(neto.toFixed(2));
                 $(`#pesoneto-${id}-${subid}`).val(neto.toFixed(2));
                 $(`#subtotal-${id}-${subid}`).val(totalMonto.toFixed(2));
-                $(`#possibility-${id}-${subid}`).text(min.toFixed(2)+'-'+max.toFixed(2));
+                $(`#possibility-${id}-${subid}`).text(min.toFixed(2)+'  -  '+max.toFixed(2));
                 getTotal()
             }
 
