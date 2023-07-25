@@ -231,13 +231,21 @@
             {{ csrf_field() }}
             <input type="hidden" name="setting_tab" class="setting_tab" value="{{ $active }}" />
             <div class="panel">
+                @php
+                    if (!auth()->user()->hasRole('admin')) {
+                        $active = 'Configuración';
+                    }
+                @endphp
 
                 <div class="page-content settings container-fluid">
                     <ul class="nav nav-tabs">
                         @foreach($settings as $group => $setting)
+                            @if ((auth()->user()->hasRole('admin')) || ($group == 'Configuración' && !auth()->user()->hasRole('admin')))
+
                             <li @if($group == $active) class="active" @endif>
                                 <a data-toggle="tab" href="#{{ \Illuminate\Support\Str::slug($group) }}">{{ $group }}</a>
                             </li>
+                            @endif
                         @endforeach
                     </ul>
 
@@ -249,6 +257,7 @@
                                 <h3 class="panel-title">
                                     {{ $setting->display_name }} @if(config('voyager.show_dev_tips'))<code>setting('{{ $setting->key }}')</code>@endif
                                 </h3>
+                                @if (auth()->user()->hasRole('admin'))
                                 <div class="panel-actions">
                                     <a href="{{ route('voyager.settings.move_up', $setting->id) }}">
                                         <i class="sort-icons voyager-sort-asc"></i>
@@ -263,6 +272,7 @@
                                        data-display-name="{{ $setting->display_name }}"></i>
                                     @endcan
                                 </div>
+                                @endif
                             </div>
 
                             <div class="panel-body no-padding-left-right">
@@ -337,7 +347,7 @@
                                         @endif
                                     @endif
                                 </div>
-                                <div class="col-md-2 no-padding-left-right">
+                                <div class="col-md-2 no-padding-left-right" @if (!auth()->user()->hasRole('admin')) style="display: none" @endif>
                                     <select class="form-control group_select" name="{{ $setting->key }}_group">
                                         @foreach($groups as $group)
                                         <option value="{{ $group }}" {!! $setting->group == $group ? 'selected' : '' !!}>{{ $group }}</option>
@@ -359,7 +369,7 @@
         </form>
 
         <div style="clear:both"></div>
-
+        @if (auth()->user()->hasRole('admin'))
         @can('add', Voyager::model('Setting'))
         <div class="panel" style="margin-top:10px;">
             <div class="panel-heading new-setting">
@@ -423,6 +433,8 @@
             </div>
         </div>
         @endcan
+        @endif
+        
     </div>
 
     @can('delete', Voyager::model('Setting'))

@@ -41,19 +41,15 @@
             
             <li class="nav-item dropdown" >
                 <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
-                <!-- <span class="voyager-power spinner-grow-sm" id="luz" style="background: #16ff16"></span> -->
-                    <!-- <i class="voyager-bell" style="width: 20px; font-size: 1.5em;"></i> -->
-                    <!-- <span class="badge badge-warning navbar-badge" id="bandeja"></span> -->
+                    <i class="voyager-bell text-info" style="width: 50px; font-size: 1.8em;"></i>
                 </a>
                 <div class="dropdown-menu">
-                    <span class="dropdown-item dropdown-header bg-danger text-danger" id="listadoc"></span>
-                    <div id="notificaciones">
-
-                    </div>
-                    <!-- <div class="dropdown-divider"></div> -->
-                    <a href="#">Ir a Ingresos de Donaciones</a>
+                    
+                    
                 </div>
             </li>
+
+
             <li class="dropdown profile">      
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"
                    aria-expanded="false"><img src="{{ $user_avatar }}" class="profile-img"> <span

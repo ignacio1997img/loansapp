@@ -57,6 +57,8 @@ class PermissionRoleTableSeeder extends Seeder
 
                                             `key` = "browse_printdailyList" or
 
+                                            table_name = "settings" or 
+
                                             
                                             `key` = "browse_clear-cache"')->get();
         $role->permissions()->sync($permissions->pluck('id')->all());

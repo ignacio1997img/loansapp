@@ -206,7 +206,11 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="{{ asset('vendor/momentjs/moment.min.js') }}"></script>
 <script src="{{ asset('vendor/momentjs/moment-with-locales.min.js') }}"></script>
 
+
+
+
 @include('voyager::media.manager')
+
 @yield('javascript')
 @stack('javascript')
 @if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->
