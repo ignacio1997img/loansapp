@@ -65,11 +65,16 @@
                                     </div>    
                                     <div class="form-group col-md-4">
                                         <small>Cantidad Mes</small>
-                                        <select name="month" id="month" class="form-control select2" required>
+
+                                        <input type="number" name="month" id="month" min="1" value="1" step="1" style="text-align: right" class="form-control text">
+
+                                        {{-- <select name="month" id="month" class="form-control select2" required>
                                             <option value="" disabled selected>--Selecciona una opción--</option>
                                             <option value="1">1 Mes</option>
                                             <option value="3">3 Mes</option>
-                                        </select>
+                                        </select> --}}
+
+
                                     </div>                                 
                                 </div>
                                 <hr>
