@@ -30,17 +30,56 @@
                     @endforeach
                 @endif
             </ol>
-            @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('gerente') || auth()->user()->hasRole('cajero'))
-                <a href="#" data-toggle="modal" data-target="#notificar-modal1" title="Notificar a todos los deudores" class="btn btn-sm">
-                    <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i> <small></small>
-                </a>
-            @endif
+                @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('gerente') || auth()->user()->hasRole('cajero'))
+                    <a href="#" data-toggle="modal" data-target="#notificar-modal1" title="Notificar a todos los deudores" class="btn btn-sm">
+                        <i class="fa-brands fa-square-whatsapp" style="color: #43d180; font-size: 35px;"></i> <small></small>
+                    </a>
+                @endif
             @show
         </div>
         <ul class="nav navbar-nav @if (__('voyager::generic.is_rtl') == 'true') navbar-left @else navbar-right @endif">
             <li class="dropdown profile">
+                <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"> <i style="font-size: 150%" style="color: black" class="fa-solid fa-inbox"></i></a>
+                <ul class="dropdown-menu dropdown-menu-animated">
+                    <li class="profile-img">
+                        <img src="{{ $user_avatar }}" class="profile-img">
+                        <div class="profile-body">
+                            <h5>{{ Auth::user()->name }}</h5>
+                            <h6>{{ Auth::user()->email }}</h6>
+                        </div>
+                    </li>
+                    <li class="divider"></li>
+                    <?php $nav_items = config('voyager.dashboard.navbar_items'); ?>
+                    @if(is_array($nav_items) && !empty($nav_items))
+                    @foreach($nav_items as $name => $item)
+                    <li {!! isset($item['classes']) && !empty($item['classes']) ? 'class="'.$item['classes'].'"' : '' !!}>
+                        @if(isset($item['route']) && $item['route'] == 'voyager.logout')
+                        
+                        <form action="{{ route('voyager.logout') }}" method="POST">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-danger btn-block">
+                                @if(isset($item['icon_class']) && !empty($item['icon_class']))
+                                <i class="{!! $item['icon_class'] !!}"></i>
+                                @endif
+                                {{__($name)}}
+                            </button>
+                        </form>
+                        @else
+                        <a href="{{ isset($item['route']) && Route::has($item['route']) ? route($item['route']) : (isset($item['route']) ? $item['route'] : '#') }}" {!! isset($item['target_blank']) && $item['target_blank'] ? 'target="_blank"' : '' !!}>
+                            @if(isset($item['icon_class']) && !empty($item['icon_class']))
+                            <i class="{!! $item['icon_class'] !!}"></i>
+                            @endif
+                            {{__($name)}}
+                        </a>
+                        @endif
+                    </li>
+                    @endforeach
+                    @endif
+                </ul>
+            </li>
+            <li class="dropdown profile">
                 <a href="#" class="dropdown-toggle text-right" data-toggle="dropdown" role="button"
-                   aria-expanded="false"><img src="{{ $user_avatar }}" class="profile-img"> <span
+                   aria-expanded="false"><img src="{{ $user_avatar }}" class="profile-img"> <i style="font-size: 150%" style="color: black" class="fa-solid fa-inbox"></i> <span
                             class="caret"></span></a>
                 <ul class="dropdown-menu dropdown-menu-animated">
                     <li class="profile-img">
