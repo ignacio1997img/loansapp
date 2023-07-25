@@ -57,15 +57,15 @@ class ReportCashierController extends Controller
                     // ->where('l.deleted_at', null)
                     // ->where('ld.deleted_at', null)
                     ->where('lda.deleted_at', null)
-                    ->whereDate('lda.created_at', date('Y-m-d', strtotime($request->date)))
+                    ->whereDate('t.created_at', date('Y-m-d', strtotime($request->date)))
                     ->where('lda.agent_id', $request->agent_id)
                     ->whereRaw($type)
                     // ->whereRaw($query_filter)
                     ->select('p.first_name', 'u.name', 'p.last_name1', 'last_name2', 'p.ci', 'ld.date as dateDay', 'u.name',
                             'l.id as loan', 'l.code', 'l.amountTotal', 'lda.id as loanDayAgent_id', DB::raw('SUM(lda.amount)as amount'),
-                            'lda.created_at as loanDayAgent_fecha', 't.transaction', 't.type')
+                            't.created_at as loanDayAgent_fecha', 't.transaction', 't.type')
                     ->groupBy('loan', 'transaction')
-                    ->orderBy('lda.created_at', 'ASC')
+                    ->orderBy('loanDayAgent_fecha', 'ASC')
                     ->get();
         $amount = $data->SUM('amount');
         $agent = User::where('id', $request->agent_id)->first()->name;

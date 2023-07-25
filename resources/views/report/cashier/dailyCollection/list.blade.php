@@ -55,7 +55,7 @@
                                 <br>
                                 <small>Tipo de Pago: </small>{{$item->type}}
                             </td>
-                            <td style="text-align: center">{{date('d/m/Y H:m:s', strtotime($item->loanDayAgent_fecha))}}</td>
+                            <td style="text-align: center">{{date('d/m/Y', strtotime($item->loanDayAgent_fecha))}}<br>{{date('H:i:s', strtotime($item->loanDayAgent_fecha))}}</td>
                             <td style="text-align: right"><small>Bs. </small> {{ number_format($item->amount,2, ',', '.') }}</td>
                                                                                   
                             
