@@ -23,8 +23,8 @@ const io = require('socket.io')(server, {
 io.on('connection', (socket) => {
     console.log('connection');
 
-    socket.on('reload score', data => {
-        io.emit(`change score`, data);
+    socket.on('reload notificationCashierOpen', data => {
+        io.emit(`change notificationCashierOpen`, data);
         // console.log('message: ' + data.id);
     });
 
@@ -38,6 +38,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(env('SOCKET_PORT'), () => {
+server.listen(3005, () => {
     console.log('Server Socket.io is running');
 });

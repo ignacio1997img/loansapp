@@ -77,6 +77,11 @@
                                                     {{-- <label class="label label-success">{{$item->status}}</label> --}}
 
                                                 </td>
+
+                                                
+
+
+
                                                 <td style="text-align: center">{{date('d/m/Y H:i:s', strtotime($item->created_at))}}<br><small>{{\Carbon\Carbon::parse($item->created_at)->diffForHumans()}}.</small></td>
                                                 <td style="text-align: center">@if($item->closed_at){{date('d/m/Y H:i:s', strtotime($item->closed_at))}}<br><small>{{\Carbon\Carbon::parse($item->closed_at)->diffForHumans()}}.@endif </small></td>
                                 
@@ -283,11 +288,12 @@
 
             @if(session('cashier_id'))
                 // let users = "{{ session('user') }}";
-                let users =@json(session('user'))
+                let user =@json(session('user'))
           
                 let cashier_id = "{{ session('cashier_id') }}";
+                // alert(cashier_id)
 
-                socket.emit(`reload score`, {id: cashier_id, user: users});
+                socket.emit(`reload notificationCashierOpen`, {cashierRegister_id: cashier_id, auth: user});
             @endif
         });
 

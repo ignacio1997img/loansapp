@@ -82,7 +82,7 @@
                                                 <div class="form-group">
                                                     <label for="">Bóveda</label>
                                                     <select name="vault_id" class="form-control select2">
-                                                        @foreach (\App\Models\Vault::where('status', 'activa')->where('user_id', auth()->user()->id)->get() as $item)
+                                                        @foreach (\App\Models\Vault::where('status', 'activa')->get() as $item)
                                                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                                                         @endforeach
                                                     </select>

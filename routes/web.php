@@ -10,6 +10,7 @@ use App\Http\Controllers\RouteController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CollectorController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\DevelopmentController;
 use App\Http\Controllers\GarmentController;
 use App\Http\Controllers\GpsController;
@@ -261,6 +262,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
 
 
     // PARA LAS NOTIFICACIONES
+    Route::get('getAuth', [Controller::class, 'getAuth'])->name('getAuth');
     Route::get('notification/cashierOpen', [NotificationController::class, 'cashierOpen'])->name('notification.cashierOpen');
 
 

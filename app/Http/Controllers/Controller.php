@@ -9,11 +9,17 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Cashier;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function getAuth()
+    {
+        return Auth::user();
+    }
     
 
     public function agent($id)

@@ -224,43 +224,41 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
     <script>       
         $(function() {
-
-            // setInterval(            
-                // function () 
-                // {     
-                    // alert(1)
-                    let count = 0;
-                    $.get('{{route('notification.cashierOpen')}}', function (data) {    
-                        count = 1;
-                        // alert(count)                     
-                        if(data)
-                        {
-                            var luz = '<span class="badge badge-warning navbar-badge" id="bandeja">'+count+'</span>';
-                            $('#countNotification').html(luz)        
-                            $('#notificationInbox').append(`
-                                <a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Tiene una Caja Pendiente Asignada</a>
-                                `);
-                        }
-                        else
-                        {
-                            $('#countNotification').html('')
-                        }                     
-
-
-
-                    });
-                // }, 800 //en medio minuto se recargará solo la campana de notificación..
-            // );
-           
+            // $.get('{{route('getAuth')}}', function (data) {    
+            //     alert(data)      
+            // })
+            notification();
         });
 
-        // function si()
-        // {
-        //     var luz = '<i class="voyager-bell text-primary" style="width: 20px; font-size: 1.5em;"></i>'
-        //                         luz+= '<span class="badge badge-warning navbar-badge" id="bandeja"></span>'
-        //     $('#not').html(luz)
-        // }
+        function notification()
+        {
+            let count = 0;
+            $.get('{{route('notification.cashierOpen')}}', function (data) {    
+                count = 1;
+                        // alert(count)                     
+                if(data)
+                {
+                    var luz = '<span class="badge badge-danger navbar-badge" id="bandeja">'+count+'</span>';
+                    $('#countNotification').html(luz)        
+                    $('#notificationInbox').append(`
+                        <a href="{{url('admin#rowCashierOpen')}}" style="font-size: 16px; color:black"><i class="fa-solid fa-cash-register"></i><small> Tiene una Caja Pendiente Asignada</small></a>
+                        <hr>
+                    `);
+                }
+                else
+                {
+                    $('#countNotification').html('')
+                    $('#notificationInbox').html('Vacio')
+                }       
+            })
+        }
 
+        // function getAuth()
+        // {
+        //     $.get('{{route('getAuth')}}', function (data) {    
+        //         return data;
+        //     })
+        // }
     </script>
 
 
@@ -268,19 +266,39 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
     <script>
         const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
 
-        // alert(@json('Auth::user();'));
-        socket.on(`change score`, data => {
+       
+        socket.on(`change notificationCashierOpen`, data => {
+            // let auth =  @json(App\Models\User::where('id',  1)->first());
+            let auth =  @json(Auth::user());
 
-            // $('#label_prueba').text(data.id);
-            // alert(data.user);
 
-            toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Hola '+data.user.name+', Tiene una Caja Pendiente Asignada</a>', 'Notificación',
-                {   "positionClass" : "toast-bottom-right",
-                    "href" : "admins"
-                }
-            );
+            if(auth.id == data.auth.id)
+            {
+                notification()
+                toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Hola '+data.auth.name+', Tiene una Caja Pendiente Asignada</a>', 'Notificación',
+                    {   "positionClass" : "toast-bottom-right",
+                        "timeOut": "8000",
+                        "closeButton": true,
+                        "progressBar": true,
+                    }
+                );
+            }
             
         });
+
+        // $(function() {
+
+        //     toastr.info('<a style="font-size: 15px; color:black">Hola, Tiene una Caja Pendiente Asignada</a>', 'Notificación',
+        //             {   "positionClass" : "toast-bottom-right",
+        //                 "timeOut": "5000",
+        //                 "closeButton": true,
+        //                 "progressBar": true,
+        //             }
+        //         );
+
+        // });
+
+     
     </script>
 
     {{-- ########################################################################### --}}
