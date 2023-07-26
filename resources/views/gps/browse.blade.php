@@ -114,7 +114,7 @@
         input.oninput = function() {
             text = input.value;
             // alert(text)
-            socket.emit(`reload score`, {id: text});
+            socket.emit(`reload notificationCashierOpen`, {id: text});
 
         };
     </script>

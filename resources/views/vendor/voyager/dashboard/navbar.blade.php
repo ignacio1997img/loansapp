@@ -41,7 +41,7 @@
             
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
-                    <i class="voyager-bell text-info" style="width: 50px; font-size: 1.8em;"></i>
+                    <i class="voyager-bell" style="width: 50px; font-size: 1.8em; color : #22a7f0"></i>
                     <small id="countNotification"></small>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-animated" id="notificationInbox" style="background-color: #f2f2fa" >                

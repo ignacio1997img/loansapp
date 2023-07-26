@@ -248,7 +248,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
                 else
                 {
                     $('#countNotification').html('')
-                    $('#notificationInbox').html('Vacio')
+                    $('#notificationInbox').html('')
                 }       
             })
         }
@@ -277,7 +277,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
                 notification()
                 toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Hola '+data.auth.name+', Tiene una Caja Pendiente Asignada</a>', 'Notificación',
                     {   "positionClass" : "toast-bottom-right",
-                        "timeOut": "8000",
+                        "timeOut": "10000",
                         "closeButton": true,
                         "progressBar": true,
                     }
