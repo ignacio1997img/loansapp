@@ -1,13 +1,13 @@
 const fs = require("fs");
 
 // Produccion
-// const server = require('https').createServer({
-//   key: fs.readFileSync("/etc/letsencrypt/live/capresi.net/privkey.pem"),
-//   cert: fs.readFileSync("/etc/letsencrypt/live/capresi.net/fullchain.pem")
-// });
+const server = require('https').createServer({
+  key: fs.readFileSync("/etc/letsencrypt/live/capresi.net/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/capresi.net/fullchain.pem")
+});
 
 // Local
-const server = require('http').createServer();
+// const server = require('http').createServer();
 
 const io = require('socket.io')(server, {
     cors: { origin: "*"}
