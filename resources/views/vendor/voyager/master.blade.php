@@ -269,6 +269,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
        
         socket.on(`change notificationCashierOpen`, data => {
             // let auth =  @json(App\Models\User::where('id',  1)->first());
+            
             let auth =  @json(Auth::user());
 
 
