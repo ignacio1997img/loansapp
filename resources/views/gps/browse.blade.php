@@ -97,7 +97,7 @@
 @endsection
 
 @section('javascript')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
     
 
     <script>
@@ -105,7 +105,7 @@
         $(document).ready(function () {
 
         //     socket.emit(`reload score`, {id: "Hola"});
-        alert(2)
+        // alert(2)
 
 
             
@@ -113,10 +113,8 @@
 
         input.oninput = function() {
             text = input.value;
-            alert(text)
-            socket.emit(`reload notificationCashierOpen`, {cashierRegister_id: text, auth:1});
-            // socket.emit(`reload notificationCashierOpen`, {cashierRegister_id: cashier_id, auth: user});
-
+            // alert(text)
+            socket.emit(`reload prueba`, {id: text});
 
         };
     </script>

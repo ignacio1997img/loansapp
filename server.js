@@ -28,6 +28,11 @@ io.on('connection', (socket) => {
         // console.log('message: ' + data.id);
     });
 
+    socket.on('reload prueba', data => {
+        io.emit(`change prueba`, data);
+        // console.log('message: ' + data.id);
+    });
+
     // socket.on('chat message', (msg) => {
     //     console.log('message: ' + msg);
     // });
