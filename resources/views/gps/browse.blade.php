@@ -101,11 +101,11 @@
     
 
     <script>
-        const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
+        // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
         $(document).ready(function () {
 
         //     socket.emit(`reload score`, {id: "Hola"});
-        // alert(2
+        alert(2)
 
 
             
@@ -114,7 +114,9 @@
         input.oninput = function() {
             text = input.value;
             // alert(text)
-            socket.emit(`reload notificationCashierOpen`, {id: text});
+            socket.emit(`reload notificationCashierOpen`, {cashierRegister_id: text, auth:1});
+            // socket.emit(`reload notificationCashierOpen`, {cashierRegister_id: cashier_id, auth: user});
+
 
         };
     </script>

@@ -717,9 +717,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
-            const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
+            // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
             socket.on('change notificationCashierOpen', data => {
-                $('#label_prueba').text(data.id);
+                $('#label_prueba').text(cashierRegister_id.id);
             });
         </script>
 
