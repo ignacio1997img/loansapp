@@ -113,7 +113,7 @@
 
         input.oninput = function() {
             text = input.value;
-            // alert(text)
+            alert(text)
             socket.emit(`reload notificationCashierOpen`, {cashierRegister_id: text, auth:1});
             // socket.emit(`reload notificationCashierOpen`, {cashierRegister_id: cashier_id, auth: user});
 
