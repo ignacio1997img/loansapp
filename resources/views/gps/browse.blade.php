@@ -44,7 +44,7 @@
 
 
                                 <audio id="audio" controls>
-                                    <source type="audio/wav" src="audio.wav">
+                                    <source type="audio/wav" src="{{ asset('sound/notification.mp3') }}">
                                     </audio>
 
 
@@ -128,16 +128,30 @@
     <script>
         // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
      
+        $(document).ready(function() {
+
+            const audio = new Audio("https://manzdev.github.io/codevember2017/assets/eye-tiger.mp3");
+audio.play();
+
+        });
 
 
 
+        // var sonido = new Audio();
 
-            
+            var audio = document.getElementById("audio");
+
         //al cargar la ventana
         window.onload = function() {
 
+
+           
+
+
         //opcion de html5 para pedir permisos en el navegador para la notificacion
             Notification.requestPermission(function(permission){
+
+                
         
             //opciones de la notificacion
                 var opciones = {
@@ -146,15 +160,16 @@
                     };
                 
                 var notification = new Notification("EL TITULO DE LA ",opciones);
+                
 
             
-                var sine1 = T("sin", {freq:440, mul:0.5});
-                var sine2 = T("sin", {freq:660, mul:0.5});
-                var sine3 = T("sin", {freq:880, mul:0.5});
+                // var sine1 = T("sin", {freq:440, mul:0.5});
+                // var sine2 = T("sin", {freq:660, mul:0.5});
+                // var sine3 = T("sin", {freq:880, mul:0.5});
 
-                T("perc", {r:500}, sine1, sine2, sine3).on("ended", function() {
-                this.pause();
-                }).bang().play();
+                // T("perc", {r:500}, sine1, sine2, sine3).on("ended", function() {
+                // this.pause();
+                // }).bang().play();
 
 
             });//finaliza la notificacion
