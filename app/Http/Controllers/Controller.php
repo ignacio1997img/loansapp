@@ -16,10 +16,10 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function getAuth()
-    {
-        return Auth::user();
-    }
+    // public function getAuth()
+    // {
+    //     return Auth::user();
+    // }
     
 
     public function agent($id)
