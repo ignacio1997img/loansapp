@@ -38,6 +38,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3005, () => {
+server.listen(3011, () => {
     console.log('Server Socket.io is running');
 });
