@@ -220,6 +220,9 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 <script src="{{ asset('vendor/momentjs/moment.min.js') }}"></script>
 <script src="{{ asset('vendor/momentjs/moment-with-locales.min.js') }}"></script>
 
+{{-- <script src="{{ asset('js/timbre.js') }}"></script> --}}
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
     <script>       

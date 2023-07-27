@@ -40,6 +40,25 @@
                                     </div>
                                 </div>
 
+
+
+
+                                <audio id="audio" controls>
+                                    <source type="audio/wav" src="audio.wav">
+                                    </audio>
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 <div class="col-xs-6">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover" id="table-visitor">
@@ -98,18 +117,51 @@
 
 @section('javascript')
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
-    
+<script src="timbre.js"></script>
+{{-- <script src="{{ asset('js/timbre.js') }}"></script>
+<script src="{{ asset('js/timbre.dev.js') }}"></script> --}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timbre/14.11.25/timbre.dev.js" integrity="sha512-FNA6oLEBWNffaS8MhG6CvJRZ2mQpdqZs3njPhXsZiPETVujawQtDS2ZRnlH2VH8PsV2LlkeykmOZXfS1WC05yA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timbre/14.11.25/timbre.dev.min.js" integrity="sha512-/RVOKApS+psbtm+g9PMembypokIV/Op6/Q6AagVU+QNlMlCItoniSHDfyImD3nMnP6c+mMrEgkanKPMNL1J/wQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
-        $(document).ready(function () {
+     
 
-        //     socket.emit(`reload score`, {id: "Hola"});
-        // alert(2)
+
 
 
             
-        });
+        //al cargar la ventana
+        window.onload = function() {
+
+        //opcion de html5 para pedir permisos en el navegador para la notificacion
+            Notification.requestPermission(function(permission){
+        
+            //opciones de la notificacion
+                var opciones = {
+                        body: "El texto que quiera en la notificacion",
+                        icon: "https://t2.gstatic.com/licensed-image?q=tbn:ANd9GcQdAnprsidzbOSZ4jI1SvcFeIEuFKwBLrILGo8tLCEA4ixMzfxUQfk6onBDhipea4sD"
+                    };
+                
+                var notification = new Notification("EL TITULO DE LA ",opciones);
+
+            
+                var sine1 = T("sin", {freq:440, mul:0.5});
+                var sine2 = T("sin", {freq:660, mul:0.5});
+                var sine3 = T("sin", {freq:880, mul:0.5});
+
+                T("perc", {r:500}, sine1, sine2, sine3).on("ended", function() {
+                this.pause();
+                }).bang().play();
+
+
+            });//finaliza la notificacion
+        }//finaliza la carga de la ventana
+
+
+
 
         input.oninput = function() {
             text = input.value;
@@ -118,4 +170,12 @@
 
         };
     </script>
+
+{{-- <script>
+  T("sin", {freq:880, mul:0.5}).play();
+</script> --}}
+
+
+
+
 @stop
