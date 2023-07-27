@@ -118,12 +118,12 @@
 @section('javascript')
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
 <script src="timbre.js"></script>
-{{-- <script src="{{ asset('js/timbre.js') }}"></script>
-<script src="{{ asset('js/timbre.dev.js') }}"></script> --}}
+<script src="{{ asset('js/timbre.js') }}"></script>
+<script src="{{ asset('js/timbre.dev.js') }}"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/timbre/14.11.25/timbre.dev.js" integrity="sha512-FNA6oLEBWNffaS8MhG6CvJRZ2mQpdqZs3njPhXsZiPETVujawQtDS2ZRnlH2VH8PsV2LlkeykmOZXfS1WC05yA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/timbre/14.11.25/timbre.dev.js" integrity="sha512-FNA6oLEBWNffaS8MhG6CvJRZ2mQpdqZs3njPhXsZiPETVujawQtDS2ZRnlH2VH8PsV2LlkeykmOZXfS1WC05yA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/timbre/14.11.25/timbre.dev.min.js" integrity="sha512-/RVOKApS+psbtm+g9PMembypokIV/Op6/Q6AagVU+QNlMlCItoniSHDfyImD3nMnP6c+mMrEgkanKPMNL1J/wQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timbre/14.11.25/timbre.dev.min.js" integrity="sha512-/RVOKApS+psbtm+g9PMembypokIV/Op6/Q6AagVU+QNlMlCItoniSHDfyImD3nMnP6c+mMrEgkanKPMNL1J/wQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
 
     <script>
         // const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
