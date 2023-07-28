@@ -18,6 +18,7 @@ class CreateQuilatesTable extends Migration
             $table->foreignId('jewel_id')->nullable()->constrained('jewels');
             $table->string('name')->nullable();
             $table->decimal('price', 11, 2)->nullable();
+            $table->decimal('pricemin', 11, 2)->nullable();
             $table->smallInteger('status')->default(1);
             $table->timestamps();
             $table->softDeletes();

@@ -2497,7 +2497,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 0,
                 'details' => '{"validation":{"rule":"required|max:191"},"display":{"width":4}}',
-                'order' => 5,
+                'order' => 6,
             ),
             155 => 
             array (
@@ -2513,7 +2513,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 6,
+                'order' => 7,
             ),
             156 => 
             array (
@@ -2529,7 +2529,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 7,
+                'order' => 8,
             ),
             157 => 
             array (
@@ -2545,7 +2545,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 9,
+                'order' => 10,
             ),
             158 => 
             array (
@@ -2673,7 +2673,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{"on":"Activo","off":"Inactivo","checked":true}',
-                'order' => 8,
+                'order' => 9,
             ),
             166 => 
             array (
@@ -2690,6 +2690,22 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 0,
                 'details' => '{"display":{"width":4},"model":"App\\\\Models\\\\Jewel","table":"jewels","type":"belongsTo","column":"jewel_id","key":"id","label":"name","pivot_table":"articles","pivot":"0","taggable":"0"}',
                 'order' => 2,
+            ),
+            167 => 
+            array (
+                'id' => 173,
+                'data_type_id' => 23,
+                'field' => 'pricemin',
+                'type' => 'number',
+                'display_name' => 'Precio Minimo por Gramo',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 0,
+                'details' => '{"validation":{"rule":"required|max:191"},"display":{"width":4}}',
+                'order' => 5,
             ),
         ));
         

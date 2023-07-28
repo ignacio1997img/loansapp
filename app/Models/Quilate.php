@@ -15,6 +15,7 @@ class Quilate extends Model
     protected $fillable =[
         'name',
         'price',
+        'pricemin',
         'deleted_at',
         'status',
         'jewel_id'
