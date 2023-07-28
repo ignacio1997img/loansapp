@@ -238,7 +238,7 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
             let count = 0;
             $.get('{{route('notification.cashierOpen')}}', function (data) {    
                 count = 1;
-                        // alert(count)                     
+                 
                 if(data)
                 {
                     var luz = '<span class="badge badge-danger navbar-badge" id="bandeja">'+count+'</span>';
@@ -247,6 +247,20 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
                         <a href="{{url('admin#rowCashierOpen')}}" style="font-size: 16px; color:black"><i class="fa-solid fa-cash-register"></i><small> Tiene una Caja Pendiente Asignada</small></a>
                         <hr>
                     `);
+
+                    // setTimeout(function(){
+                    //     alert('dos');
+                    // }, 1000)
+                    setInterval(() => {
+                     
+                            $('#bellNotification').html('<i class="voyager-bell" style="font-size: 1.8em; color : #ff0808"></i>');
+                
+                        setTimeout(function(){
+                            $('#bellNotification').html('<i class="fa-solid fa-bell" style="font-size: 1.8em; color : #22a7f0"></i>')  ;
+                        }, 500)
+                        
+
+                    }, 1000);
                 }
                 else
                 {
