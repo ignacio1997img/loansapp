@@ -89,11 +89,9 @@
                                     </div>    
                           
                                     
-                                    {{-- <div class="form-group col-md-4">
-                                        <div class="form-line">
-                                            <button type="button" style='width:50px; height:50px' id="bt_add" class="btn btn-success btn-lg"><i class="fa-solid fa-cart-shopping" style="font-size: 20px" ></i></button>
-                                        </div>
-                                    </div>  --}}
+                                    <div class="form-group col-md-8"style="text-align: right">
+                                        <small style="font-size: 35px" id="amountMoney">Bs. 0.0</small>
+                                    </div> 
                                 </div>
 
                                 
@@ -857,6 +855,7 @@
 
                 $('#amountTotal1').val(total.toFixed(2));
                 $('#amountTotal').val(total.toFixed(2));
+                $('#amountMoney').html(`Bs. ${total.toFixed(2)}</small>`);
 
 
                 let priceDollar = $(`#priceDollar`).val() ? parseFloat($(`#priceDollar`).val()) : 0;
