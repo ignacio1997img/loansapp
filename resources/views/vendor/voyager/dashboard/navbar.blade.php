@@ -41,7 +41,7 @@
             
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#" id="not" aria-expanded="false">
-                    <small id="bellNotification"><i class="fa-solid fa-bell" style="font-size: 1.8em; color : #ff0808"></i></small>
+                    <small id="bellNotification"><i class="fa-solid fa-bell" style="font-size: 1.8em; color : #22a7f0"></i></small>
                     <small id="countNotification"></small>
                 </a>
 
