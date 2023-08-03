@@ -265,7 +265,6 @@ class GarmentController extends Controller
 
             // if()
 
-            // return $request;
             for ($i=0; $i < count($request->category); $i++) { 
                 $category = $request->category[$i];
 
@@ -281,8 +280,6 @@ class GarmentController extends Controller
     
                     ]);
 
-                    // return $request['subtotal'.$category][0];
-
                     $getArticle = Article::where('id', $request['article'.$category][$a])->first();
 
                     GarmentsArticlesDetail::create([
@@ -293,8 +290,13 @@ class GarmentController extends Controller
                         'foreign_id' => $request['article'.$category][$a],
                         'typeForeign' => 'articles',
                     ]);
+                    // return $request['article'.$category][$a];
+                    // return $request['kilate'.$category][$a];
+                    // return $request;
 
-                    $jewel = Jewel::where('id', $request['kilate'.$category][$a])->first();
+                    $jewel = Jewel::where('id', $request['typeMetal'.$category][$a])->first();
+
+                    // return $jewel;
 
                     GarmentsArticlesDetail::create([
                         'garmentArticle_id'=>$article->id,
@@ -305,6 +307,7 @@ class GarmentController extends Controller
                         'typeForeign' => 'TipoMaterial',
                     ]);
 
+                    // return $request;
 
                     $kilate = Quilate::where('id', $request['kilate'.$category][$a])->first();
 
@@ -335,113 +338,14 @@ class GarmentController extends Controller
                         'title' => 'Peso Neto',
                     ]);
                 }
-
-
-
-                // for($x = 0; $x < $countDetail; $x++)
-                // {
-
-                //     $auxName = $request['name'.$request->group[$i]][$x];
-                //     // return $auxName;
-                //     if($request['value'.$request->group[$i]][$x] == 'modelo_list')
-                //     {
-                //         $auxName = ModelGarment::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-                //     }
-                //     if($request['value'.$request->group[$i]][$x] == 'marca_list')
-                //     {
-                //         $auxName = BrandGarment::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-                //     }
-
-                //     if($request['value'.$request->group[$i]][$x] == 'joya_list')
-                //     {
-                //         $auxName = Jewel::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-                //     }
-
-                //     if($request['value'.$request->group[$i]][$x] == 'quilate')
-                //     {
-                //         $auxName = Quilate::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-                //     }
-
-                //     GarmentsArticlesDetail::create([
-                //         'garmentArticle_id'=>$article->id,
-                //         'articleDeveloper_id' => $request['developer'.$request->group[$i]][$x],
-                //         'value' => $auxName,
-                //         'title' => $request['title'.$request->group[$i]][$x],
-
-                //         'foreign_id' => $request['value'.$request->group[$i]][$x]?$request['name'.$request->group[$i]][$x]:null,
-                //         'typeForeign' => $request['value'.$request->group[$i]][$x],
-
-
-                //     ]);
-                // }
             }
 
-            // for ($i=0; $i < count($request->group); $i++) { 
-
-            //     $art = Article::where('id', $request->article[$i])->first();
-            //     // return $art;
-            //     $article = GarmentsArticle::create([
-            //         'garment_id'=>$garment->id,
-            //         'article_id'=>$art->id,
-            //         'article'=>$art->name,
-            //         'amountLoan'=>$request['amountLoan'.$request->group[$i]],
-            //         'amountCant'=>$request['price'.$request->group[$i]],
-            //         'amountSubTotal'=>$request['subAmountLoan'.$request->group[$i]],
-
-            //     ]);
-
-            //     $auxTotal = $auxTotal + $request['subAmountLoan'.$request->group[$i]];
-
-            //     $countDetail = count($request['name'.$request->group[$i]]);
-
-            //     // return $request['name'.$request->group[$i]][0];
-            //     // return $request['value1'.$request->group[$i]][0];
-            //     // return $request['developer'.$request->group[$i][$x]];
-
-            //     for($x = 0; $x < $countDetail; $x++)
-            //     {
-
-            //         $auxName = $request['name'.$request->group[$i]][$x];
-            //         // return $auxName;
-            //         if($request['value'.$request->group[$i]][$x] == 'modelo_list')
-            //         {
-            //             $auxName = ModelGarment::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-            //         }
-            //         if($request['value'.$request->group[$i]][$x] == 'marca_list')
-            //         {
-            //             $auxName = BrandGarment::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-            //         }
-
-            //         if($request['value'.$request->group[$i]][$x] == 'joya_list')
-            //         {
-            //             $auxName = Jewel::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-            //         }
-
-            //         if($request['value'.$request->group[$i]][$x] == 'quilate')
-            //         {
-            //             $auxName = Quilate::where('id', $request['name'.$request->group[$i]][$x])->first()->name;
-            //         }
-
-            //         GarmentsArticlesDetail::create([
-            //             'garmentArticle_id'=>$article->id,
-            //             'articleDeveloper_id' => $request['developer'.$request->group[$i]][$x],
-            //             'value' => $auxName,
-            //             'title' => $request['title'.$request->group[$i]][$x],
-
-            //             'foreign_id' => $request['value'.$request->group[$i]][$x]?$request['name'.$request->group[$i]][$x]:null,
-            //             'typeForeign' => $request['value'.$request->group[$i]][$x],
-
-
-            //         ]);
-            //     }
-            // }
-
-            // return $request;
+            // return 1;
             DB::commit();
             return redirect()->route('garments.index')->with(['message' => 'Registrado exitosamente exitosamente.', 'alert-type' => 'success']);            
         } catch (\Throwable $th) {
             DB::rollBack();
-            // return 0;
+            return 0;
             return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
     }

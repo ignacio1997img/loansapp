@@ -563,13 +563,13 @@
                                                             </th>
                                                             <th style="text-align: center; width: 100px">Detalle</th>    
                                                             <th style="text-align: center; width: 150px">Tipo de Material</th>  
-                                                            <th style="text-align: center; width: 80px">Kilate</th>    
+                                                            <th style="text-align: center; width: 80px">Kilates</th>    
                                                             <th style="text-align: center; width: 80px">Peso Bruto</th>    
                                                             <th style="text-align: center; width: 80px">Peso Piedra</th>    
                                                             <th style="text-align: center; width: 80px">Peso Neto</th>    
-                                                            <th style="text-align: center; width: 80px">Cantidad a dar</th>    
+                                                            <th style="text-align: center; width: 80px">Cantidad posible</th>    
             
-                                                            <th style="text-align: center; width: 80px">Sub Total</th>
+                                                            <th style="text-align: center; width: 80px">Cantidad a dar</th>
                                                             <th style="text-align: center; width: 10%">Acción</th>
                                                         </tr>
                                                     </thead>
@@ -593,10 +593,10 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <input type="number" name="pesobruto${product.id}[]" min="1" step="0.01" value="0.0" id="pesobruto-${product.id}-1" onkeyup="calculoNetoMetal(${product.id},1)" onchange="calculoNetoMetal(${product.id},1)" style="text-align: right" class="form-control" required>
+                                                                <input type="number" name="pesobruto${product.id}[]" min="1" step="0.01" value="0" id="pesobruto-${product.id}-1" onkeyup="calculoNetoMetal(${product.id},1)" onchange="calculoNetoMetal(${product.id},1)" style="text-align: right" class="form-control" required>
                                                             </td>
                                                             <td>
-                                                                <input type="number" name="pesopiedra${product.id}[]" min="0" step="0.01" value="0.0" id="pesopiedra-${product.id}-1" onkeyup="calculoNetoMetal(${product.id},1)" onchange="calculoNetoMetal(${product.id},1)" style="text-align: right" class="form-control" required>
+                                                                <input type="number" name="pesopiedra${product.id}[]" min="0" step="0.01" value="0" id="pesopiedra-${product.id}-1" onkeyup="calculoNetoMetal(${product.id},1)" onchange="calculoNetoMetal(${product.id},1)" style="text-align: right" class="form-control" required>
                                                             </td>
                                                             <td>
                                                                 <input type="number" disabled value="0" id="pesonetod-${product.id}-1" style="text-align: right" class="form-control">
@@ -628,7 +628,7 @@
                             toastr.success('Detalle agregado', 'Exito')
 
                         }else{
-                            toastr.info('EL detalle ya está agregado', 'Información')
+                            toastr.info('El detalle ya está agregado', 'Información')
                         }
                     }
                 });
@@ -696,7 +696,7 @@
 
                     for(i=0; i<data.length; i++)
                     {
-                        quilates_list+= '<option value="'+data[i].id+'" data-price="'+data[i].price+'">Tipo de Kilate:'+data[i].name+'</option>';
+                        quilates_list+= '<option value="'+data[i].id+'" data-priceminimo="'+data[i].pricemin+'" data-price="'+data[i].price+'">'+data[i].name+'</option>';
                     }
                     $('#kilate-'+id+'-'+subid).append(quilates_list);
                 }); 
@@ -744,10 +744,10 @@
                             </select>
                         </td>
                         <td>
-                            <input type="number" name="pesobruto${id}[]" min="1" step="0.01" value="0.0" id="pesobruto-${id}-${subid}" onkeyup="calculoNetoMetal(${id},${subid})" onchange="calculoNetoMetal(${id},${subid})" style="text-align: right" class="form-control" required>
+                            <input type="number" name="pesobruto${id}[]" min="1" step="0.01" value="0" id="pesobruto-${id}-${subid}" onkeyup="calculoNetoMetal(${id},${subid})" onchange="calculoNetoMetal(${id},${subid})" style="text-align: right" class="form-control" required>
                         </td>
                         <td>
-                            <input type="number" name="pesopiedra${id}[]" min="0" step="0.01" value="0.0" id="pesopiedra-${id}-${subid}" onkeyup="calculoNetoMetal(${id},${subid})" onchange="calculoNetoMetal(${id},${subid})" style="text-align: right" class="form-control" required>
+                            <input type="number" name="pesopiedra${id}[]" min="0" step="0.01" value="0" id="pesopiedra-${id}-${subid}" onkeyup="calculoNetoMetal(${id},${subid})" onchange="calculoNetoMetal(${id},${subid})" style="text-align: right" class="form-control" required>
                         </td>
                         <td>
                             <input type="number" disabled value="0" id="pesonetod-${id}-${subid}" style="text-align: right" class="form-control">
@@ -781,31 +781,38 @@
                 let bruto = $(`#pesobruto-${id}-${subid}`).val() ? parseFloat($(`#pesobruto-${id}-${subid}`).val()) : 0;
                 let piedra = $(`#pesopiedra-${id}-${subid}`).val() ? parseFloat($(`#pesopiedra-${id}-${subid}`).val()) : 0;
 
-                let priceG = $('#kilate-'+id+'-'+subid+' option:selected').data('price')?parseFloat($('#kilate-'+id+'-'+subid+' option:selected').data('price')) : 0;
+                let priceMin = $('#kilate-'+id+'-'+subid+' option:selected').data('priceminimo')?parseFloat($('#kilate-'+id+'-'+subid+' option:selected').data('priceminimo')) : 0;
+                let priceMax = $('#kilate-'+id+'-'+subid+' option:selected').data('price')?parseFloat($('#kilate-'+id+'-'+subid+' option:selected').data('price')) : 0;
+                
+            
 
-                // alert(priceG);
+                alert(priceMin);
+                alert(priceMax)
 
                 let neto = bruto>=piedra?(bruto-piedra):(piedra-bruto);
                 
-                let totalMonto = priceG*neto;
+                // let totalMonto = priceG*neto;
+                let totalMin = priceMin*neto;
+                let totalMax = priceMax*neto;
                 
-                let porcentageAux = totalMonto*0.3;
+                // let porcentageAux = totalMonto*0.3;
 
-                let min=totalMonto-porcentageAux
-                let max=totalMonto;
+                // let min=totalMonto-porcentageAux
+
+                // let max=totalMax;
 
                 $(`#pesopiedra-${id}-${subid}`).attr("max", bruto);
 
                 
                 // $(`#subtotal-${id}-${subid}`).attr("min", min);
-                $(`#subtotal-${id}-${subid}`).attr("max", max);
+                $(`#subtotal-${id}-${subid}`).attr("max", totalMax);
 
 
 
                 $(`#pesonetod-${id}-${subid}`).val(neto.toFixed(2));
                 $(`#pesoneto-${id}-${subid}`).val(neto.toFixed(2));
-                $(`#subtotal-${id}-${subid}`).val(totalMonto.toFixed(2));
-                $(`#possibility-${id}-${subid}`).text(min.toFixed(2)+'  -  '+max.toFixed(2));
+                $(`#subtotal-${id}-${subid}`).val(totalMax.toFixed(2));
+                $(`#possibility-${id}-${subid}`).text(totalMin.toFixed(2)+'  -  '+totalMax.toFixed(2));
                 getTotal()
             }
 
