@@ -56,8 +56,8 @@
                             
                             <div class="col-sm-2 text-right">
                                 <select name="status" class="form-control select2" id="select-status">
-                                    <option value="todo">Todos</option>
-                                    <option value="enpago" selected>En Pago</option>
+                                    <option value="todo" selected>Todos</option>
+                                    <option value="enpago">En Pago</option>
                                     <option value="pendiente">Pendiente</option>
                                     <option value="porentregar">Por Entregar Prestamo</option>
 
