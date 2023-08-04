@@ -11,6 +11,7 @@ class Garment extends Model
 
     protected $fillable = [
         'code',
+        'number',
         'people_id',
         'cashier_id',
         'type',

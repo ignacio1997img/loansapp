@@ -16,6 +16,8 @@ class CreateGarmentsTable extends Migration
         Schema::create('garments', function (Blueprint $table) {
             $table->id();
             $table->string('code')->nullable();
+            $table->string('number')->nullable();
+            
             $table->foreignId('people_id')->nullable()->constrained('people');
             
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');

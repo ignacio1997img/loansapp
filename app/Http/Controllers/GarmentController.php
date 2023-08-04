@@ -237,6 +237,7 @@ class GarmentController extends Controller
 
             
             $garment = Garment::create([
+                'number'=>$request->number,
                 'people_id'=> $request->people_id,
 
                 'type'=>$request->type,
