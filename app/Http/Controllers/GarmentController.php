@@ -529,7 +529,7 @@ class GarmentController extends Controller
         // return 1;
         // return $garment;
         $garment = Garment::with(['people', 'garmentArticle', 'garmentArticle.garmentArticleDetail'])->where('id', $garment)->first();
-        if($garment->type == 'compacto')
+        if($garment->type == 'conpactorescate')
         {
 
             return view('garment.contractCompact', compact('garment'));

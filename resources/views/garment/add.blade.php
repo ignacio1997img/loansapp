@@ -44,13 +44,21 @@
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                         <small for="customer_id">Beneficiario del Prestamo</small>
-                                        <select name="people_id" class="form-control" id="select_people_id" required></select>
+                                        <div class="input-group">
+                                            <select name="people_id" class="form-control" id="select_people_id" required></select>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" title="Nueva persona" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
-                                    {{-- <div class="form-group col-md-4">
-                                        <small for="customer_id">Fotocopia CI/NIT (Fotografía)</small>
-                                        <input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" name="fileCi" id="fileCi" class="form-control text imageLength">
-                                    </div> --}}
                                 </div>
+
+                                
+
+
+
                                 <hr>
                                 <h5>Detalle del Contrato</h5>
 
@@ -59,7 +67,7 @@
                                         <small>Tipo</small>
                                         <select name="type" id="type" class="form-control select2" required>
                                             <option value="" disabled selected>--Selecciona una opción--</option>
-                                            <option value="compacto">Minuta de Compacto de Rescate</option>
+                                            <option value="conpactorescate">Minuta de con pacto de Rescate</option>
                                             <option value="contratoprivado">Contrato Privado</option>
                                         </select>
                                     </div>    
@@ -166,6 +174,90 @@
                 </div>         
             </form>              
         </div>
+        <form action="{{ url('admin/people/store') }}" id="form-create-customer" method="POST">
+            <div class="modal fade" tabindex="-1" id="modal-create-customer" role="dialog">
+                <div class="modal-dialog modal-primary">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"><i class="fa-solid fa-person"></i> Registrar Persona</h4>
+                        </div>
+                        <div class="modal-body">
+                            @csrf
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <small>CI</small>
+                                    <input type="text" id="ci" name="ci" class="form-control" placeholder="CI" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{-- <label for="full_name">Género</label> --}}
+                                    <small>Género</small>
+                                    <select name="gender" id="gender" class="form-control select2" required>
+                                        <option value="" disabled selected>--Seleccione una opción--</option>
+                                        <option value="masculino">Masculino</option>
+                                        <option value="femenino">Femenino</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <small>Nombres</small>
+                                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Nombre." required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <small>Apellido Paterno</small>
+                                    <input type="text" name="last_name1" id="last_name1" class="form-control" placeholder="Apellido paterno" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <small>Apellido Materno</small>
+                                    <input type="text" name="last_name2" id="last_name2" class="form-control" placeholder="Apellido materno" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <small>Fecha Nacimiento</small>
+                                    <input type="date" name="birth_date" id="birth_date" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <small>Email</small>
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="exemplo@gmail.com" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <small>Celular</small>
+                                    <input type="text" name="" id="cell_phone" class="form-control" placeholder="67285914" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <small>Nro de Casa</small>
+                                    <input type="text" name="home" id="home" class="form-control" placeholder="326" required>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <small>Calle o Av. "Domicilio</small>
+                                    <textarea name="street" id="street" class="form-control" rows="2" placeholder="C/ 18 de nov. Nro 123 zona central" required></textarea>
+                                </div>
+                                <div class="form-group col-md-12">cell_phone
+                                    <small>Zona o Barrio "Domicilio"</small>
+                                    <textarea name="zone" id="zone" class="form-control" rows="" placeholder="Nueva Trinidad" required></textarea>
+                                </div>
+                            </div>
+                            <input type="hidden" name="streetB" value=".">
+                            <input type="hidden" name="homeB" value=".">
+                            <input type="hidden" name="zoneB" value=".">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            <input type="submit" class="btn btn-primary btn-save-customer" value="Guardar">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     @stop
 
     @section('css')
@@ -182,6 +274,42 @@
 
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script> --}}
         <script>
+
+            $('#form-create-customer').submit(function(e){
+                e.preventDefault();
+                $('.btn-save-customer').attr('disabled', true);
+                $('.btn-save-customer').val('Guardando...');
+                $.post($(this).attr('action'), $(this).serialize(), function(data){
+
+                    if(data.people.id){
+                       
+                        toastr.success('Registrado exitosamente', 'Éxito');
+                        $(this).trigger('reset');
+                    }else{
+                        toastr.error(data.error, 'Error');
+                    }
+                })
+                .always(function(){
+                    $('.btn-save-customer').attr('disabled', false);
+                    $('.btn-save-customer').val('Guardar');
+
+                    $('#ci').val('');
+                    $('#first_name').val('');
+                    $('#last_name1').val('');
+                    $('#last_name2').val('');
+                    $('#email').val('');
+                    $('#home').val('');
+                    $('#street').val('');
+                    $('#zone').val('');
+                    $('#cell_phone').val('');
+
+
+                    $('#modal-create-customer').modal('hide');
+                    
+
+
+                });
+            });
 
             $(document).ready(function(){
 
@@ -786,8 +914,8 @@
                 
             
 
-                alert(priceMin);
-                alert(priceMax)
+                // alert(priceMin);
+                // alert(priceMax)
 
                 let neto = bruto>=piedra?(bruto-piedra):(piedra-bruto);
                 

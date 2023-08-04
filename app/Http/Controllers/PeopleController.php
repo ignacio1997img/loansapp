@@ -168,6 +168,24 @@ class PeopleController extends Controller
 
     }
 
+    public function store(Request $request){
+        DB::beginTransaction();
+        try {
+            $ok = People::where('ci', $request->ci)->where('deleted_at', null)->first();
+            if($ok)
+            {
+                return response()->json(['error' => 'Ya existe una persona registrada con el mismo numero de CI'], 500);
+            }
+            $request->merge(['register_userId'=>Auth::user()->id]);
+            $people = People::create($request->all());
+            DB::commit();
+            return response()->json(['people' => $people]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
 
 
     //para la realizacion  de prestamos
