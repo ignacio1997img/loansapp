@@ -248,11 +248,11 @@
                     
                     <div class="row">
                         <div class="col-md-12">
-                            @if ($garment->status == 'entregado' && $garment->deleted_at == null)
+                            {{-- @if ($garment->status == 'entregado' && $garment->deleted_at == null)
                                 <a data-toggle="modal" data-target="#modal_finish" data-money="" title="Pagar"  class="btn btn-success">
                                     <i class="fa-solid fa-money-bill"></i> Recoger Prenda
                                 </a>
-                            @endif
+                            @endif --}}
                             
                             <div class="table-responsive">
                                 <table id="dataStyle" class="table table-bordered table-hover">

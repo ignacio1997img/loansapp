@@ -422,7 +422,7 @@ class GarmentController extends Controller
             // Http::get('https://api.whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝');
             
             // return $loan;
-            $ok= Garment::where('id', $id)->where('deleted_at', null)->where('status', 'pendiente')->first();
+            $ok= Garment::with(['people'])->where('id', $id)->where('deleted_at', null)->where('status', 'pendiente')->first();
             if(!$ok)
             {
                 return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
@@ -434,14 +434,23 @@ class GarmentController extends Controller
                 'success_agentType' => $this->agent(Auth::user()->id)->role
             ]);
 
-            Http::get('https://api.whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝');
+            // return 1;
+            // return $ok;
+            if($ok->people->cell_phone)
+            {
+                // return 11;
 
+                Http::get('https://api.whatsapp.capresi.net/?number=591'.$ok->people->cell_phone.'&message=Hola *'.$ok->people->first_name.' '.$ok->people->last_name1.' '.$ok->people->last_name2.'*.%0A%0A*SU SOLICITUD DE PRESTAMO HA SIDO APROBADA EXITOSAMENTE*%0A%0APase por favor por las oficinas para entregarle su solicitud de prestamos%0A%0AGracias🤝');
+                // return 22;
+            }
+            // return 1;
 
 
             DB::commit();
             return redirect()->route('garments.index')->with(['message' => 'Prestamo aprobado exitosamente.', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             DB::rollBack();
+            return 0;
             return redirect()->route('garments.index')->with(['message' => 'Ocurrió un error.', 'alert-type' => 'error']);
         }
     }
