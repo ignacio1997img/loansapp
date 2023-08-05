@@ -2,7 +2,7 @@
 
 @section('page_title', 'Crear Input')
 
-@if (auth()->user()->hasRole('admin'))
+{{-- @if (auth()->user()->hasRole('admin')) --}}
 
 
     @section('page_header')
@@ -248,4 +248,4 @@
         </script>
     @stop
 
-@endif
+{{-- @endif --}}

@@ -61,7 +61,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('articles/{article_id?}/developer', [ArticleController::class, 'developer'])->name('articles.developer');
     Route::post('articles/{article_id?}/developer/store', [ArticleController::class, 'developerStore'])->name('articles-developer.store');
     Route::delete('articles/{article_id?}/developer/{detail_id?}/destroy', [ArticleController::class, 'developerDestroy'])->name('articles-developer.destroy');
-    Route::get('articles/developer/ajax/{id?}', [ArticleController::class, 'ajaxDeveloper'])->name('articles-developer.ajax');//para obtener las herramientas para genarrar los reqiisitos
+    Route::get('articles/developer/ajax/{article_id?}', [ArticleController::class, 'ajaxDeveloper'])->name('articles-developer.ajax');//para obtener las herramientas para genarrar los reqiisitos
 
 
 

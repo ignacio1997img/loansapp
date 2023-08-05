@@ -91,7 +91,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <small>Categoria</small>
-                                        <select name="category_id" id="select_category" class="form-control select2">
+                                        <select name="category_id" id="select_category" change.select2="prueba()" class="form-control select2">
                                     
                                         </select>
                                     </div>    
@@ -108,13 +108,6 @@
                                 </div>
                                 <hr style="border: 5px solid #22a7f0; border-radius: 10px;">
                                 
-
-
-
-
-
-
-
 
 
 
@@ -620,7 +613,7 @@
                         return markup;
                     },
                     language: {
-                        inputTooShort: function (data) {
+                        inputTooShort: function (data) {                            
                             return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
                         },
                         noResults: function () {
@@ -632,6 +625,7 @@
                     ajax: {
                         url: "{{ url('admin/garments/category/ajax') }}",        
                         processResults: function (data) {
+
                             let results = [];
                             data.map(data =>{
                                 results.push({
@@ -653,7 +647,11 @@
                         // return '<i class="fa fa-search"></i> Buscar... ';
                     }
                 }).change(function(){
+                    
                     if($('#select_category option:selected').val()){
+                        // alert($('#select_category option:selected').val())
+
+                        let isset = true;
                         let product = categorySelected;
                         $('#select_category').empty();     
 
@@ -670,6 +668,7 @@
 
                         if(product.id == 5 && $(`#div-${product.id}`).val() === undefined)
                         {
+                            isset = false;
                             let typeMetals = @json($typeMetal);
                             let typeMetal_list = '<option value="" disabled selected>--Seleccione una opción--</option>';
 
@@ -710,7 +709,7 @@
                                                             <td>
                                                                 <select name="article${product.id}[]" id="article-${product.id}-1" class="form-control" required>
                                                                      ${article_list}
-                                                                </select>
+                                                                </select>     
                                                             </td>
                                                             <td>
                                                                 <select name="typeMetal${product.id}[]" id="typeMetal-${product.id}-1" onchange="showKilate(${product.id},1);" class="form-control" required>
@@ -750,6 +749,80 @@
                                     </div>                                
                             `);
 
+                            // $('#article-'+product.id+'-1').select2();
+                            $('#article-'+product.id+'-1').select2({tags:true});
+
+                            $('#typeMetal-'+product.id+'-1').select2();
+                            $('#kilate-'+product.id+'-1').select2();
+                            setNumber(product.id);
+                            getTotal()
+                            toastr.success('Detalle agregado', 'Exito')
+
+                        }
+                        if(product.id != 5 && 1 == 2 && $(`#div-${product.id}`).val() === undefined)
+                        {
+                            isset = false;
+                            // alert(product.id)
+                            let typeMetals = @json($typeMetal);
+                            let typeMetal_list = '<option value="" disabled selected>--Seleccione una opción--</option>';
+
+                            typeMetals.map(
+                            item => {
+                                typeMetal_list += `<option value="${item.id}" data-quilate="${item.quilate}">${item.name}</option>`;
+                                }
+                            );
+
+                            $('#garment_detail').append(`
+                                    <div class="row" id="div-${product.id}">
+                                        <input type="hidden" name="category[]" value="${product.id}" class="form-control" required>
+                                        <h3 id="titleHead" class="title-'+id+'" style="text-align: center">CATEGORIA: ${product.name}</h3>
+                                        <div class="form-group col-md-12">
+                                            <div class="table-responsive">
+                                                <table id="dataStyle" class="tables tablesMetales table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="5%">
+                                                                <button  id="btn-${product.id}" onclick="removeDiv(${product.id})" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>
+                                                            </th>
+                                                            <th style="text-align: center; width: 100px">Detalle</th>    
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="table-body-${product.id}">
+
+                                                        <tr class="tr-item" id="tr-item-metales-${product.id}-1">
+                                                            <td style="text-align: center" class="td-item-${product.id}"></td>
+                                                            <td>
+                                                                <small>Articulo</small>
+                                                                <select name="article${product.id}[]" id="article-${product.id}-1" onchange="developerAdd(${product.id},1);" class="form-control" required>
+                                                                     ${article_list}
+                                                                </select>    
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr class="tr-item" id="tr-item-metales-${product.id}-1">
+                                                            <td style="text-align: center" class="td-item-${product.id}"></td>
+                                                            <td>
+                                                                <small>Articulo</small>
+                                                                <select name="article${product.id}[]" id="article-${product.id}-1" onchange="developerAdd(${product.id},1);" class="form-control" required>
+                                                                     ${article_list}
+                                                                </select>    
+                                                            </td>
+                                                            <td>
+                                                                <small>Articulo</small>
+                                                                <select name="article${product.id}[]" id="article-${product.id}-1" onchange="developerAdd(${product.id},1);" class="form-control" required>
+                                                                     ${article_list}
+                                                                </select>    
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>                                
+                            `);
+
                             $('#article-'+product.id+'-1').select2();
                             $('#typeMetal-'+product.id+'-1').select2();
                             $('#kilate-'+product.id+'-1').select2();
@@ -757,15 +830,85 @@
                             getTotal()
                             toastr.success('Detalle agregado', 'Exito')
 
-                        }else{
-                            toastr.info('El detalle ya está agregado', 'Información')
+                        }
+
+                        if(isset)
+                        {
+                            toastr.info('El detalle ya existe', 'Exito')
                         }
                     }
                 });
 
 
+                // Para los nuevos articulos
+                $('#select_aerticle').select2({
+                // tags: true,
+                    placeholder: '<i class="fa fa-search"></i> Buscar...',
+                    escapeMarkup : function(markup) {
+                        return markup;
+                    },
+                    language: {
+                        inputTooShort: function (data) {                            
+                            return `Por favor ingrese ${data.minimum - data.input.length} o más caracteres`;
+                        },
+                        noResults: function () {
+                            return `<i class="far fa-frown"></i> No hay resultados encontrados <br>
+                            
+
+                            <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <small for="customer_id">Articulo Nuevo</small>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" title="Nueva persona" data-target="#modal-create-customer" data-toggle="modal" style="margin: 0px" type="button">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                            </div>
+
+
+
+
+
+                            `;
+                        }
+                    },
+                    quietMillis: 250,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: "{{ url('admin/garments/category/ajax') }}",        
+                        processResults: function (data) {
+
+                            let results = [];
+                            data.map(data =>{
+                                results.push({
+                                    ...data,
+                                    disabled: false
+                                });
+                            });
+                            return {
+                                results
+                            };
+                        },
+                        cache: true
+                    },
+                    templateResult: formatResultCustomers_category,
+                    templateSelection: (opt) => {
+                        categorySelected = opt;
+                        
+                        return opt.id?'Categoría: '+opt.name:'<i class="fa fa-search"></i> Buscar... ';
+                        // return '<i class="fa fa-search"></i> Buscar... ';
+                    }
+                }).change(function(){
+                });
+
+
             })
 
+           
             function formatResultCustomers_people(option){
             // Si está cargando mostrar texto de carga
                 if (option.loading) {
@@ -896,7 +1039,9 @@
                 `);
                 // toastr.success('Detalle agregado', 'Exito')
 
-                $('#article-'+id+'-'+subid).select2();
+
+
+                $('#article-'+id+'-'+subid).select2({tags:true});
                 $('#typeMetal-'+id+'-'+subid).select2();
                 $('#kilate-'+id+'-'+subid).select2();
                 setNumber(id);
@@ -953,7 +1098,104 @@
                     length++;
                 });
             }
+            
+            function developerAdd(id, subid)
+            {
 
+                let article = $('#article-'+id+'-'+subid+' option:selected').text();
+                let article_id = $('#article-'+id+'-'+subid+' option:selected').val();
+
+                alert(article_id)
+
+                $.get('{{route('articles-developer.ajax')}}/'+article_id, function (data) {
+
+                    // alert(data)
+                    let title = '';
+                    for (i = 0; i < data.length; i++) 
+                    {
+                        fila+=              '<div class="form-group col-md-4">'+
+                                                '<small>'+data[i].title+'</small>'+
+                                                '<input type="hidden" name="developer'+id+'[]" value="'+data[i].id+'">'+
+                                                '<input type="hidden" name="title'+id+'[]" value="'+data[i].title+'">';
+
+                                                // Para los input
+                                                if(data[i].tool == 'input'){
+                        fila+=                  '<input type="'+data[i].type+'" name="name'+id+'[]" id="'+data[i].detail+'-'+id+'"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>'+
+                                                '<input type="hidden" name="value'+id+'[]" value="">';
+                                                }
+
+                                                let aux = "'"+data[i].detail+'-'+id+"'";
+                                                if(data[i].tool == 'select'){
+                        // fila+=                  '<input type="'+data[i].type+'" name="amountLoan" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>';
+                        fila+=                      '<select name="name'+id+'[]" id="'+data[i].detail+'-'+id+'" onchange="mostrarprecio('+aux+','+id+');" class="form-control select2" '+data[i].required+'>';
+                                                        if(data[i].concatenar == 'modelo_list')
+                                                        {
+                        fila+=                              modelo_list;
+                                                        }
+                                                        if(data[i].concatenar == 'marca_list')
+                                                        {
+                        fila+=                              marca_list;
+                                                        }
+                                                        if(data[i].concatenar == 'joya_list')
+                                                        {
+                                                            auxJoya = 'joya_list';
+                        fila+=                              joya_list;
+                                                        }
+                        fila+=                      '</select>'+        
+                                                    '<input type="hidden" name="value'+id+'[]" value="'+data[i].concatenar+'">';                                    
+                                                }
+                        fila+=              '</div>'; 
+                    } 
+
+
+
+                    
+                    // fila = '<hr style="border: 5px solid #22a7f0; border-radius: 10px;" id="hr-'+id+'"><h3 id="titleHead" class="title-'+id+'" style="text-align: center">'+articleText+'</h3><button  id="btn-'+id+'" onclick="removeDiv('+id+')" title="Borrar" class="btn btn-sm btn-danger delete"><i class="voyager-trash"></i></button>'+
+                    //             '<div class="row" id="div-'+id+'"> <input type="hidden" name="article[]" value="'+articleVal+'"><input type="hidden" name="group[]" value="'+id+'">';
+                    //                 for (i = 0; i < data.length; i++) 
+                    //                 {
+                    // fila+=              '<div class="form-group col-md-4">'+
+                    //                         '<small>'+data[i].title+'</small>'+
+                    //                         '<input type="hidden" name="developer'+id+'[]" value="'+data[i].id+'">'+
+                    //                         '<input type="hidden" name="title'+id+'[]" value="'+data[i].title+'">';
+
+                    //                         // Para los input
+                    //                         if(data[i].tool == 'input'){
+                    // fila+=                  '<input type="'+data[i].type+'" name="name'+id+'[]" id="'+data[i].detail+'-'+id+'"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>'+
+                    //                         '<input type="hidden" name="value'+id+'[]" value="">';
+                    //                         }
+
+                    //                         let aux = "'"+data[i].detail+'-'+id+"'";
+                    //                         if(data[i].tool == 'select'){
+                    // // fila+=                  '<input type="'+data[i].type+'" name="amountLoan" id="amountLoan"'; if(data[i].type=='number'){fila+='style="text-align: right" value="0" min="1" step=".01"';} fila+='class="form-control" '+data[i].required+'>';
+                    // fila+=                      '<select name="name'+id+'[]" id="'+data[i].detail+'-'+id+'" onchange="mostrarprecio('+aux+','+id+');" class="form-control select2" '+data[i].required+'>';
+                    //                                 if(data[i].concatenar == 'modelo_list')
+                    //                                 {
+                    // fila+=                              modelo_list;
+                    //                                 }
+                    //                                 if(data[i].concatenar == 'marca_list')
+                    //                                 {
+                    // fila+=                              marca_list;
+                    //                                 }
+                    //                                 if(data[i].concatenar == 'joya_list')
+                    //                                 {
+                    //                                     auxJoya = 'joya_list';
+                    // fila+=                              joya_list;
+                    //                                 }
+                    // fila+=                      '</select>'+        
+                    //                             '<input type="hidden" name="value'+id+'[]" value="'+data[i].concatenar+'">';                                    
+                    //                         }
+                    // fila+=              '</div>'; 
+                    //                 }     
+                    // fila+=      '</div>';
+
+                    //     $('#garment_detail').append(fila);
+                    //     toastr.success('Prenda agregada exitosamente..', 'Información');
+
+                }); 
+
+                // alert(article)
+            }
 
 
 

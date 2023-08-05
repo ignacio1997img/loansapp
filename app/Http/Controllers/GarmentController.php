@@ -273,6 +273,8 @@ class GarmentController extends Controller
                 for($a=0; $a<count($request['article'.$category]); $a++)
                 {
                     $getCategory = CategoryGarment::where('id', $category)->first();
+
+
                     // return $request['subtotal'.$category][0];
                     $article = GarmentsArticle::create([
                         'garment_id'=>$garment->id,
@@ -282,7 +284,24 @@ class GarmentController extends Controller
     
                     ]);
 
+                    // return $request['article'.$category][$a];
                     $getArticle = Article::where('id', $request['article'.$category][$a])->first();
+
+                    if(!$getArticle)
+                    {
+                        // return $request['article'.$category][$a];
+                        // return $category;
+                        $getArticle = Article::where('name', $request['article'.$category][$a])->where('categoryGarment_id', $category)->first();
+                        // return 1;
+                        if(!$getArticle)
+                        {
+                            $getArticle = Article::create([
+                                'categoryGarment_id' => $category,
+                                'name'=>$request['article'.$category][$a]
+                            ]);
+                        }
+                    }
+                    // return $getArticle;
 
                     GarmentsArticlesDetail::create([
                         'garmentArticle_id'=>$article->id,

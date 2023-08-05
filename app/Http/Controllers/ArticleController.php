@@ -103,9 +103,9 @@ class ArticleController extends Controller
     }
 
 
-    public function ajaxDeveloper($id)
+    public function ajaxDeveloper($article_id)
     {
-        return ArticlesDeveloper::where('article_id', $id)->where('deleted_at', null)->get();
+        return ArticlesDeveloper::where('article_id', $article_id)->where('deleted_at', null)->get();
     }
 
 }
