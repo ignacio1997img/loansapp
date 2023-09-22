@@ -17,11 +17,8 @@ class CreateLoansTable extends Migration
             $table->id();
             $table->foreignId('people_id')->nullable()->constrained('people');
             $table->foreignId('guarantor_id')->nullable()->constrained('people');
-            
             $table->foreignId('cashier_id')->nullable()->constrained('cashiers');
-            
             $table->string('code')->nullable();
-
             $table->string('typeLoan')->nullable();
             $table->date('date')->nullable();
             $table->integer('day')->nullable();
@@ -52,19 +49,14 @@ class CreateLoansTable extends Migration
 
             $table->foreignId('success_userId')->nullable()->constrained('users');
             $table->string('success_agentType')->nullable();
-
-            $table->timestamps();
+            
             $table->foreignId('cashierRegister_id')->nullable()->constrained('cashiers');
             $table->foreignId('register_userId')->nullable()->constrained('users');
             $table->string('register_agentType')->nullable();
-
-            $table->softDeletes();
             $table->foreignId('deleted_userId')->nullable()->constrained('users');
             $table->string('deleted_agentType')->nullable();
             $table->text('deleteObservation')->nullable();
             $table->string('deletedKey')->nullable();
-
-
             $table->date('notificationDate')->default(date('Y-m-d'));
             $table->bigInteger('notificationQuantity')->default(0);
 
@@ -75,7 +67,8 @@ class CreateLoansTable extends Migration
             // $table->string('destroy_agentType')->nullable();
             //fin
 
-
+            $table->timestamps();
+            $table->softDeletes();
 
         });
     }

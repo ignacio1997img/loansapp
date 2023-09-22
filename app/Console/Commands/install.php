@@ -11,7 +11,7 @@ class install extends Command
      *
      * @var string
      */
-    protected $signature = 'template:install';
+    protected $signature = 'prestamos:install';
 
     /**
      * The console command description.
@@ -42,6 +42,6 @@ class install extends Command
         $this->call('db:seed');
         $this->call('storage:link');
         $this->call('vendor:publish', ['--provider' => VoyagerServiceProvider::class, '--tag' => ['config', 'voyager_avatar']]);
-        $this->info('Gracias por instalar LoansApp');
+        $this->info('Gracias por la instalación');
     }
 }
