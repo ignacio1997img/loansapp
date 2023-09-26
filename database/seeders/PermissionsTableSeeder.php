@@ -47,7 +47,8 @@ class PermissionsTableSeeder extends Seeder
         // Permission::generateFor('quilates');
         Permission::generateFor('item_categories');
         Permission::generateFor('item_features');
-
+        Permission::generateFor('item_types');
+        Permission::generateFor('pawn');
 
         $keys = [
             'browse_articles',

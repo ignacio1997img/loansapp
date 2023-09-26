@@ -16,10 +16,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    // public function getAuth()
-    // {
-    //     return Auth::user();
-    // }
+    public function custom_authorize($permission){
+        if(!Auth::user()->hasPermission($permission)){
+            abort(403, 'THIS ACTION IS UNAUTHORIZED.');
+        }
+    }
     
 
     public function agent($id)

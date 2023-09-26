@@ -16,7 +16,7 @@ class CreatePawnRegisterDetailsTable extends Migration
         Schema::create('pawn_register_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pawn_register_id')->nullable()->constrained('pawn_registers');
-            $table->foreignId('item_id')->nullable()->constrained('items');
+            $table->foreignId('item_type_id')->nullable()->constrained('item_types');
             $table->decimal('price', 10, 2)->nullable();
             $table->decimal('quantity', 10, 2)->nullable();
             $table->timestamps();

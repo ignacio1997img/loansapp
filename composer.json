@@ -16,7 +16,6 @@
         "orangehill/iseed": "^3.0",
         "simplesoftwareio/simple-qrcode": "~4",
         "tcg/voyager": "^1.6",
-        "villca/numeros-en-letras": "^1.2",
         "yadahan/laravel-authentication-log": "^1.5"
     },
     "require-dev": {
