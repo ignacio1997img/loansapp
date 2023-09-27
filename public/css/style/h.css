@@ -33,6 +33,11 @@ small{font-size: 12px;
     font-weight: bold;
 }
 
+.label-form {
+    font-size: 12px;
+    color: rgb(12, 12, 12);
+    font-weight: bold;
+}
 
 input.text, select.text, textarea.text{ 
     border-radius: 5px 5px 5px 5px;

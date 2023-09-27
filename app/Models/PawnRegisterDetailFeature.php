@@ -11,4 +11,9 @@ class PawnRegisterDetailFeature extends Model
     use HasFactory, SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'pawn_register_detail_id',
+        'item_feature_id',
+        'value'
+    ];
 }

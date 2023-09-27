@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="page-content edit-add container-fluid">    
-        <form id="form-submit" action="{{ route('garments.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="form-submit" action="{{ route('pawn.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="cashier_id" value="">
             <div class="row">
@@ -50,7 +50,7 @@
                                     <small for="item_id">Tipo de artículo</small>
                                     <select name="item_id" class="form-control select2" id="select-item_id">
                                         <option value="" selected disabled>Seleccione tipo de artículo</option>
-                                        @foreach (App\Models\ItemType::where('status', 1)->get() as $item)
+                                        @foreach (App\Models\ItemType::with(['category'])->where('status', 1)->get() as $item)
                                             <option value="{{ $item->id }}" data-item='@json($item)'>{{ $item->name }}</option>
                                         @endforeach
                                     </select>
@@ -63,15 +63,24 @@
                                                 <th>Tipo</th>
                                                 <th>Cantidad</th>
                                                 <th>Precio</th>
+                                                <th>Características</th>
                                                 <th>Observaciones</th>
+                                                <th class="text-right">Subtotal</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody id="table-details">
                                             <tr class="tr-empty">
-                                                <td colspan="6">No hay artículos seleccionados</td>
+                                                <td colspan="8">No hay artículos seleccionados</td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-right" colspan="6">TOTAL Bs.</td>
+                                                <td class="text-right" id="td-total"><h4>0.00</h4></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -99,40 +108,88 @@
 @section('javascript')
     <script src="{{ asset('js/main.js') }}"></script>
     <script>
-        var trCount = 0;
+        var index = 0;
+        var features = @json($features);
         $(document).ready(function(){
+            customSelect('#select-people_id', '{{ url("admin/people/search/ajax") }}', formatResultPeople, data => data.first_name+' '+data.last_name1+' '+data.last_name2, null);
             $('#select-item_id').change(function(){
                 let type = $('#select-item_id option:selected').data('item');
                 if (type) {
                     $('.tr-empty').css('display', 'none');
                     $('#table-details').append(`
-                        <tr id="tr-item-${trCount}">
+                        <tr id="tr-item-${index}">
                             <td class="td-number"></td>
-                            <td>${type.name}</td>
-                            <td width="150px">
+                            <td>
+                                ${type.name} <br>
+                                <span style="font-size: 12px">${type.category.name}</span>
+                                <input type="hidden" name="item_type_id[]" value="${type.id}" />
+                            </td>
+                            <td width="120px">
                                 <div class="input-group">
-                                    <input type="number" name="quantity[]" id="input-quantity-${trCount}" class="form-control" value="1" required>
+                                    <input type="number" name="quantity[]" id="input-quantity-${index}" onchange="getSubtotal(${index})" onkeyup="getSubtotal(${index})" class="form-control" value="1" min="1" required>
                                     <span class="input-group-addon"><small>${type.unit}</small></span>
                                 </div>
                             </td>
                             <td width="150px">
                                 <div class="input-group">
-                                    <input type="number" name="price[]" id="input-price-${trCount}" class="form-control" value="${type.price}" required>
+                                    <input type="number" name="price[]" id="input-price-${index}" onchange="getSubtotal(${index})" onkeyup="getSubtotal(${index})" class="form-control" value="${type.price}" required>
                                     <span class="input-group-addon"><small>Bs.</small></span>
                                 </div>
                             </td>
                             <td>
-                                <input type="text" class="form-control" value="">
+                                <table id="table-features-${index}"></table>
+                                <a class="btn btn-link" onclick="addFeature(${index})"><i class="voyager-plus"></i> agregar</a>
                             </td>
-                            <td class="text-right"><button type="button" class="btn btn-link" onclick="removeTr(${trCount})"><span class="voyager-trash text-danger"></span></button></td>
+                            <td><textarea name="observation[]" class="form-control"></textarea></td>
+                            <td id="td-subtotal-${index}" class="td-subtotal text-right">${type.price}</td>
+                            <td class="text-right"><button type="button" class="btn btn-link" onclick="removeTr(${index})"><span class="voyager-trash text-danger"></span></button></td>
                         </td>
                     `);
                     generateNumber();
-                    trCount++;
+                    index++;
                     $('#select-item_id').val('').trigger('change');
+                    getTotal();
                 }
             });
         });
+
+        function addFeature(index){
+            let featuresList = '';
+            features.map((feature) => {
+                featuresList = featuresList+`<option value="${feature.id}">${feature.name}</option>`
+            });
+            // Se va a nombrar los atributos de cada item concatenando el numero de item asignado
+            // para agruparlos al momento de recorerlos
+            $(`#table-features-${index}`).append(`
+                <tr id="tr-features-${index}">
+                    <td><select name="features_${index}[]" style="height:24px !important">${featuresList}</select></td>
+                    <td><input name="features_value_${index}[]" required /></td>
+                    <td><button type="button" class="btn-danger" onclick="removeTrFeature(${index})">x</button></td>
+                </tr>
+            `)
+        }
+
+        function getSubtotal(index){
+            let price = $(`#input-price-${index}`).val() ? parseFloat($(`#input-price-${index}`).val()) : 0;
+            let quantity = $(`#input-quantity-${index}`).val() ? parseFloat($(`#input-quantity-${index}`).val()) : 0;
+            if (quantity > 0) {
+                $(`#td-subtotal-${index}`).text((price*quantity).toFixed(2));
+                getTotal();
+            } else {
+                $(`#input-quantity-${index}`).val(1);
+                getSubtotal(index);
+                toastr.warning('La cantidad debe ser de al menos 1', 'Advertencia');
+            }
+        }
+
+        function getTotal(){
+            let total = 0;
+            $('.td-subtotal').each(function(){
+                let value = parseFloat($(this).text());
+                total += value;
+            });
+            $(`#td-total`).html(`<h4>${total.toFixed(2)}</h4>`);
+        }
 
         function generateNumber(){
             let number = 1;
@@ -149,8 +206,14 @@
 
         function removeTr(index){
             $(`#tr-item-${index}`).remove();
-            // getTotal();
             generateNumber();
+            getTotal();
+        }
+
+        function removeTrFeature(index){
+            $(`#tr-features-${index}`).remove();
+            generateNumber();
+            getTotal();
         }
     </script>
 @stop

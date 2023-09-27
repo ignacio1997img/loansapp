@@ -19,6 +19,7 @@ class CreatePawnRegisterDetailsTable extends Migration
             $table->foreignId('item_type_id')->nullable()->constrained('item_types');
             $table->decimal('price', 10, 2)->nullable();
             $table->decimal('quantity', 10, 2)->nullable();
+            $table->text('observations')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

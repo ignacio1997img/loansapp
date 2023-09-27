@@ -189,12 +189,12 @@ class PeopleController extends Controller
 
 
     //para la realizacion  de prestamos
-    public function ajaxPeople()
-    {
+    public function ajaxPeople(){
         $q = request('q');
-        $data = People::whereRaw($q ? '(ci like "%'.$q.'%" or first_name like "%'.$q.'%" or last_name1 like "%'.$q.'%" or last_name2 like "%'.$q.'%" or CONCAT(first_name," " , last_name1, " ", last_name2) like "%'.$q.'%" )' : 1)
-        ->where('deleted_at', null)->get();
-
+        $data = [];
+        if ($q) {
+            $data = People::whereRaw('(ci like "%'.$q.'%" or first_name like "%'.$q.'%" or last_name1 like "%'.$q.'%" or last_name2 like "%'.$q.'%" or CONCAT(first_name," " , last_name1, " ", last_name2) like "%'.$q.'%" )')->where('deleted_at', null)->get();
+        }
         return response()->json($data);
     }
 }

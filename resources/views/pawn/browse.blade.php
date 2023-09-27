@@ -100,10 +100,10 @@
 
         function list(page = 1){
             let type =$("#select-status").val();
-            let url = "{{ url('admin/garments/ajax/list')}}/";
+            let url = "{{ route('pawn.list')}}";
             let search = $('#input-search').val() ? $('#input-search').val() : '';
             $.ajax({
-                url: `${url}/${type}/${search}?paginate=${countPage}&page=${page}`,
+                url: `${url}?paginate=${countPage}&page=${page}&type=${type}&search=${search}`,
                 type: 'get',
                 success: function(result){
                 $("#div-results").html(result);

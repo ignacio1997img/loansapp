@@ -3,9 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
+
+// Models
+use App\Models\ItemFeature;
+use App\Models\PawnRegister;
+use App\Models\PawnRegisterDetail;
+use App\Models\PawnRegisterDetailFeature;
 
 class PawnController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,6 +31,13 @@ class PawnController extends Controller
         return view('pawn.browse');
     }
 
+    public function list(){
+        $this->custom_authorize('browse_pawn');
+        $paginate = request('paginate') ?? 10;
+        $data = PawnRegister::with(['person', 'user', 'details.type.category'])->paginate($paginate);
+        return view('pawn.list', compact('data'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -25,7 +46,8 @@ class PawnController extends Controller
     public function create()
     {
         $this->custom_authorize('add_pawn');
-        return view('pawn.edit-add');
+        $features = ItemFeature::all();
+        return view('pawn.edit-add', compact('features'));
     }
 
     /**
@@ -36,7 +58,45 @@ class PawnController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        DB::beginTransaction();
+        try {
+            // Registrar empeño
+            $pawn_register = PawnRegister::create([
+                'user_id' => Auth::user()->id,
+                'person_id' => $request->people_id,
+                'date' => $request->date,
+                'observations' => $request->observations,
+            ]);
+
+            // Registrar items del empeño
+            for ($i=0; $i < count($request->item_type_id); $i++) { 
+                $detail = PawnRegisterDetail::create([
+                    'pawn_register_id' => $pawn_register->id,
+                    'item_type_id' => $request->item_type_id[$i],
+                    'price' => $request->price[$i],
+                    'quantity' => $request->quantity[$i],
+                    'observations' => $request->observation[$i]
+                ]);
+
+                // Registrar características de cada item
+                if (isset($request->{'features_'.$i})) {
+                    for ($j=0; $j < count($request->{'features_'.$i}); $j++) { 
+                        PawnRegisterDetailFeature::create([
+                            'pawn_register_detail_id' => $detail->id,
+                            'item_feature_id' => $request->{'features_'.$i}[$j],
+                            'value' => $request->{'features_value_'.$i}[$j]
+                        ]);
+                    }
+                }
+            }
+            DB::commit();
+            return redirect()->route('pawn.index')->with(['message' => 'Registrado exitosamente', 'alert-type' => 'success']);            
+        } catch (\Throwable $th) {
+            DB::rollback();
+            // throw $th;
+            return redirect()->route('pawn.index')->with(['message' => 'Ocurrió un error', 'alert-type' => 'error']);
+        }
     }
 
     /**

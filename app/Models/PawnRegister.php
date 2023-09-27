@@ -11,4 +11,22 @@ class PawnRegister extends Model
     use HasFactory, SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'user_id',
+        'person_id',
+        'date',
+        'observations',
+    ];
+
+    public function person(){
+        return $this->belongsTo(People::class, 'person_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function details(){
+        return $this->hasMany(PawnRegisterDetail::class, 'pawn_register_id');
+    }
 }
