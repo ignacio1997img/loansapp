@@ -7,7 +7,7 @@
                     <th>Fecha</th>
                     <th>Persona</th>
                     <th>Actículos</th>
-                    <th>Total</th>
+                    <th>Total (Bs.)</th>
                     <th>Deuda</th>
                     <th>Estado</th>
                     <th>Registrado por</th>
@@ -30,7 +30,13 @@
                         <td>
                             <ul>
                                 @foreach ($item->details as $detail)
-                                    <li>{{ floatval($detail->quantity) ? intval($detail->quantity) : $detail->quantity }} {{ $detail->type->name }} a Bs. {{ $detail->price }}</li>
+                                    @php
+                                        $features_list = '';
+                                        foreach ($detail->features_list as $feature) {
+                                            $features_list .= '<span><b>'.$feature->feature->name.'</b>: '.$feature->value.'</span><br>';
+                                        }
+                                    @endphp
+                                    <li @if($detail->features_list->count() || $detail->observations) data-toggle="popover" data-trigger="hover" data-placement="top" data-html="true"  data-content="<div>{!! $features_list ? $features_list : '' !!}{!! $detail->observations && $detail->features_list->count() ? '<hr>' : '' !!} {{ $detail->observations }}</div>" style="cursor: pointer" @endif>{{ floatval($detail->quantity) ? intval($detail->quantity) : $detail->quantity }} {{ $detail->type->unit }} {{ $detail->type->name }} a {{ $detail->price }} Bs.</li>
                                     @php
                                         $subtotal += $detail->quantity * $detail->price;
                                     @endphp
@@ -39,13 +45,44 @@
                         </td>
                         <td>{{ $subtotal }}</td>
                         <td></td>
-                        <td></td>
+                        <td>
+                            @php
+                                switch ($item->status) {
+                                    case 'pendiente':
+                                        # code...
+                                        break;
+                                    
+                                    default:
+                                        # code...
+                                        break;
+                                }
+                            @endphp
+                        </td>
                         <td>
                             {{ $item->user ? $item->user->name : '' }} <br>
                             {{ date('d/', strtotime($item->created_at)).$meses[intval(date('m', strtotime($item->created_at)))].date('/Y H:i', strtotime($item->created_at)) }} <br>
                             <small>{{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</small>
                         </td>
-                        <td class="no-sort no-click bread-actions text-right"></td>
+                        <td class="no-sort no-click bread-actions text-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="margin-right: 5px">
+                                    Más <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" style="left: -90px !important">
+                                    <li><a href="{{ route('pawn.print', $item->id) }}" title="Imprimir" target="_blank">Imprimir</a></li>
+                                </ul>
+                            </div>
+                            @if (auth()->user()->hasPermission('read_pawn'))
+                                <a href="#" title="Ver" class="btn btn-sm btn-warning view">
+                                    <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Ver</span>
+                                </a>
+                            @endif
+                            @if (auth()->user()->hasPermission('delete_pawn'))
+                                <button title="Borrar" class="btn btn-sm btn-danger delete" onclick="deleteItem('{{ route('pawn.destroy', ['pawn' => $item->id]) }}')" data-toggle="modal" data-target="#delete-modal">
+                                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Eliminar</span>
+                                </button>
+                            @endif
+                        </td>
                     </tr>
                     @php
                         $cont++;
@@ -87,6 +124,7 @@
     moment.locale('es');
     var page = "{{ request('page') }}";
     $(document).ready(function(){
+        $('[data-toggle="popover"]').popover()
         $('.page-link').click(function(e){
             e.preventDefault();
             let link = $(this).attr('href');

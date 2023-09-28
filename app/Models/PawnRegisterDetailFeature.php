@@ -16,4 +16,8 @@ class PawnRegisterDetailFeature extends Model
         'item_feature_id',
         'value'
     ];
+
+    public function feature(){
+        return $this->belongsTo(ItemFeature::class, 'item_feature_id');
+    }
 }

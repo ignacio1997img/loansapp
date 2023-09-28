@@ -34,7 +34,7 @@ class PawnController extends Controller
     public function list(){
         $this->custom_authorize('browse_pawn');
         $paginate = request('paginate') ?? 10;
-        $data = PawnRegister::with(['person', 'user', 'details.type.category'])->paginate($paginate);
+        $data = PawnRegister::with(['person', 'user', 'details.type.category', 'details.features_list.feature'])->paginate($paginate);
         return view('pawn.list', compact('data'));
     }
 
@@ -66,6 +66,7 @@ class PawnController extends Controller
                 'user_id' => Auth::user()->id,
                 'person_id' => $request->people_id,
                 'date' => $request->date,
+                'date_limit' => $request->date_limit,
                 'observations' => $request->observations,
             ]);
 
@@ -91,7 +92,7 @@ class PawnController extends Controller
                 }
             }
             DB::commit();
-            return redirect()->route('pawn.index')->with(['message' => 'Registrado exitosamente', 'alert-type' => 'success']);            
+            return redirect()->route('pawn.index')->with(['message' => 'Registrado exitosamente', 'alert-type' => 'success', 'pawn_register_id' => $pawn_register->id]);            
         } catch (\Throwable $th) {
             DB::rollback();
             // throw $th;
@@ -142,5 +143,10 @@ class PawnController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function print($id){
+        $pawn = PawnRegister::find($id);
+        return view('pawn.print.contract', compact('pawn'));
     }
 }

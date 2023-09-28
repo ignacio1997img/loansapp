@@ -16,6 +16,7 @@ class ItemType extends Model
         'name',
         'unit',
         'price',
+        'max_price',
         'description',
         'images',
         'status',

@@ -15,7 +15,9 @@ class PawnRegister extends Model
         'user_id',
         'person_id',
         'date',
+        'date_limit',
         'observations',
+        'status'
     ];
 
     public function person(){

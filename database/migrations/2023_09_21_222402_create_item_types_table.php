@@ -19,6 +19,7 @@ class CreateItemTypesTable extends Migration
             $table->string('name')->nullable();
             $table->string('unit')->nullable()->default('unid.');
             $table->decimal('price', 10, 2)->nullable();
+            $table->decimal('max_price', 10, 2)->nullable();
             $table->text('description')->nullable();
             $table->text('images')->nullable();
             $table->smallInteger('status')->nullable()->default(1);

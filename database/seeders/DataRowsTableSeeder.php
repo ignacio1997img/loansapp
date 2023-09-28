@@ -3040,7 +3040,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{"options":{"pza":"pza","kg":"kg","g":"g","Otra":"Otra"},"display":{"width":6}}',
+                'details' => '{"options":{"":"Ninguna","kg":"kg","g":"g","Otra":"Otra"},"display":{"width":6}}',
                 'order' => 5,
             ),
             189 => 
@@ -3089,7 +3089,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 1,
                 'delete' => 1,
                 'details' => '{"display":{"width":6}}',
-                'order' => 7,
+                'order' => 9,
             ),
             192 => 
             array (
@@ -3104,8 +3104,8 @@ class DataRowsTableSeeder extends Seeder
                 'edit' => 1,
                 'add' => 1,
                 'delete' => 1,
-                'details' => '{"on":"Activo","off":"Inactivo","checked":true}',
-                'order' => 9,
+                'details' => '{"on":"Activo","off":"Inactivo","checked":true,"display":{"width":6}}',
+                'order' => 10,
             ),
             193 => 
             array (
@@ -3121,7 +3121,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 10,
+                'order' => 11,
             ),
             194 => 
             array (
@@ -3137,7 +3137,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 11,
+                'order' => 12,
             ),
             195 => 
             array (
@@ -3153,7 +3153,7 @@ class DataRowsTableSeeder extends Seeder
                 'add' => 0,
                 'delete' => 0,
                 'details' => '{}',
-                'order' => 12,
+                'order' => 13,
             ),
             196 => 
             array (
@@ -3170,6 +3170,22 @@ class DataRowsTableSeeder extends Seeder
                 'delete' => 1,
                 'details' => '{"model":"App\\\\Models\\\\ItemCategory","table":"item_categories","type":"belongsTo","column":"item_category_id","key":"id","label":"name","pivot_table":"articles","pivot":"0","taggable":"0"}',
                 'order' => 2,
+            ),
+            197 => 
+            array (
+                'id' => 216,
+                'data_type_id' => 32,
+                'field' => 'max_price',
+                'type' => 'number',
+                'display_name' => 'Precio máximo',
+                'required' => 0,
+                'browse' => 1,
+                'read' => 1,
+                'edit' => 1,
+                'add' => 1,
+                'delete' => 1,
+                'details' => '{"validation":{"rule":"max:191"},"display":{"width":6}}',
+                'order' => 7,
             ),
         ));
         

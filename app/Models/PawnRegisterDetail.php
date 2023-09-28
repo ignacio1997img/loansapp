@@ -22,4 +22,8 @@ class PawnRegisterDetail extends Model
     public function type(){
         return $this->belongsTo(ItemType::class, 'item_type_id');
     }
+
+    public function features_list(){
+        return $this->hasMany(PawnRegisterDetailFeature::class, 'pawn_register_detail_id');
+    }
 }

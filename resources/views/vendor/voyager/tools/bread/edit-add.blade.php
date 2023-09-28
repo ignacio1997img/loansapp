@@ -448,8 +448,6 @@
 
             $('#bread-items').disableSelection();
 
-            $('[data-toggle="tooltip"]').tooltip();
-
             $('.toggleswitch').bootstrapToggle();
 
             $('textarea[data-editor]').each(function () {

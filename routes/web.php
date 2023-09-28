@@ -24,6 +24,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportManagerController;
 use App\Http\Controllers\PawnController;
+use App\Http\Controllers\ItemTypesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -153,8 +154,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('garments/tickets/print/{garment_id?}', [GarmentController::class, 'printGarmentTickets']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
     Route::get('garments/payment/money/print/{garment_id}/{transaction_id?}', [GarmentController::class, 'printDailyMoney']);//imprimir los meses diarios de pago de la premda
 
+    Route::post('item_types/store', [ItemTypesController::class, 'store'])->name('item_types.store');
+    
     Route::resource('pawn', PawnController::class);
     Route::get('pawn/list/ajax', [PawnController::class, 'list'])->name('pawn.list');
+    Route::get('pawn/{id}/print', [PawnController::class, 'print'])->name('pawn.print');
 
     // ##################################################################################################################################
     // ###########################################################       FIN       #####################################################

@@ -18,7 +18,7 @@
                     <div class="panel panel-bordered">
                         <div class="panel-body">
                             {{-- Verificar que se haya abierto caja --}}
-                            @if (true)  
+                            @if (false)  
                                 <div class="alert alert-warning">
                                     <strong>Advertencia:</strong>
                                     <p>No puedes registrar debido a que no tiene una caja asignada.</p>
@@ -34,13 +34,17 @@
 
                             <h5>Datos Generales</h5>
                             <div class="row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-4">
                                     <small for="people_id">Beneficiario del Prestamo</small>
                                     <select name="people_id" class="form-control select2" id="select-people_id" required></select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <small for="date">Fecha</small>
+                                <div class="form-group col-md-4">
+                                    <small for="date">Fecha del prestamo</small>
                                     <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <small for="date_limit">Fecha del límite de devolución</small>
+                                    <input type="date" name="date_limit" class="form-control" value="{{ date('Y-m-d') }}" required>
                                 </div>
                             </div>
                             <hr>
@@ -48,7 +52,7 @@
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <small for="item_id">Tipo de artículo</small>
-                                    <select name="item_id" class="form-control select2" id="select-item_id">
+                                    <select name="item_id" class="form-control" id="select-item_id">
                                         <option value="" selected disabled>Seleccione tipo de artículo</option>
                                         @foreach (App\Models\ItemType::with(['category'])->where('status', 1)->get() as $item)
                                             <option value="{{ $item->id }}" data-item='@json($item)'>{{ $item->name }}</option>
@@ -95,6 +99,62 @@
             </div>         
         </form>              
     </div>
+    
+    {{-- Create type items modal --}}
+    <form action="{{ route('item_types.store') }}" id="form-type-items" class="form-submit" method="POST">
+        @csrf
+        <div class="modal modal-primary fade" tabindex="-1" id="type-items-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"><i class="voyager-tag"></i> Registrar tipo de artículo</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="contract_id">
+                        <div class="form-group">
+                            <label for="item_category_id">Categoría</label>
+                            <select name="item_category_id" class="form-control" id="select-item_category_id" required>
+                                <option value="">--Seleccionar categoría--</option>
+                                @foreach (App\Models\ItemCategory::where('status', 1)->get() as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="unit">Unidad</label>
+                            <select name="unit" class="form-control select2">
+                                <option value="">Ninguna</option>
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
+                                <option value="otra">Otra</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Precio</label>
+                            <input type="number" name="price" min="0.1" step="0.1" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="max_price">Precio máximo</label>
+                            <input type="number" name="max_price" min="0.1" step="0.1" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Descripción</label>
+                            <textarea name="description" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <input type="submit" class="btn btn-dark btn-submit" value="Aceptar">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 @stop
 
 @section('css')
@@ -111,7 +171,64 @@
         var index = 0;
         var features = @json($features);
         $(document).ready(function(){
+            
             customSelect('#select-people_id', '{{ url("admin/people/search/ajax") }}', formatResultPeople, data => data.first_name+' '+data.last_name1+' '+data.last_name2, null);
+            $('#select-item_category_id').select2({
+                tags: true,
+                dropdownParent: '#type-items-modal',
+                createTag: function (params) {
+                    return {
+                    id: params.term,
+                    text: params.term,
+                    newOption: true
+                    }
+                },
+                templateResult: function (data) {
+                    var $result = $("<span></span>");
+                    $result.text(data.text);
+                    if (data.newOption) {
+                        $result.append(" <em>(ENTER para agregar)</em>");
+                    }
+                    return $result;
+                }
+            });
+
+            $('#select-item_id').select2({
+                tags: true,
+                createTag: function (params) {
+                    return {
+                    id: params.term,
+                    text: params.term,
+                    newOption: true
+                    }
+                },
+                templateResult: function (data) {
+                    var $result = $("<span></span>");
+                    $result.text(data.text);
+                    if (data.newOption) {
+                        $result.append(" <em>(ENTER o CLICK para agregar)</em> <button class='btn btn-default'>Agregar nuevo</button>");
+                    }
+                    return $result;
+                }
+            })
+            .change(function(){
+                let value = $('#select-item_id option:selected').val();
+                let newItem = $('#select-item_id option:selected').data('select2-tag');
+                if (newItem) {
+                    // Limpiar select
+                    $('#select-item_id').val('').trigger('change');
+
+                    // Agregar nombre de tipo de artículo al campo en el modal
+                    $('#type-items-modal').modal('show');
+                    $('#form-type-items input[name="name"]').val(value);
+                    
+                    // Quitar la opción creada en el select
+                    setTimeout(() => {
+                        $(`#select-item_id option[value='${value}']`).remove();
+                    }, 1000);
+                }
+            });
+
             $('#select-item_id').change(function(){
                 let type = $('#select-item_id option:selected').data('item');
                 if (type) {
@@ -132,7 +249,7 @@
                             </td>
                             <td width="150px">
                                 <div class="input-group">
-                                    <input type="number" name="price[]" id="input-price-${index}" onchange="getSubtotal(${index})" onkeyup="getSubtotal(${index})" class="form-control" value="${type.price}" required>
+                                    <input type="number" name="price[]" id="input-price-${index}" onchange="getSubtotal(${index})" onkeyup="getSubtotal(${index})" class="form-control" value="${type.price}" max="${type.max_price ? type.max_price : ''}" required>
                                     <span class="input-group-addon"><small>Bs.</small></span>
                                 </div>
                             </td>
@@ -150,6 +267,25 @@
                     $('#select-item_id').val('').trigger('change');
                     getTotal();
                 }
+            });
+
+            $('#form-type-items').submit(function(e){
+                e.preventDefault();
+                $.post($(this).attr('action'), $(this).serialize(), function(res){
+                    if(res.success){
+                        let newOption = `<option value="${res.type.id}" data-item='${JSON.stringify(res.type)}'>${res.type.name}</option>`;
+                        $('#select-item_id').append(newOption).trigger('change');
+                        $('#type-items-modal').modal('hide');
+                        toastr.success('Tipo registrado correctamente', 'Bien hecho!');
+
+                        setTimeout(() => {
+                            $('#select-item_id').val(res.type.id).trigger('change');
+                        }, 250);
+                    }else{
+                        toastr.error('Ocurrió un error', 'Error');
+                    }
+                    $('.form-submit .btn-submit').prop('disabled', false);
+                });
             });
         });
 
