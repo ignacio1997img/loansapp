@@ -159,6 +159,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::resource('pawn', PawnController::class);
     Route::get('pawn/list/ajax', [PawnController::class, 'list'])->name('pawn.list');
     Route::get('pawn/{id}/print', [PawnController::class, 'print'])->name('pawn.print');
+    Route::post('pawn/payment/store', [PawnController::class, 'payment_store'])->name('pawn.payment');
 
     // ##################################################################################################################################
     // ###########################################################       FIN       #####################################################

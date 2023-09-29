@@ -8,37 +8,7 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-
-    {{-- <style>
-        .form-control, .select2-selection, .mce-tinymce {
-            border: 1px solid #c3c5c7 !important;
-            color: #555555
-        }
-    </style>
- --}}
-
-    {{-- <style>
-        .form-control, .select2-selection, .mce-tinymce {
-            border: 1px solid #000000 !important;
-            color: #f40202;
-            font-weight: bold;
-        }
-    </style> --}}
-
-
-    <style>
-        .form-control, .select2-selection, .mce-tinymce {
-            border: 1px solid #000000 !important;
-            color:rgb(0, 0, 0) !important;
-            /* font-weight: bold; */
-            font-family: Tahoma, Verdana, Arial; 
-            /* font-size: 15px;  */
-        }
-        label
-        {
-            color: rgb(0, 0, 0) !important;
-        }
-    </style>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/style/dataTable.css') }}">
@@ -327,6 +297,10 @@
         @if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->
             @foreach(config('voyager.additional_js') as $js)<script type="text/javascript" src="{{ asset($js) }}"></script>@endforeach
         @endif
+
+        {{-- Loading --}}
+        <script src="{{ asset('vendor/loading/loading.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('vendor/loading/loading.css') }}">
 
         <script>
             $(document).ready(function() {

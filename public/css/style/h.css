@@ -42,7 +42,7 @@ small{font-size: 12px;
 input.text, select.text, textarea.text{ 
     border-radius: 5px 5px 5px 5px;
     color: #000000;
-    border-color: rgb(63, 63, 63);
+    border-color: #ccc;
 }
 
 

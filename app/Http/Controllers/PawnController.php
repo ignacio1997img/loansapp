@@ -12,6 +12,7 @@ use App\Models\ItemFeature;
 use App\Models\PawnRegister;
 use App\Models\PawnRegisterDetail;
 use App\Models\PawnRegisterDetailFeature;
+use App\Models\PawnRegisterPayment;
 
 class PawnController extends Controller
 {
@@ -34,7 +35,29 @@ class PawnController extends Controller
     public function list(){
         $this->custom_authorize('browse_pawn');
         $paginate = request('paginate') ?? 10;
-        $data = PawnRegister::with(['person', 'user', 'details.type.category', 'details.features_list.feature'])->paginate($paginate);
+        $search = request('search') ?? null;
+        $status = request('status') ?? null;
+        $data = PawnRegister::with(['person', 'user', 'details.type.category', 'details.features_list.feature', 'payments'])
+                    ->where(function($query) use ($search){
+                        if($search){
+                            $query
+                            ->OrwhereHas('person', function($query) use($search){
+                                $query->whereRaw("(first_name like '%$search%' or last_name1 like '%$search%' or last_name2 like '%$search%' or ci like '%$search%' or phone like '%$search%' or CONCAT(first_name, ' ', last_name1, ' ', last_name2) like '%$search%')");
+                            })
+                            ->OrWhereHas('details.type', function($query) use($search){
+                                $query->whereRaw($search ? 'name like "%'.$search.'%"' : 1);
+                            })
+                            ->OrWhereHas('details.type.category', function($query) use($search){
+                                $query->whereRaw($search ? 'name like "%'.$search.'%"' : 1);
+                            })
+                            ->OrWhereHas('details.features_list', function($query) use($search){
+                                $query->whereRaw($search ? 'value like "%'.$search.'%"' : 1);
+                            });
+                        }
+                    })
+                    ->whereRaw($status ? " status = '$status'" : 1)
+                    ->orderBy('id', 'desc')
+                    ->paginate($paginate);
         return view('pawn.list', compact('data'));
     }
 
@@ -67,6 +90,7 @@ class PawnController extends Controller
                 'person_id' => $request->people_id,
                 'date' => $request->date,
                 'date_limit' => $request->date_limit,
+                'interest_rate' => $request->interest_rate,
                 'observations' => $request->observations,
             ]);
 
@@ -85,8 +109,8 @@ class PawnController extends Controller
                     for ($j=0; $j < count($request->{'features_'.$i}); $j++) { 
                         PawnRegisterDetailFeature::create([
                             'pawn_register_detail_id' => $detail->id,
-                            'item_feature_id' => $request->{'features_'.$i}[$j],
-                            'value' => $request->{'features_value_'.$i}[$j]
+                            'item_feature_id' => is_numeric($request->{'features_'.$i}[$j]) ? $request->{'features_'.$i}[$j] : ItemFeature::create(['name' => ucfirst($request->{'features_'.$i}[$j])])->id,
+                            'value' => ucfirst($request->{'features_value_'.$i}[$j])
                         ]);
                     }
                 }
@@ -95,7 +119,7 @@ class PawnController extends Controller
             return redirect()->route('pawn.index')->with(['message' => 'Registrado exitosamente', 'alert-type' => 'success', 'pawn_register_id' => $pawn_register->id]);            
         } catch (\Throwable $th) {
             DB::rollback();
-            // throw $th;
+            throw $th;
             return redirect()->route('pawn.index')->with(['message' => 'Ocurrió un error', 'alert-type' => 'error']);
         }
     }
@@ -108,7 +132,9 @@ class PawnController extends Controller
      */
     public function show($id)
     {
-        //
+        $this->custom_authorize('read_pawn');
+        $pawn = PawnRegister::find($id);
+        return view('pawn.read', compact('pawn'));
     }
 
     /**
@@ -148,5 +174,38 @@ class PawnController extends Controller
     public function print($id){
         $pawn = PawnRegister::find($id);
         return view('pawn.print.contract', compact('pawn'));
+    }
+
+    public function payment_store(Request $request){
+        try {
+            PawnRegisterPayment::create([
+                'pawn_register_id' => $request->id,
+                'user_id' => Auth::user()->id,
+                'date' => $request->date,
+                'amount' => $request->amount,
+                'observations' => $request->observations
+            ]);
+
+            // Verificar si ya se terminó de pagar
+            $pawn = PawnRegister::find($request->id);
+            $total_payment = $pawn->payments->sum('amount');
+            $total = 0;
+            // Obtener el dinero prestado
+            foreach ($pawn->details as $detail) {
+                $total += $detail->price * $detail->quantity;
+            }
+            $interest_rate = $total * ($pawn->interest_rate /100);
+
+            // Si los pagos son iguales a la deuda total
+            if ($total_payment >= ($total + $interest_rate)) {
+                $pawn->status = 'pagado';
+                $pawn->save();
+            }
+
+            return response()->json(['success' => 1]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['error' => 1]);
+        }
     }
 }

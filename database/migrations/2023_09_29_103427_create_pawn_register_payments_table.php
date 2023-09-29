@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePawnRegistersTable extends Migration
+class CreatePawnRegisterPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreatePawnRegistersTable extends Migration
      */
     public function up()
     {
-        Schema::create('pawn_registers', function (Blueprint $table) {
+        Schema::create('pawn_register_payments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pawn_register_id')->nullable()->constrained('pawn_registers');
             $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->foreignId('person_id')->nullable()->constrained('people');
             $table->date('date')->nullable();
-            $table->date('date_limit')->nullable();
+            $table->decimal('amount', 10, 2)->nullable();
             $table->text('observations')->nullable();
-            $table->decimal('interest_rate', 10, 2)->nullable();
-            $table->string('status')->nullable()->default('pendiente');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -34,6 +32,6 @@ class CreatePawnRegistersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pawn_registers');
+        Schema::dropIfExists('pawn_register_payments');
     }
 }

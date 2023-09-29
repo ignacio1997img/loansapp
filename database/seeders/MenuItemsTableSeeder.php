@@ -455,7 +455,7 @@ class MenuItemsTableSeeder extends Seeder
             array (
                 'id' => 46,
                 'menu_id' => 1,
-                'title' => 'Prendario',
+                'title' => 'Registros de Empeño',
                 'url' => '',
                 'target' => '_self',
                 'icon_class' => 'fa-solid fa-handshake',
@@ -463,7 +463,7 @@ class MenuItemsTableSeeder extends Seeder
                 'parent_id' => NULL,
                 'order' => 5,
                 'created_at' => '2023-06-14 04:02:56',
-                'updated_at' => '2023-09-26 15:24:18',
+                'updated_at' => '2023-09-29 09:20:51',
                 'route' => 'pawn.index',
                 'parameters' => 'null',
             ),

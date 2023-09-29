@@ -34,17 +34,24 @@
 
                             <h5>Datos Generales</h5>
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <small for="people_id">Beneficiario del Prestamo</small>
                                     <select name="people_id" class="form-control select2" id="select-people_id" required></select>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
+                                    <small for="interest_rate">Tasa de interes</small>
+                                    <div class="input-group">
+                                        <input type="number" name="interest_rate" class="form-control" value="10" step="1" required>
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
                                     <small for="date">Fecha del prestamo</small>
                                     <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <small for="date_limit">Fecha del límite de devolución</small>
-                                    <input type="date" name="date_limit" class="form-control" value="{{ date('Y-m-d') }}" required>
+                                    <input type="date" name="date_limit" class="form-control" value="{{ date('Y-m-d', strtotime(date('Y-m-d').' +1 months')) }}" required>
                                 </div>
                             </div>
                             <hr>
@@ -90,7 +97,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12 text-right">
-                                    <button type="submit" id="btn-submit" class="btn btn-primary">Guardar</button>
+                                    <button type="submit" class="btn btn-primary btn-submit">Guardar</button>
                                 </div>
                             </div>
                         </div>
@@ -170,6 +177,7 @@
     <script>
         var index = 0;
         var features = @json($features);
+        var number_features = 0;
         $(document).ready(function(){
             
             customSelect('#select-people_id', '{{ url("admin/people/search/ajax") }}', formatResultPeople, data => data.first_name+' '+data.last_name1+' '+data.last_name2, null);
@@ -243,11 +251,11 @@
                             </td>
                             <td width="120px">
                                 <div class="input-group">
-                                    <input type="number" name="quantity[]" id="input-quantity-${index}" onchange="getSubtotal(${index})" onkeyup="getSubtotal(${index})" class="form-control" value="1" min="1" required>
-                                    <span class="input-group-addon"><small>${type.unit}</small></span>
+                                    <input type="number" name="quantity[]" id="input-quantity-${index}" onchange="getSubtotal(${index})" onkeyup="getSubtotal(${index})" class="form-control" value="1" min="1" step="0.1" required>
+                                    <span class="input-group-addon"><small>${type.unit ? type.unit : 'pza'}</small></span>
                                 </div>
                             </td>
-                            <td width="150px">
+                            <td width="170px">
                                 <div class="input-group">
                                     <input type="number" name="price[]" id="input-price-${index}" onchange="getSubtotal(${index})" onkeyup="getSubtotal(${index})" class="form-control" value="${type.price}" max="${type.max_price ? type.max_price : ''}" required>
                                     <span class="input-group-addon"><small>Bs.</small></span>
@@ -292,17 +300,22 @@
         function addFeature(index){
             let featuresList = '';
             features.map((feature) => {
-                featuresList = featuresList+`<option value="${feature.id}">${feature.name}</option>`
+                featuresList = featuresList+`<option value="${feature.id}">${feature.name}</option>`;
             });
+
+            // Agregar option para crear atributo
+            featuresList = featuresList+`<option value="new">(<em>Nuevo</em>)</option>`
+
             // Se va a nombrar los atributos de cada item concatenando el numero de item asignado
             // para agruparlos al momento de recorerlos
             $(`#table-features-${index}`).append(`
-                <tr id="tr-features-${index}">
-                    <td><select name="features_${index}[]" style="height:24px !important">${featuresList}</select></td>
+                <tr id="tr-features-${number_features}">
+                    <td id="td-name-features-${number_features}"><select name="features_${index}[]" id="select-features-${number_features}" style="height:24px !important; width: 120px" onchange="changeTypeInputFeature(${number_features}, ${index})">${featuresList}</select></td>
                     <td><input name="features_value_${index}[]" required /></td>
-                    <td><button type="button" class="btn-danger" onclick="removeTrFeature(${index})">x</button></td>
+                    <td><button type="button" class="btn-danger" onclick="removeTrFeature(${number_features})">x</button></td>
                 </tr>
-            `)
+            `);
+            number_features++;
         }
 
         function getSubtotal(index){
@@ -337,6 +350,13 @@
             // Si está vacío
             if(number == 1){
                 $('.tr-empty').css('display', 'block');
+            }
+        }
+
+        function changeTypeInputFeature(number_features, index){
+            let val = $(`#select-features-${number_features} option:selected`).val();
+            if(val == 'new'){
+                $(`#td-name-features-${number_features}`).html(`<input name="features_${index}[]" style="width: 120px" placeholder="Ingresar nuevo..." required />`);
             }
         }
 

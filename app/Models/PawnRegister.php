@@ -16,6 +16,7 @@ class PawnRegister extends Model
         'person_id',
         'date',
         'date_limit',
+        'interest_rate',
         'observations',
         'status'
     ];
@@ -30,5 +31,9 @@ class PawnRegister extends Model
 
     public function details(){
         return $this->hasMany(PawnRegisterDetail::class, 'pawn_register_id');
+    }
+
+    public function payments(){
+        return $this->hasMany(PawnRegisterPayment::class, 'pawn_register_id');
     }
 }
