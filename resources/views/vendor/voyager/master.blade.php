@@ -8,37 +8,7 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-
-    {{-- <style>
-        .form-control, .select2-selection, .mce-tinymce {
-            border: 1px solid #c3c5c7 !important;
-            color: #555555
-        }
-    </style>
- --}}
-
-    {{-- <style>
-        .form-control, .select2-selection, .mce-tinymce {
-            border: 1px solid #000000 !important;
-            color: #f40202;
-            font-weight: bold;
-        }
-    </style> --}}
-
-
-    <style>
-        .form-control, .select2-selection, .mce-tinymce {
-            border: 1px solid #000000 !important;
-            color:rgb(0, 0, 0) !important;
-            /* font-weight: bold; */
-            font-family: Tahoma, Verdana, Arial; 
-            /* font-size: 15px;  */
-        }
-        label
-        {
-            color: rgb(0, 0, 0) !important;
-        }
-    </style>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/style/dataTable.css') }}">
@@ -91,243 +61,256 @@
 
     @yield('head')
 </head>
+    <body class="voyager @if(isset($dataType) && isset($dataType->slug)){{ $dataType->slug }}@endif">
 
-<body class="voyager @if(isset($dataType) && isset($dataType->slug)){{ $dataType->slug }}@endif">
 
+        <div id="voyager-loader">
+            <?php $admin_loader_img = Voyager::setting('admin.loader', ''); ?>
+            @if($admin_loader_img == '')
+                <img src="{{ asset('images/loading.png') }}" alt="Voyager Loader">
+            @else
+                <img src="{{ Voyager::image($admin_loader_img) }}" alt="Voyager Loader">
+            @endif
+        </div>
 
-<div id="voyager-loader">
-    <?php $admin_loader_img = Voyager::setting('admin.loader', ''); ?>
-    @if($admin_loader_img == '')
-        <img src="{{ asset('images/loading.png') }}" alt="Voyager Loader">
-    @else
-        <img src="{{ Voyager::image($admin_loader_img) }}" alt="Voyager Loader">
-    @endif
-</div>
+        <?php
+            if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'https://')) {
+                $user_avatar = Auth::user()->avatar;
+                // dd($user_avatar);
+            } else {
+                $user_avatar = Voyager::image(Auth::user()->avatar);
+                // dd($user_avatar);
+            }
+        ?>
 
-<?php
-if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'https://')) {
-    $user_avatar = Auth::user()->avatar;
-    // dd($user_avatar);
-} else {
-    $user_avatar = Voyager::image(Auth::user()->avatar);
-    // dd($user_avatar);
-}
-?>
+        <div class="app-container">
+            <div class="fadetoblack visible-xs"></div>
+            <div class="row content-container">
+                @include('voyager::dashboard.navbar')
+                @include('voyager::dashboard.sidebar')
+                <script>
+                    (function(){
+                            var appContainer = document.querySelector('.app-container'),
+                                sidebar = appContainer.querySelector('.side-menu'),
+                                navbar = appContainer.querySelector('nav.navbar.navbar-top'),
+                                loader = document.getElementById('voyager-loader'),
+                                hamburgerMenu = document.querySelector('.hamburger'),
+                                sidebarTransition = sidebar.style.transition,
+                                navbarTransition = navbar.style.transition,
+                                containerTransition = appContainer.style.transition;
 
-<div class="app-container">
-    <div class="fadetoblack visible-xs"></div>
-    <div class="row content-container">
-        @include('voyager::dashboard.navbar')
-        @include('voyager::dashboard.sidebar')
-        <script>
-            (function(){
-                    var appContainer = document.querySelector('.app-container'),
-                        sidebar = appContainer.querySelector('.side-menu'),
-                        navbar = appContainer.querySelector('nav.navbar.navbar-top'),
-                        loader = document.getElementById('voyager-loader'),
-                        hamburgerMenu = document.querySelector('.hamburger'),
-                        sidebarTransition = sidebar.style.transition,
-                        navbarTransition = navbar.style.transition,
-                        containerTransition = appContainer.style.transition;
+                            sidebar.style.WebkitTransition = sidebar.style.MozTransition = sidebar.style.transition =
+                            appContainer.style.WebkitTransition = appContainer.style.MozTransition = appContainer.style.transition =
+                            navbar.style.WebkitTransition = navbar.style.MozTransition = navbar.style.transition = 'none';
 
-                    sidebar.style.WebkitTransition = sidebar.style.MozTransition = sidebar.style.transition =
-                    appContainer.style.WebkitTransition = appContainer.style.MozTransition = appContainer.style.transition =
-                    navbar.style.WebkitTransition = navbar.style.MozTransition = navbar.style.transition = 'none';
+                            if (window.innerWidth > 768 && window.localStorage && window.localStorage['voyager.stickySidebar'] == 'true') {
+                                appContainer.className += ' expanded no-animation';
+                                loader.style.left = (sidebar.clientWidth/2)+'px';
+                                hamburgerMenu.className += ' is-active no-animation';
+                            }
 
-                    if (window.innerWidth > 768 && window.localStorage && window.localStorage['voyager.stickySidebar'] == 'true') {
-                        appContainer.className += ' expanded no-animation';
-                        loader.style.left = (sidebar.clientWidth/2)+'px';
-                        hamburgerMenu.className += ' is-active no-animation';
-                    }
-
-                   navbar.style.WebkitTransition = navbar.style.MozTransition = navbar.style.transition = navbarTransition;
-                   sidebar.style.WebkitTransition = sidebar.style.MozTransition = sidebar.style.transition = sidebarTransition;
-                   appContainer.style.WebkitTransition = appContainer.style.MozTransition = appContainer.style.transition = containerTransition;
-            })();
-        </script>
-        <!-- Main Content -->
-        <div class="container-fluid">
-            <div class="side-body padding-top">
-                @yield('page_header')
-                <div id="voyager-notifications"></div>
-                @yield('content')
+                        navbar.style.WebkitTransition = navbar.style.MozTransition = navbar.style.transition = navbarTransition;
+                        sidebar.style.WebkitTransition = sidebar.style.MozTransition = sidebar.style.transition = sidebarTransition;
+                        appContainer.style.WebkitTransition = appContainer.style.MozTransition = appContainer.style.transition = containerTransition;
+                    })();
+                </script>
+                <!-- Main Content -->
+                <div class="container-fluid">
+                    <div class="side-body padding-top">
+                        @yield('page_header')
+                        <div id="voyager-notifications"></div>
+                        @yield('content')
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-@include('voyager::partials.app-footer')
+        @include('voyager::partials.app-footer')
 
-<!-- Javascript Libs -->
+        <!-- Javascript Libs -->
 
 
-<script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
+        <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
 
 
-<script>
-    //para que cada ves que cambie de pagina verfifique si hay prestamos con dias atrazados
-    $(function() {             
-        $.get('{{route('loans-loanDay.late')}}', function (data) {
-                    // alert(2);
-        });
-        //     }, 8000 //10000 en medio minuto se recargará solo la campana de notificación..
-        // );
+        <script>
+            //para que cada ves que cambie de pagina verfifique si hay prestamos con dias atrazados
+            $(function() {             
+                $.get('{{route('loans-loanDay.late')}}', function (data) {
+                            // alert(2);
+                });
+                //     }, 8000 //10000 en medio minuto se recargará solo la campana de notificación..
+                // );
 
-        $.get('{{route('garments-month.late')}}', function (data) {
-                    // alert(2);
-        });
+                $.get('{{route('garments-month.late')}}', function (data) {
+                            // alert(2);
+                });
 
-        // toastr.success('Detalle agregado', 'Exito')
-        // toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Tiene una Caja Pendiente Asignada</a>', 'Notificación',
-        //     {   "positionClass" : "toast-bottom-right",
-        //         "href" : "admins"
-        //     }
-        // );
+                // toastr.success('Detalle agregado', 'Exito')
+                // toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Tiene una Caja Pendiente Asignada</a>', 'Notificación',
+                //     {   "positionClass" : "toast-bottom-right",
+                //         "href" : "admins"
+                //     }
+                // );
 
-       
-    });
-
-
-
-
-    
-
-</script>
-
-
-
-
-<script>
-    @if(Session::has('alerts'))
-        let alerts = {!! json_encode(Session::get('alerts')) !!};
-        helpers.displayAlerts(alerts, toastr);
-    @endif
-
-    @if(Session::has('message'))
-
-    // TODO: change Controllers to use AlertsMessages trait... then remove this
-    var alertType = {!! json_encode(Session::get('alert-type', 'info')) !!};
-    var alertMessage = {!! json_encode(Session::get('message')) !!};
-    var alerter = toastr[alertType];
-
-    if (alerter) {
-        alerter(alertMessage);
-    } else {
-        toastr.error("toastr alert-type " + alertType + " is unknown");
-    }
-    @endif
-</script>
-
-<script src="{{ asset('vendor/momentjs/moment.min.js') }}"></script>
-<script src="{{ asset('vendor/momentjs/moment-with-locales.min.js') }}"></script>
-
-{{-- <script src="{{ asset('js/timbre.js') }}"></script> --}}
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
-    <script>       
-        $(function() {
-            // $.get('{{route('getAuth')}}', function (data) {    
-            //     alert(data)      
-            // })
-            notification();
-        });
-
-        function notification()
-        {
-            let count = 0;
-            $.get('{{route('notification.cashierOpen')}}', function (data) {    
-                count = 1;
-                 
-                if(data)
-                {
-                    var luz = '<span class="badge badge-danger navbar-badge" id="bandeja">'+count+'</span>';
-                    $('#countNotification').html(luz)        
-                    $('#notificationInbox').append(`
-                        <a href="{{url('admin#rowCashierOpen')}}" style="font-size: 16px; color:black"><i class="fa-solid fa-cash-register"></i><small> Tiene una Caja Pendiente Asignada</small></a>
-                        <hr>
-                    `);
-
-                    // setTimeout(function(){
-                    //     alert('dos');
-                    // }, 1000)
-                    setInterval(() => {
-                     
-                            $('#bellNotification').html('<i class="voyager-bell" style="font-size: 1.8em; color : #ff0808"></i>');
-                
-                        setTimeout(function(){
-                            $('#bellNotification').html('<i class="fa-solid fa-bell" style="font-size: 1.8em; color : #22a7f0"></i>')  ;
-                        }, 500)
-                        
-
-                    }, 1000);
-                }
-                else
-                {
-                    $('#countNotification').html('')
-                    $('#notificationInbox').html('')
-                }       
-            })
-        }
-
-        // function getAuth()
-        // {
-        //     $.get('{{route('getAuth')}}', function (data) {    
-        //         return data;
-        //     })
-        // }
-    </script>
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
-
-       
-        socket.on(`change notificationCashierOpen`, data => {
-            // let auth =  @json(App\Models\User::where('id',  1)->first());
             
-            let auth =  @json(Auth::user());
+            });
 
 
-            if(auth.id == data.auth.id)
-            {
-                notification()
-                toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Hola '+data.auth.name+', Tiene una Caja Pendiente Asignada</a>', 'Notificación',
-                    {   "positionClass" : "toast-bottom-right",
-                        "timeOut": "10000",
-                        "closeButton": true,
-                        "progressBar": true,
-                    }
-                );
+
+
+            
+
+        </script>
+
+
+
+
+        <script>
+            @if(Session::has('alerts'))
+                let alerts = {!! json_encode(Session::get('alerts')) !!};
+                helpers.displayAlerts(alerts, toastr);
+            @endif
+
+            @if(Session::has('message'))
+
+            // TODO: change Controllers to use AlertsMessages trait... then remove this
+            var alertType = {!! json_encode(Session::get('alert-type', 'info')) !!};
+            var alertMessage = {!! json_encode(Session::get('message')) !!};
+            var alerter = toastr[alertType];
+
+            if (alerter) {
+                alerter(alertMessage);
+            } else {
+                toastr.error("toastr alert-type " + alertType + " is unknown");
             }
+            @endif
+        </script>
+
+        <script src="{{ asset('vendor/momentjs/moment.min.js') }}"></script>
+        <script src="{{ asset('vendor/momentjs/moment-with-locales.min.js') }}"></script>
+
+        {{-- <script src="{{ asset('js/timbre.js') }}"></script> --}}
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
+            <script>       
+                $(function() {
+                    // $.get('{{route('getAuth')}}', function (data) {    
+                    //     alert(data)      
+                    // })
+                    notification();
+                });
+
+                function notification()
+                {
+                    let count = 0;
+                    $.get('{{route('notification.cashierOpen')}}', function (data) {    
+                        count = 1;
+                        
+                        if(data)
+                        {
+                            var luz = '<span class="badge badge-danger navbar-badge" id="bandeja">'+count+'</span>';
+                            $('#countNotification').html(luz)        
+                            $('#notificationInbox').append(`
+                                <a href="{{url('admin#rowCashierOpen')}}" style="font-size: 16px; color:black"><i class="fa-solid fa-cash-register"></i><small> Tiene una Caja Pendiente Asignada</small></a>
+                                <hr>
+                            `);
+
+                            // setTimeout(function(){
+                            //     alert('dos');
+                            // }, 1000)
+                            setInterval(() => {
+                            
+                                    $('#bellNotification').html('<i class="voyager-bell" style="font-size: 1.8em; color : #ff0808"></i>');
+                        
+                                setTimeout(function(){
+                                    $('#bellNotification').html('<i class="fa-solid fa-bell" style="font-size: 1.8em; color : #22a7f0"></i>')  ;
+                                }, 500)
+                                
+
+                            }, 1000);
+                        }
+                        else
+                        {
+                            $('#countNotification').html('')
+                            $('#notificationInbox').html('')
+                        }       
+                    })
+                }
+
+                // function getAuth()
+                // {
+                //     $.get('{{route('getAuth')}}', function (data) {    
+                //         return data;
+                //     })
+                // }
+            </script>
+
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js" integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script>
+                const socket = io("{{ env('SOCKET_URL').':'.env('SOCKET_PORT') }}");
+
             
-        });
+                socket.on(`change notificationCashierOpen`, data => {
+                    // let auth =  @json(App\Models\User::where('id',  1)->first());
+                    
+                    let auth =  @json(Auth::user());
 
-        // $(function() {
 
-        //     toastr.info('<a style="font-size: 15px; color:black">Hola, Tiene una Caja Pendiente Asignada</a>', 'Notificación',
-        //             {   "positionClass" : "toast-bottom-right",
-        //                 "timeOut": "5000",
-        //                 "closeButton": true,
-        //                 "progressBar": true,
-        //             }
-        //         );
+                    if(auth.id == data.auth.id)
+                    {
+                        notification()
+                        toastr.info('<a href="{{url('admin#rowCashierOpen')}}" style="font-size: 15px; color:black">Hola '+data.auth.name+', Tiene una Caja Pendiente Asignada</a>', 'Notificación',
+                            {   "positionClass" : "toast-bottom-right",
+                                "timeOut": "10000",
+                                "closeButton": true,
+                                "progressBar": true,
+                            }
+                        );
+                    }
+                    
+                });
 
-        // });
+                // $(function() {
 
-     
-    </script>
+                //     toastr.info('<a style="font-size: 15px; color:black">Hola, Tiene una Caja Pendiente Asignada</a>', 'Notificación',
+                //             {   "positionClass" : "toast-bottom-right",
+                //                 "timeOut": "5000",
+                //                 "closeButton": true,
+                //                 "progressBar": true,
+                //             }
+                //         );
 
-    {{-- ########################################################################### --}}
+                // });
 
-@include('voyager::media.manager')
+            
+            </script>
 
-@yield('javascript')
-@stack('javascript')
-@if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->
-    @foreach(config('voyager.additional_js') as $js)<script type="text/javascript" src="{{ asset($js) }}"></script>@endforeach
-@endif
+            {{-- ########################################################################### --}}
 
-</body>
+        @include('voyager::media.manager')
+
+        @yield('javascript')
+        @stack('javascript')
+        @if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->
+            @foreach(config('voyager.additional_js') as $js)<script type="text/javascript" src="{{ asset($js) }}"></script>@endforeach
+        @endif
+
+        {{-- Loading --}}
+        <script src="{{ asset('vendor/loading/loading.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('vendor/loading/loading.css') }}">
+
+        <script>
+            $(document).ready(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="popover"]').popover();
+                $('.form-submit').submit(function(){
+                    $('.form-submit .btn-submit').attr('disabled', 'disabled');
+                });
+            });
+        </script>
+
+    </body>
 </html>

@@ -37,20 +37,18 @@ class PermissionsTableSeeder extends Seeder
         }
 
         Permission::generateFor('menus');
-
         Permission::generateFor('roles');
-
         Permission::generateFor('users');
-
         Permission::generateFor('settings');
-
-
-        Permission::generateFor('category_garments');
-        Permission::generateFor('brand_garments');
-        Permission::generateFor('model_garments');
-        Permission::generateFor('jewels');
-        Permission::generateFor('quilates');
-
+        // Permission::generateFor('category_garments');
+        // Permission::generateFor('brand_garments');
+        // Permission::generateFor('model_garments');
+        // Permission::generateFor('jewels');
+        // Permission::generateFor('quilates');
+        Permission::generateFor('item_categories');
+        Permission::generateFor('item_features');
+        Permission::generateFor('item_types');
+        Permission::generateFor('pawn');
 
         $keys = [
             'browse_articles',
@@ -59,7 +57,6 @@ class PermissionsTableSeeder extends Seeder
             'read_articles',
             'delete_articles',
             'input_articles',
-            
         ];
 
         foreach ($keys as $key) {
@@ -78,7 +75,6 @@ class PermissionsTableSeeder extends Seeder
             'movements_vaults',
             'close_vaults',
             'print_vaults',
-            
         ];
 
         foreach ($keys as $key) {
@@ -94,13 +90,9 @@ class PermissionsTableSeeder extends Seeder
             'add_loans',
             'read_loans',
             'delete_loans',
-
             'successLoan_loans',//para que el gerente apruebe el prestamo
             'deliverMoney_loans', //para quye entregen el dinero al beneficiario
-
-
             'addMoneyDaily_loans',//para agregar o pagar el prestamo diario
-
         ];
 
         foreach ($keys as $key) {
@@ -116,11 +108,8 @@ class PermissionsTableSeeder extends Seeder
         $keys = [
             'browse_printdailyCollection',
             'browse_printloanAll',
-
-
             'browse_printdailyList', //para imprimir la lista diaria de cobro por dias y rutas
             'browse_printloanListLate',
-
             'browse_printloanCollection', //reportes para el cajero y el cobrador en moto
             'browse_printloanDelivered' //reportes para obtener los prestamos diarios entregados o en fecha
         ];
@@ -131,9 +120,6 @@ class PermissionsTableSeeder extends Seeder
                 'table_name' => 'reports_gerente',
             ]);
         }
-
-
-        
 
         // _________________________________________________________
 
@@ -146,7 +132,6 @@ class PermissionsTableSeeder extends Seeder
             'edit_routes',
             'read_routes',
             'collector_routes',
-            
             'browse_routesloanexchange'
         ];
 
@@ -156,9 +141,6 @@ class PermissionsTableSeeder extends Seeder
                 'table_name' => 'routes',
             ]);
         }
-
-
-        
 
         // cajeros
         $keys = [
@@ -220,11 +202,8 @@ class PermissionsTableSeeder extends Seeder
             'add_garments',
             'read_garments',
             'delete_garments',
-
             'successLoan_garments',//para que el gerente apruebe el prestamo del prendario
             'deliverMoney_garments', //para quye entregen el dinero al beneficiario
-
-
             // 'addMoneyDaily_garments',//para agregar o pagar el prestamo diario
         ];
 

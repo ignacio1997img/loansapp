@@ -80,11 +80,7 @@
 
     @section('css')
         <style>
-            .form-control, .select2-selection, .mce-tinymce {
-                border: 1px solid #7a7a7a !important;
-                /* color: #f40202; */
-                font-weight: bold
-            }
+
         </style>
     @endsection
 

@@ -207,7 +207,6 @@
 
                 $('#confirm_delete_modal').modal('hide');
             });
-            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 @stop

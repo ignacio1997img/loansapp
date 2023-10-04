@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\PeopleController;
@@ -20,12 +22,9 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
-use App\Models\Loan;
-use App\Models\People;
 use App\Http\Controllers\ReportManagerController;
-use Illuminate\Support\Facades\Route;
-
-// use PeopleController
+use App\Http\Controllers\PawnController;
+use App\Http\Controllers\ItemTypesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,12 +62,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::delete('articles/{article_id?}/developer/{detail_id?}/destroy', [ArticleController::class, 'developerDestroy'])->name('articles-developer.destroy');
     Route::get('articles/developer/ajax/{article_id?}', [ArticleController::class, 'ajaxDeveloper'])->name('articles-developer.ajax');//para obtener las herramientas para genarrar los reqiisitos
 
-
-
-
     // Route::resources('people', PeopleController::class);
     Route::get('people', [PeopleController::class, 'index'])->name('voyager.people.index');
     Route::get('people/ajax/list/{search?}', [PeopleController::class, 'list']);
+    Route::get('people/search/ajax', [PeopleController::class, 'ajaxPeople']);
     Route::post('people/store', [PeopleController::class, 'store']);
     Route::get('people/{id?}/sponsor', [PeopleController::class, 'indexSponsor'])->name('people-sponsor.index');
     Route::post('people/{id?}/sponsor/store', [PeopleController::class, 'storeSponsor'])->name('people-sponsor.store');
@@ -79,7 +76,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('people/verification', [PeopleController::class, 'verification'])->name('people.verification');
 
     Route::post('people/importar', [PeopleController::class, 'import'])->name('people.import');
-
 
     Route::resource('loans', LoanController::class);
     Route::get('loans/ajax/list/{cashier_id}/{type}/{search?}', [LoanController::class, 'list']);
@@ -118,7 +114,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('agents/store', [AgentController::class, 'store'])->name('agents.store');
     // Route::delete('agents/destroy/{id}', [AgentController::class, 'destroy'])->name('voyager.agents.destroy');
 
-
     Route::get('routes', [RouteController::class, 'index'])->name('voyager.routes.index');
     Route::get('routes/ajax/list/{search?}', [RouteController::class, 'list']);
 
@@ -135,13 +130,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::post('routes/loan/exchange/search', [RouteController::class, 'listLoan'])->name('routes-loan-exchange.search');
     Route::post('routes/loan/exchange/transfer', [RouteController::class, 'storeExchangeLoan'])->name('routes-loan-exchange.transfer');
 
-
-
-
     Route::resource('collectors', CollectorController::class);
     Route::get('collectors/ajax/list/{search?}', [PeopleController::class, 'list']);
     
-
     // ##################################################################################################################################
     // ###########################################################    PRENDARIO    ##########################################################
     // ##################################################################################################################################
@@ -163,23 +154,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('garments/tickets/print/{garment_id?}', [GarmentController::class, 'printGarmentTickets']);//para imprimir el comprobante de prestamo al entregar el prestamo al cliente
     Route::get('garments/payment/money/print/{garment_id}/{transaction_id?}', [GarmentController::class, 'printDailyMoney']);//imprimir los meses diarios de pago de la premda
 
-
-
-
+    Route::post('item_types/store', [ItemTypesController::class, 'store'])->name('item_types.store');
+    
+    Route::resource('pawn', PawnController::class);
+    Route::get('pawn/list/ajax', [PawnController::class, 'list'])->name('pawn.list');
+    Route::get('pawn/{id}/print', [PawnController::class, 'print'])->name('pawn.print');
+    Route::post('pawn/payment/store', [PawnController::class, 'payment_store'])->name('pawn.payment');
 
     // ##################################################################################################################################
     // ###########################################################       FIN       #####################################################
     // ##################################################################################################################################
-
-
-
-
-
-
-
-
-
-
 
     Route::resource('vaults', VaultController::class);
 
@@ -188,7 +172,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('vaults/{id}/close', [VaultController::class, 'close'])->name('vaults.close');
     Route::post('vaults/{id}/close/store', [VaultController::class, 'close_store'])->name('vaults.close.store');//***Para guardar cuando se cierre de boveda
     Route::get('vaults/{vault}/print/status', [VaultController::class, 'print_status'])->name('vaults.print.status');//***
-
 
     Route::resource('cashiers', CashierController::class);
     Route::get('cashiers/{cashier}/amount', [CashierController::class, 'amount'])->name('cashiers.amount');//para abrir la vista de poder agregar dinero o aboinar mas dinero a la caja
@@ -201,23 +184,17 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('cashiers/{cashier}/confirm_close', [CashierController::class, 'confirm_close'])->name('cashiers.confirm_close');
     Route::post('cashiers/{cashier}/confirm_close/store', [CashierController::class, 'confirm_close_store'])->name('cashiers.confirm_close.store');
 
-
     Route::get('cashiers/print/open/{id?}', [CashierController::class, 'print_open'])->name('print.open');//para imprimir el comprobante cuando se abre una caja
     Route::get('cashiers/print/close/{id?}', [CashierController::class, 'print_close'])->name('print.close');
 
     Route::post('cashiers/{cashier}/loans/transaction/{transaction}/delete', [CashierController::class, 'destroyTransaction'])->name('cashiers-loan.transaction.delete');//para pider eliminar prestamos cuando no tenga dias pagados 
     Route::post('cashiers/loans/delete', [CashierController::class, 'destroyDelete'])->name('cashiers-loan.delete');//para pider eliminar prestamos cuando no tenga dias pagados 
 
-
-
     // Para registrar usuario los gerente, administradores
     Route::resource('user', UserController::class);
     Route::get('user/ajax/list/{search?}', [UserController::class, 'list']);
     Route::get('user/{user?}/inhabilitar', [UserController::class, 'inhabilitarUser'])->name('user.inhabilitar');
     Route::get('userr/{user?}/habilitar', [UserController::class, 'habilitarUser'])->name('user.habilitar');
-
-
-
 
     //____________________________________________________________________________REPORTE________________________________________________________________________
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                   FROM MANAGER ADMINISTRATOR                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -233,11 +210,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('print/loanListLate', [ReportController::class, 'loanListLate'])->name('print-loanListLate');
     Route::post('print/loanListLate/list', [ReportController::class, 'loanListLateList'])->name('print-loanListLate.list');
 
-    
-
-
-
-
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$                   PARA CAJEROS                      $$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //para poder mostrar su recaudacion de la persona CAJERO O COBRADOR EN MOTO
     Route::get('print/loanCollection', [ReportCashierController::class, 'loanCollection'])->name('print-loanCollection');
@@ -250,27 +222,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'loggin'], function () {
     Route::get('print/dailyList', [ReportCashierController::class, 'dailyList'])->name('print.dailyList');
     Route::post('print/dailyList/list', [ReportCashierController::class, 'dailyListList'])->name('print-dailyList.list');
 
-
-
-
-
     Route::resource('gps', GpsController::class);
-
-
-
-
-
-
 
     // PARA LAS NOTIFICACIONES
     Route::get('getAuth', [Controller::class, 'getAuth'])->name('getAuth');
     Route::get('notification/cashierOpen', [NotificationController::class, 'cashierOpen'])->name('notification.cashierOpen');
-
-
-
-    
-
-
 });
 Route::get('loans/loanDay/late', [AjaxController::class, 'late'])->name('loans-loanDay.late');
 Route::get('loans/loanDay/notificationLate', [AjaxController::class, 'notificationLate'])->name('loans-loanDay.notificationLate');
@@ -280,8 +236,6 @@ Route::get('garments/month/late', [AjaxController::class, 'lateGarment'])->name(
 Route::post('template/loan/search', [TemplateController::class, 'searchLoan'])->name('template-loan.search');
 Route::post('template/loan/search/codeVerification', [TemplateController::class, 'codeVerification'])->name('template-loan-search.codeverification');
 Route::get('template/loan/search/verification/{loan?}/{phone?}/{code?}', [TemplateController::class, 'verification'])->name('template-loan-search.verification');
-
-
 
 // Route::get('message/{id?}/verification', [MessageController::class, 'verification']);
 

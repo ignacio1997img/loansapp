@@ -77,12 +77,6 @@
             </div>
         </div>
     </div>
-    {{-- <style>
-        .form-control, .select2-selection, .mce-tinymce {
-            border: 1px solid #c3c5c7 !important;
-            color: #555555
-        }
-    </style> --}}
 @stop
 
 @php
